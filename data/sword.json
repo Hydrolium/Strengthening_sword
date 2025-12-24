@@ -1,0 +1,567 @@
+[
+  {
+    "id": "dagger",
+    "prob": 1.0,
+    "cost": 300,
+    "price": 0,
+    "requiredRepairs": 0,
+    "canSave": false,
+    "pieces": []
+  },
+  {
+    "id": "long_sword",
+    "prob": 1.0,
+    "cost": 500,
+    "price": 100,
+    "requiredRepairs": 0,
+    "canSave": true,
+    "pieces": []
+  },
+  {
+    "id": "rageknife",
+    "prob": 1.0,
+    "cost": 700,
+    "price": 300,
+    "requiredRepairs": 0,
+    "canSave": true,
+    "pieces": []
+  },
+  {
+    "id": "dorans_blade",
+    "prob": 0.96,
+    "cost": 1000,
+    "price": 500,
+    "requiredRepairs": 1,
+    "canSave": true,
+    "pieces": []
+  },
+  {
+    "id": "hexdrinker",
+    "prob": 0.9,
+    "cost": 1500,
+    "price": 800,
+    "requiredRepairs": 1,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "bf_sword",
+    "prob": 0.9,
+    "cost": 2000,
+    "price": 1000,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "faerie_charm",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "sheen",
+    "prob": 0.85,
+    "cost": 3000,
+    "price": 1500,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "kindlegem",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "executioners_calling",
+    "prob": 0.8,
+    "cost": 4300,
+    "price": 3000,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "faerie_charm",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "broken_stopwatch",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "commencing_stopwatch",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "guardians_blade",
+    "prob": 0.8,
+    "cost": 5800,
+    "price": 5000,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "blasting_wand",
+        "prob": 1.0,
+        "max_drop": 1
+      },
+      {
+        "id": "faerie_charm",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "kindlegem",
+        "prob": 1.0,
+        "max_drop": 2
+      }
+    ]
+  },
+  {
+    "id": "umbral_glaive",
+    "prob": 0.75,
+    "cost": 8000,
+    "price": 10000,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "tear_of_the_goddess",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "oblivion_orb",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "zeal",
+    "prob": 0.7,
+    "cost": 10500,
+    "price": 15000,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 1.0,
+        "max_drop": 1
+      },
+      {
+        "id": "minion_dematerailizer",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "bamis_cinder",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "serrated_dirk",
+    "prob": 0.7,
+    "cost": 13500,
+    "price": 25000,
+    "requiredRepairs": 3,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 1.0,
+        "max_drop": 2
+      },
+      {
+        "id": "kindlegem",
+        "prob": 1.0,
+        "max_drop": 2
+      }
+    ]
+  },
+  {
+    "id": "serpents_fang",
+    "prob": 0.65,
+    "cost": 16500,
+    "price": 37000,
+    "requiredRepairs": 5,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "tear_of_the_goddess",
+        "prob": 1.0,
+        "max_drop": 1
+      },
+      {
+        "id": "refillable_potion",
+        "prob": 0.5,
+        "max_drop": 2
+      },
+      {
+        "id": "elixir_of_sorcery",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "guinsoos_rageblade",
+    "prob": 0.65,
+    "cost": 20000,
+    "price": 60000,
+    "requiredRepairs": 5,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "quicksilver_sash",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "stormrazor",
+    "prob": 0.6,
+    "cost": 25000,
+    "price": 100000,
+    "requiredRepairs": 5,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "oblivion_orb",
+        "prob": 0.75,
+        "max_drop": 1
+      },
+      {
+        "id": "quicksilver_sash",
+        "prob": 0.5,
+        "max_drop": 1
+      },
+      {
+        "id": "trinity_force",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "sanguine_blade",
+    "prob": 0.6,
+    "cost": 30000,
+    "price": 150000,
+    "requiredRepairs": 5,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "trinity_force",
+        "prob": 0.75,
+        "max_drop": 2
+      },
+      {
+        "id": "bamis_cinder",
+        "prob": 1.0,
+        "max_drop": 2
+      }
+    ]
+  },
+  {
+    "id": "mercurial_scimitar",
+    "prob": 0.55,
+    "cost": 40000,
+    "price": 220000,
+    "requiredRepairs": 7,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "minion_dematerailizer",
+        "prob": 0.75,
+        "max_drop": 1
+      },
+      {
+        "id": "quicksilver_sash",
+        "prob": 1.0,
+        "max_drop": 1
+      },
+      {
+        "id": "refillable_potion",
+        "prob": 1.0,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "guardian_angel",
+    "prob": 0.5,
+    "cost": 50000,
+    "price": 320000,
+    "requiredRepairs": 7,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "kindlegem",
+        "prob": 0.75,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "wits_end",
+    "prob": 0.45,
+    "cost": 70000,
+    "price": 460000,
+    "requiredRepairs": 7,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "aether_wisp",
+        "prob": 0.75,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "manamune",
+    "prob": 0.4,
+    "cost": 100000,
+    "price": 650000,
+    "requiredRepairs": 7,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "tear_of_the_goddess",
+        "prob": 1.0,
+        "max_drop": 1
+      },
+      {
+        "id": "elixir_of_sorcery",
+        "prob": 1.0,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "muramana",
+    "prob": 0.4,
+    "cost": 150000,
+    "price": 915000,
+    "requiredRepairs": 7,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "blasting_wand",
+        "prob": 1.0,
+        "max_drop": 1
+      },
+      {
+        "id": "tear_of_the_goddess",
+        "prob": 1.0,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "bloodthirster",
+    "prob": 0.35,
+    "cost": 250000,
+    "price": 1230000,
+    "requiredRepairs": 10,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "trinity_force",
+        "prob": 0.75,
+        "max_drop": 1
+      },
+      {
+        "id": "blighting_jewel",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "eclipse",
+    "prob": 0.3,
+    "cost": 370000,
+    "price": 1880000,
+    "requiredRepairs": 10,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "verdant_barrier",
+        "prob": 0.75,
+        "max_drop": 1
+      },
+      {
+        "id": "abyssal_mask",
+        "prob": 0.5,
+        "max_drop": 1
+      }
+    ]
+  },
+  {
+    "id": "duskblade_of_draktharr",
+    "prob": 0.3,
+    "cost": 550000,
+    "price": 3000000,
+    "requiredRepairs": 10,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "blighting_jewel",
+        "prob": 1.0,
+        "max_drop": 3
+      },
+      {
+        "id": "oblivion_orb",
+        "prob": 1.0,
+        "max_drop": 2
+      }
+    ]
+  },
+  {
+    "id": "lich_bane",
+    "prob": 0.25,
+    "cost": 780000,
+    "price": 6000000,
+    "requiredRepairs": 10,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "abyssal_mask",
+        "prob": 0.8,
+        "max_drop": 3
+      }
+    ]
+  },
+  {
+    "id": "yoummuus_ghostblade",
+    "prob": 0.25,
+    "cost": 1050000,
+    "price": 9000000,
+    "requiredRepairs": 13,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "faerie_charm",
+        "prob": 1.0,
+        "max_drop": 2
+      }
+    ]
+  },
+  {
+    "id": "maw_of_malmortius",
+    "prob": 0.2,
+    "cost": 1320000,
+    "price": 11500000,
+    "requiredRepairs": 13,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "axiom_arc",
+        "prob": 0.9,
+        "max_drop": 2
+      }
+    ]
+  },
+  {
+    "id": "infinity_edge",
+    "prob": 0.1,
+    "cost": 1620000,
+    "price": 13700000,
+    "requiredRepairs": 13,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 1.0,
+        "max_drop": 10
+      },
+      {
+        "id": "faerie_charm",
+        "prob": 1.0,
+        "max_drop": 10
+      },
+      {
+        "id": "kindlegem",
+        "prob": 1.0,
+        "max_drop": 10
+      },
+      {
+        "id": "broken_stopwatch",
+        "prob": 1.0,
+        "max_drop": 20
+      }
+    ]
+  },
+  {
+    "id": "blade_of_the_ruined",
+    "prob": 0.05,
+    "cost": 2000000,
+    "price": 17000000,
+    "requiredRepairs": 15,
+    "canSave": true,
+    "pieces": [
+      {
+        "id": "navori_quickblades",
+        "prob": 1.0,
+        "max_drop": 20
+      },
+      {
+        "id": "faerie_charm",
+        "prob": 1.0,
+        "max_drop": 20
+      },
+      {
+        "id": "kindlegem",
+        "prob": 1.0,
+        "max_drop": 20
+      },
+      {
+        "id": "broken_stopwatch",
+        "prob": 1.0,
+        "max_drop": 20
+      }
+    ]
+  },
+  {
+    "id": "imperial_mandate",
+    "prob": 0.0,
+    "cost": 0,
+    "price": 100000000,
+    "requiredRepairs": 0,
+    "canSave": true,
+    "pieces": []
+  }
+]

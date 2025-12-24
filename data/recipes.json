@@ -1,0 +1,376 @@
+[
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "navori_quickblades",
+        "count": 1
+      },
+      {
+        "type": "piece",
+        "id": "faerie_charm",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "stormrazor",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "kindlegem",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "navori_quickblades",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "sanguine_blade",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "quicksilver_sash",
+        "count": 1
+      },
+      {
+        "type": "piece",
+        "id": "rejuvenation_bead",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "mercurial_scimitar",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "commencing_stopwatch",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "broken_stopwatch",
+        "count": 1
+      },
+      {
+        "type": "sword",
+        "id": "bf_sword",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "guardian_angel",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "blasting_wand",
+        "count": 1
+      },
+      {
+        "type": "piece",
+        "id": "oblivion_orb",
+        "count": 1
+      },
+      {
+        "type": "piece",
+        "id": "refillable_potion",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "wits_end",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "tear_of_the_goddess",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "minion_dematerailizer",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "trinity_force",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "manamune",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "tear_of_the_goddess",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "elixir_of_sorcery",
+        "count": 2
+      },
+      {
+        "type": "sword",
+        "id": "manamune",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "muramana",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "bamis_cinder",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "trinity_force",
+        "count": 5
+      },
+      {
+        "type": "sword",
+        "id": "bf_sword",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "bloodthirster",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "anathemas_chains",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "aether_wisp",
+        "count": 3
+      },
+      {
+        "type": "sword",
+        "id": "serrated_dirk",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "eclipse",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "sword",
+        "id": "serrated_dirk",
+        "count": 3
+      },
+      {
+        "type": "piece",
+        "id": "axiom_arc",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "duskblade_of_draktharr",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "aether_wisp",
+        "count": 4
+      },
+      {
+        "type": "piece",
+        "id": "blasting_wand",
+        "count": 1
+      },
+      {
+        "type": "sword",
+        "id": "sheen",
+        "count": 3
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "lich_bane",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "sword",
+        "id": "serrated_dirk",
+        "count": 4
+      },
+      {
+        "type": "piece",
+        "id": "abyssal_mask",
+        "count": 4
+      },
+      {
+        "type": "piece",
+        "id": "verdant_barrier",
+        "count": 4
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "yoummuus_ghostblade",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "faerie_charm",
+        "count": 5
+      },
+      {
+        "type": "piece",
+        "id": "blighting_jewel",
+        "count": 5
+      },
+      {
+        "type": "sword",
+        "id": "hexdrinker",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "maw_of_malmortius",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "axiom_arc",
+        "count": 5
+      },
+      {
+        "type": "sword",
+        "id": "bf_sword",
+        "count": 5
+      },
+      {
+        "type": "sword",
+        "id": "muramana",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "infinity_edge",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "piece",
+        "id": "oblivion_orb",
+        "count": 5
+      },
+      {
+        "type": "piece",
+        "id": "abyssal_mask",
+        "count": 5
+      },
+      {
+        "type": "sword",
+        "id": "infinity_edge",
+        "count": 1
+      },
+      {
+        "type": "sword",
+        "id": "bloodthirster",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "blade_of_the_ruined",
+      "count": 1
+    }
+  },
+  {
+    "materials": [
+      {
+        "type": "sword",
+        "id": "blade_of_the_ruined",
+        "count": 1
+      },
+      {
+        "type": "sword",
+        "id": "infinity_edge",
+        "count": 1
+      },
+      {
+        "type": "sword",
+        "id": "maw_of_malmortius",
+        "count": 1
+      },
+      {
+        "type": "sword",
+        "id": "yoummuus_ghostblade",
+        "count": 1
+      }
+    ],
+    "result": {
+      "type": "sword",
+      "id": "imperial_mandate",
+      "count": 1
+    }
+  }
+]
