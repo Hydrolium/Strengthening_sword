@@ -1,5 +1,5 @@
+import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith } from "../other/element_controller.js";
-import { ContextType, GameContext, Sword } from "../other/entity.js";
 import { Refreshable } from "./screen.js";
 
 interface RecordInfo {

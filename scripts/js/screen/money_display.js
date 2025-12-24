@@ -1,5 +1,5 @@
+import { ContextType } from "../other/context.js";
 import { $, write } from "../other/element_controller.js";
-import { ContextType } from "../other/entity.js";
 import { Keyframes, Refreshable } from "./screen.js";
 export class MoneyDisplay extends Refreshable {
     constructor() {

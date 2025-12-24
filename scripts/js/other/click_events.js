@@ -1,6 +1,7 @@
 import { StatID } from "../manager/stat_manager.js";
+import { ContextType } from "./context.js";
 import { $, hide } from "./element_controller.js";
-import { ContextType, TestResult } from "./entity.js";
+import { TestResult } from "./entity.js";
 import { Game } from "./main.js";
 export const onClickCloseButton = (id) => hide($("#" + id));
 (function onClickFooterIcon() {

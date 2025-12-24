@@ -1,5 +1,6 @@
+import { ContextType } from "../other/context.js";
 import { $, createElement } from "../other/element_controller.js";
-import { Color, ContextType } from "../other/entity.js";
+import { Color } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 export class DeveloperMod {

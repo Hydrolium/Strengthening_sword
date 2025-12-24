@@ -66,9 +66,6 @@ export class StatScreen extends Screen {
         const created_stb = Object.keys(StatID).map(stat => this.makeStatSection(Game.statManager.getStat(stat)));
         element_stat_box.replaceChildren(...created_stb);
         write(element_stat_point_count, Game.statManager.getStatPoint());
-        // $("#max-message-close-button").addEventListener("click", () => onClickCloseButton("max-stat-message"));
-        // $("#statpoint-lack-close-button").addEventListener("click", () => onClickCloseButton("statpoint-lack-message"));
-        // $("#game_all_stat_message").addEventListener("click", () => onClickCloseButton("game-all-stat-message"));
     }
     popupMaxStatMessage() {
         const popup = new Popup();

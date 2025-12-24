@@ -1,6 +1,7 @@
 import { onClickSwordBreakButton, onClickSwordItemSellButton, onClickSwordSwapButton } from "../other/click_events.js";
+import { ContextType } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc } from "../other/element_controller.js";
-import { Color, ContextType, RepairPaperItem, SwordItem } from "../other/entity.js";
+import { Color, RepairPaperItem, SwordItem } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { ButtonType, ColoredText, HoverEffect, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";

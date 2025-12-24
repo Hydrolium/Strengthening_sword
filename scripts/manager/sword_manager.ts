@@ -1,5 +1,5 @@
 import { ContextType, GameContext } from '../other/context.js';
-import { Item, Observer, Piece, PieceItem, Sword, SwordItem, TestResult, UnknownItem } from '../other/entity.js';
+import { Item, Observer, Piece, Sword, TestResult, UnknownItem } from '../other/entity.js';
 import { Game } from '../other/main.js';
 import { StatID } from './stat_manager.js';
 

@@ -1,6 +1,6 @@
-import { StatID } from './stat_manager.js';
-import { Observer, Item, PieceItem, Recipe, MoneyItem, SwordItem, RepairPaperItem, GameContext, ContextType } from '../other/entity.js';
+import { Observer, Item, PieceItem, Recipe, MoneyItem, SwordItem, RepairPaperItem } from '../other/entity.js';
 import { Game } from '../other/main.js';
+import { ContextType, GameContext } from '../other/context.js';
 
 export class MakingManager extends Observer {
 

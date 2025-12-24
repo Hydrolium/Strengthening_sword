@@ -1,6 +1,7 @@
 import { onClickSwordInfoButton } from "../other/click_events.js";
+import { GameContext } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
-import { Color, ContextType, GameContext, Item, Sword, SwordItem, UnknownItem } from "../other/entity.js";
+import { Color, Item, Sword, SwordItem, UnknownItem } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { ColoredText, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";

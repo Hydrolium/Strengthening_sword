@@ -1,5 +1,6 @@
-import { Observer, PieceItem, Recipe, MoneyItem, SwordItem, RepairPaperItem, ContextType } from '../other/entity.js';
+import { Observer, PieceItem, Recipe, MoneyItem, SwordItem, RepairPaperItem } from '../other/entity.js';
 import { Game } from '../other/main.js';
+import { ContextType } from '../other/context.js';
 export class MakingManager extends Observer {
     constructor(recipes) {
         super();

@@ -1,5 +1,5 @@
+import { ContextType } from "../other/context.js";
 import { $, createElementWith } from "../other/element_controller.js";
-import { ContextType } from "../other/entity.js";
 import { Refreshable } from "./screen.js";
 export class RecordStorage extends Refreshable {
     constructor() {

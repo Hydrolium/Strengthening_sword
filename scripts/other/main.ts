@@ -11,8 +11,8 @@ import { MakingScreen } from "../screen/making_screen.js";
 import { MoneyDisplay } from "../screen/money_display.js";
 import { RecordStorage } from "../screen/record_storage.js";
 import { StatScreen } from "../screen/stat_screen.js";
+import { ContextType } from "./context.js";
 import { $, createImageWithSrc, hide } from "./element_controller.js";
-import { ContextType } from "./entity.js";
 
 export class Game {
 

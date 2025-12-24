@@ -1,4 +1,5 @@
-import { Observer, Color, TestResult, GameContext, ContextType } from '../other/entity.js';
+import { GameContext } from '../other/context.js';
+import { Observer, Color, TestResult } from '../other/entity.js';
 import { Game } from '../other/main.js';
 
 export type StatClass = new (

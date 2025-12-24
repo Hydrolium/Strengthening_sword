@@ -1,7 +1,8 @@
 import { StatID } from "../manager/stat_manager.js";
 import { SwordManager } from "../manager/sword_manager.js";
+import { ContextType } from "./context.js";
 import { $, hide } from "./element_controller.js";
-import { ContextType, Item, MoneyItem, PieceItem, Recipe, SwordItem, TestResult } from "./entity.js";
+import { Item, MoneyItem, PieceItem, Recipe, SwordItem, TestResult } from "./entity.js";
 import { Game } from "./main.js";
 
 export const onClickCloseButton = (id: string) => hide($("#" + id));

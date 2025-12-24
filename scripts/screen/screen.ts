@@ -1,5 +1,5 @@
+import { GameContext } from "../other/context.js";
 import { $ } from "../other/element_controller.js";
-import { GameContext } from "../other/entity.js";
 import { Game } from "../other/main.js";
 
 export class Keyframes{
