@@ -1,0 +1,83 @@
+import { DataManager } from "../manager/data_manager.js";
+import { InventoryManager } from "../manager/inventory_manager.js";
+import { MakingManager } from "../manager/making_manager.js";
+import { StatManager } from "../manager/stat_manager.js";
+import { SwordManager } from "../manager/sword_manager.js";
+import { DeveloperMod } from "../screen/developer_mod.js";
+import { InformationScreen } from "../screen/information_screen.js";
+import { InventoryScreen } from "../screen/inventory_screen.js";
+import { MainScreen } from "../screen/main_screen.js";
+import { MakingScreen } from "../screen/making_screen.js";
+import { MoneyDisplay } from "../screen/money_display.js";
+import { RecordStorage } from "../screen/record_storage.js";
+import { StatScreen } from "../screen/stat_screen.js";
+import { $, createImageWithSrc, hide } from "./element_controller.js";
+import { ContextType } from "./entity.js";
+export class Game {
+    static init(start = 0) {
+        var _a;
+        hide($("#popup-message-box"));
+        Game.mainScreen.show();
+        (_a = Game.swordManager) === null || _a === void 0 ? void 0 : _a.jumpTo(start);
+    }
+}
+Game.startMoney = 500000;
+Game.Path = {};
+Game.Korean = {};
+async function loadAllImg(srcs) {
+    const promises = srcs.map(src => {
+        return new Promise((resolve) => {
+            var _a;
+            const created_img = createImageWithSrc(src);
+            created_img.onload = () => resolve();
+            created_img.onerror = () => {
+                console.warn(`load fail: ${src}`);
+                resolve();
+            };
+            (_a = $("#img-loadder")) === null || _a === void 0 ? void 0 : _a.appendChild(created_img);
+        });
+    });
+    await Promise.all(promises);
+}
+async function gameStart() {
+    Game.dataManager = new DataManager();
+    const data = await Game.dataManager.loadAllData();
+    if (data === null || data === void 0 ? void 0 : data.path)
+        Game.Path = data.path;
+    if (data === null || data === void 0 ? void 0 : data.korean)
+        Game.Korean = data.korean;
+    if (data == null)
+        return;
+    if (data.path != undefined) {
+        await loadAllImg(Object.values(data.path));
+    }
+    Game.swordManager = new SwordManager(data.sword);
+    Game.inventoryManager = new InventoryManager();
+    Game.makingManager = new MakingManager(data.recipe);
+    Game.statManager = new StatManager(data.stat);
+    Game.mainScreen = new MainScreen();
+    Game.informationScreen = new InformationScreen();
+    Game.inventoryScreen = new InventoryScreen();
+    Game.makingScreen = new MakingScreen();
+    Game.statScreen = new StatScreen();
+    Game.moneyDisplay = new MoneyDisplay();
+    Game.recordStorage = new RecordStorage();
+    Game.developerMod = new DeveloperMod();
+    Game.swordManager.subscribe(Game.mainScreen);
+    Game.swordManager.subscribe(Game.moneyDisplay);
+    Game.swordManager.subscribe(Game.recordStorage);
+    Game.inventoryManager.subscribe(Game.makingScreen);
+    Game.inventoryManager.subscribe(Game.inventoryScreen);
+    Game.inventoryManager.subscribe(Game.moneyDisplay);
+    Game.inventoryManager.subscribe(Game.recordStorage);
+    Game.makingManager.subscribe(Game.makingScreen);
+    Game.makingManager.subscribe(Game.moneyDisplay);
+    Game.makingManager.subscribe(Game.recordStorage);
+    Game.statManager.subscribe(Game.statScreen);
+    Game.inventoryManager.saveMoney(Game.startMoney, {
+        type: ContextType.SYSTEM_MONEY_GIFT,
+        money: Game.startMoney
+    });
+    Game.init();
+}
+gameStart();

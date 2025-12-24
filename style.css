@@ -1,0 +1,342 @@
+:root {
+  --color-sky: rgb(49, 195, 221);
+  --color-blue: rgb(45, 119, 240);
+  --color-dark-blue: rgb(42, 35, 176);
+  --color-purple: rgb(194, 45, 240);
+  --color-red: rgb(255, 57, 57);
+  --color-gold: rgb(238, 155, 0);
+  --color-dark-gold: rgb(130, 84, 0);
+  --color-green: rgb(0, 140, 33);
+  --color-brown: rgb(151, 88, 32);
+  --color-navy: rgb(61, 0, 202);
+  --color-white: rgb(243, 243, 243);
+  --color-black: rgb(22, 22, 22);
+  --color-dark-gray: rgb(61, 61, 61);
+  --color-gray: rgb(130, 130, 130);
+  --color-light-gray: rgb(199, 199, 199);
+}
+* {font-family: 'Do Hyeon';text-align: center;user-select: none;word-break: keep-all;margin: 0;padding: 0;box-sizing: border-box;}
+body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hidden}
+.main_header {width: 100%;display: flex;justify-content: center;align-items: center;}
+.main_header h1 {width: fit-content;background: linear-gradient(to right, var(--color-red), var(--color-gold));-webkit-background-clip: text;-webkit-text-fill-color: transparent;font-size:2.75rem;}
+#logo-chb + label {width: 200px;height: 140px;position: relative;cursor: pointer;}
+#logo-chb + label .main_logo {width: 200px;}
+#logo-chb + label .sub_logo {position: absolute;width: 50px;}
+#logo-chb + label .left_sword {transform: rotate(148deg);left: 21px;top: 19px;z-index: -1;transition: all .1s;}
+#logo-chb + label .right_sword {transform: rotate(213deg);right: 13px;top: 17px;z-index: -1;transition: all .1s;}
+#logo-chb:checked + label .main_logo,
+#logo-chb + label:hover .main_logo {animation: .3s linear both pop;}
+#logo-chb:checked + label .left_sword,
+#logo-chb + label:hover .left_sword {transform: scale(1.2) rotate(327deg) translate(-6px, -10px);transition: all 0.35s;}
+#logo-chb:checked + label .right_sword,
+#logo-chb + label:hover .right_sword {transform: scale(1.2) rotate(39deg) translate(8px, -10px);transition: all 0.35s;}
+@keyframes pop {0%{transform: scale(1);}75%{transform: scale(1.2);}100%{transform: scale(1.15);}}
+#toturial-button {display: none;}
+#toturial-button + label {width: 50px;height: 50px;position: fixed;top: 10px;right: 10px;border: 3px solid var(--color-green);border-radius: 50px;overflow: hidden;transition: all .3s;cursor: pointer;z-index: 11;}
+#toturial-button:checked + label {border-color: var(--color-sky);}
+#toturial-button + label span {position: absolute;top: 50%;left: 50%;color: white;font-size: 0.85rem;transform: translate(-50%, -50%);text-shadow: -1px -1px 0px var(--color-green),-1px 1px 0px var(--color-green),1px 1px 0px var(--color-green),1px -1px 0px var(--color-green),-1px 0px 0px var(--color-green),1px 0px 0px var(--color-green),0px 1px 0px var(--color-green),0px -1px 0px var(--color-green);}
+#toturial-button:checked + label span {text-shadow: -1px -1px 0px var(--color-sky),-1px 1px 0px var(--color-sky),1px 1px 0px var(--color-sky),1px -1px 0px var(--color-sky),-1px 0px 0px var(--color-sky),1px 0px 0px var(--color-sky),0px 1px 0px var(--color-sky),0px -1px 0px var(--color-sky);}
+#toturial-button + label span::after {content: '튜토리얼';}
+#toturial-button:checked + label span::after {content: '돌아가기';}
+#toturial-button + label img {width: 100%;height: 100%;}
+#toturial-button:checked + label img.first {display: none;} 
+#toturial-button + label:hover {transform: scale(1.1);}
+.html_window {width: 100vw;height: 100vh;position: fixed;top: 0;left: 0;background-color: var(--color-white);z-index: 10;display: none;}
+#toturial-button:checked ~ .html_window {display: block;}
+.main_main {display: flex;flex-direction: column;justify-content: center;align-items: center;height: 100%;}
+.swordbox {display: flex;flex-direction: column;justify-content: space-between;align-items: center;}
+.swordbox img {width: 256px;border-radius: 50%;margin-bottom: 3%;filter: drop-shadow(2vmin 2vmin 2vmin var(--color-dark-gray));transition: all 0.3s;}
+.swordbox img:hover {transform: scale(1.2);border-radius: 0;transition: all 0.3s;}
+.swordbox .infomation {display: flex;flex-direction: column;align-items: center;}
+#sword-number {font-size: 1.75rem; color: var(--color-dark-gray);}
+#sword-number.hightlight {color: var(--color-red);}
+#sword-number::after {content: "강";}
+#sword-number.hightlight::after {content: "강 (MAX)";}
+#sword-name {font-size: 2.25rem; color: var(--color-gold);}
+#sword-prob{font-size: 1.25rem; color: var(--color-dark-gray);}
+#sword-prob::before {content: "강화 불가";}
+#sword-prob::after {content: "";}
+#sword-prob[enabled=true]::before {content: "강화 성공 확률: ";}
+#sword-prob[enabled=true]::after {content: "%";}
+#sword-cost, #sword-price {font-size: 1rem; color: var(--color-dark-gray);}
+#sword-cost[enabled=true]::before {content: "강화 비용: ";}
+#sword-cost[enabled=true]::after {content: "원";}
+#sword-price::before {content: "판매 가격: ";}
+#sword-price::after {content: "원";}
+.buttons {display: flex;justify-content: center;margin-top: 0.5rem;}
+.buttons.end_sort {width: 240px;justify-content: flex-end;}
+.buttons a {
+  width: 70px;height: 70px;border-radius: 50%;overflow: hidden;position: relative;cursor: pointer;transition: all .3s;margin: 0 5px;
+}
+.buttons a.hide {visibility: hidden;}
+.buttons a.red {
+  border: 4px solid var(--color-red);
+  color: var(--color-red);
+}
+.buttons a.green {
+  border: 4px solid var(--color-green);
+  color: var(--color-green);
+}
+.buttons a.sky {
+  border: 4px solid var(--color-sky);
+  color: var(--color-sky);
+}
+.buttons a.blue {
+  border: 4px solid var(--color-blue);
+  color: var(--color-blue);
+}
+.buttons a.navy {
+  border: 4px solid var(--color-navy);
+  color: var(--color-navy);
+}
+.buttons a.purple {
+  border: 4px solid var(--color-purple);
+  color: var(--color-purple);
+}
+.buttons a.dark_blue {
+  border: 4px solid var(--color-dark-blue);
+  color: var(--color-dark-blue);
+}
+.buttons a.brown {
+  border: 4px solid var(--color-brown);
+  color: var(--color-brown);
+}
+.buttons a.gold {
+  border: 4px solid var(--color-gold);
+  color: var(--color-gold);
+}
+.buttons a.title.dark_gray {
+  border: 4px solid var(--color-dark-gray);
+  color: var(--color-dark-gray);
+}
+.buttons a:hover {transform: scale(1.1);transition: all 0.3s;}
+.buttons a:active {filter: brightness(0.7);transform: scale(1.0);}
+.buttons a:hover.rotate > img {transform: scale(1.5) rotate(0.2turn);transition: all 0.5s;}
+.buttons a:hover.increase > img {transform: scale(1.25);transition: all 0.5s;}
+.buttons a:hover.turning > img {animation: turn 2s linear infinite;}
+.buttons a:hover.decrease > img {transform: scale(0.75);transition: all 0.5s;}
+@keyframes turn {0% {transform: rotate(0);} 100% {transform: rotate(-360deg);}}
+.buttons a > img {position: absolute;top: 0;left: 0;height: 100%;transition: all 0.5s;}
+.buttons a.toleft > img {transform: translateX(-5%);}
+.buttons a.tobottom > img {transform: translateY(3%);}
+.buttons a > span {position: absolute;top: 50%;left: 50%;width: 100%;transform: translate(-50%, -50%); background-color: rgba(255, 255, 255, 0.6);font-size: 1.25rem;font-weight: bold;}
+.message {position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;backdrop-filter: blur(2px);background-color: rgba(255, 255, 255, 0.9);z-index: 2;}
+.message .message_main {position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 100%;display: flex;flex-direction: column;align-items: center;}
+.message .message_main .text {display: flex;flex-direction: column;align-items: center;}
+.message .message_main .text .popup_icon {width: 60px; height: 60px;transition: all 0.5s;cursor: pointer;}
+.message .message_main .text .popup_icon:hover {transform: scale(6);}
+.message .message_main .text .title {font-size: 2rem;}
+.message .message_main .text .title.red {color: var(--color-red);}
+.message .message_main .text .title.green {color: var(--color-green);}
+.message .message_main .text .title.sky {color: var(--color-sky);}
+.message .message_main .text .title.blue {color: var(--color-blue);}
+.message .message_main .text .title.navy {color: var(--color-navy);}
+.message .message_main .text .title.purple {color: var(--color-purple);}
+.message .message_main .text .title.dark_blue {color: var(--color-dark-blue);}
+.message .message_main .text .title.brown {color: var(--color-brown);}
+.message .message_main .text .title.gold {color: var(--color-gold);}
+.message .message_main .text .title.dark_gray {color: var(--color-dark-gray);}
+.message .message_main .text .subtitle {font-size: 1.75rem;}
+.message .message_main .text .paragraph {display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 1rem 0; padding: 1rem 0; width: 100%; border-bottom: var(--color-dark-gray) 1px solid; border-top: var(--color-dark-gray) 1px solid;}
+.message .message_main .text .paragraph p {margin:0.25rem; font-size: 1.4rem; color: var(--color-dark-gray);}
+.message .message_main .text .footer {margin: 1rem 0 0 0;font-size: 1.5rem;}
+.message .message_main .text .footer.red {color: var(--color-red);}
+.message .message_main .text .footer.green {color: var(--color-green);}
+.message .message_main .text .footer.sky {color: var(--color-sky);}
+.message .message_main .text .footer.blue {color: var(--color-blue);}
+.message .message_main .text .footer.navy {color: var(--color-navy);}
+.message .message_main .text .footer.purple {color: var(--color-purple);}
+.message .message_main .text .footer.dark_blue {color: var(--color-dark-blue);}
+.message .message_main .text .footer.brown {color: var(--color-brown);}
+.message .message_main .text .footer.gold {color: var(--color-gold);}
+.message .message_main .text .footer.title.dark_gray {color: var(--color-dark-gray);}
+
+.dropped_piece_info {display: flex;align-items: flex-end;justify-content: center;}
+.dropped_piece_info img {width: 2rem;height: 2rem;margin-right: 0.25rem;transition: all 0.2s;cursor: pointer;}
+.dropped_piece_info img:hover {transform: scale(3);transition: all 0.5s;}
+.dropped_piece_info span.name {font-size: 1.4rem;color: var(--color-black);}
+.dropped_piece_info span.count {font-size: 1.5rem;color: var(--color-gold);}
+.dropped_piece_info span.count::before {content: "x";margin: 0.3rem;color: var(--color-black);font-size: 1.4rem;}
+
+.colored_text.red {color: var(--color-red);}
+.colored_textgreen {color: var(--color-green);}
+.colored_text.sky {color: var(--color-sky);}
+.colored_text.blue {color: var(--color-blue);}
+.colored_text.navy {color: var(--color-navy);}
+.colored_text.purple {color: var(--color-purple);}
+.colored_text.dark_blue {color: var(--color-dark-blue);}
+.colored_text.brown {color: var(--color-brown);}
+.colored_text.gold {color: var(--color-gold);}
+.colored_text.dark_gray {color: var(--color-dark-gray);}
+
+.main_footer {display: flex;justify-content: space-between;align-items: flex-end;width: 100vw;padding: 0.5rem;}
+.main_footer ul {width: 210px;display: flex;justify-content: space-around;}
+.main_footer ul li {list-style: none;}
+.main_footer ul li a {display: flex;flex-direction: column;align-items: center;cursor: pointer;}
+.main_footer ul li a:hover {transform: scale(1.1);}
+.main_footer ul li a:active {transform: scale(0.9);}
+.main_footer ul li a .icon {width: 35px;height: 35px;display: inline-block;position: relative;overflow: hidden;}
+.main_footer ul li a .icon > img {width: 500%;height: 100%;position: absolute;}
+.main_footer ul li a .icon.information > img {left: 0;}
+.main_footer ul li a .icon.inventory > img {left: -100%;}
+.main_footer ul li a .icon.making > img {left: -200%;}
+.main_footer ul li a .icon.stat > img {left: -300%;}
+.main_footer ul li a .icon.sword > img {left: -400%;}
+.main_footer .coinbox {text-align: end;word-break: keep-all;font-size: 1.5rem;position: relative;}
+.main_footer .coinbox #money-number {color: var(--color-gold);}
+.main_footer .coinbox #money-change {position: absolute;top: 0;right: 0;color: var(--color-dark-gold);opacity: 0;}
+.main_footer .coinbox:hover > #money-record {transform: translateY(-100%);opacity: 0.8;transition: all 0.5s;}
+.main_footer .coinbox #money-record {position: absolute;top: 0;opacity: 0;transform: translateY(100%);background-color: var(--color-white);padding: 0 1rem;width: 100%;border: solid 2px black;border-bottom: none;font-size: 1rem;transition: all 0.3s;}
+.main_footer .coinbox:hover > #money-record .record_title {margin-bottom: 1rem;}
+.window {width: 100%;height: 100%;display: grid;grid-template-columns: 1fr;grid-template-rows: 1fr 9fr;place-items: center;}
+.window > header {font-size: 1.5rem;}
+.inventory_window main {display: flex;flex-wrap: wrap;justify-content: flex-start;width: 90%;height: 100%;max-width: 550px;max-height: 450px;overflow: hidden scroll;gap: 8px;}
+.inventory_window main.empty_inventory {flex-direction: column;justify-content: flex-start;align-items: center;width: 300px;row-gap: 20px;height: 70%;overflow: unset;}
+.inventory_window main .no_item {color: var(--color-dark-gray);font-size: 1.05rem;}
+.inventory_window main .item_group {width: 100%;display: flex;flex-wrap: wrap;justify-content: space-between;height: fit-content;}
+.inventory_window main .item_group .underline {width: 100%;height:1.75rem;border: solid 3px var(--color-dark-gray);font-size: 1.1rem;}
+.inventory_window main .item_group .underline.bok::after {content: "복구권";color: var(--color-gold);}
+.inventory_window main .item_group .underline.pie::after {content: "조각";color: var(--color-green);}
+.inventory_window main .item_group .underline.swo::before {content: "검";color: var(--color-blue);}
+.inventory_window main .item_group .underline.swo::after {content: " (마우스를 아이콘 위에 올려 메뉴 확인)";font-size: 0.9rem;color: var(--color-dark-gray);}
+.inventory_window main .item_group .group {display: grid;grid-template-columns: 1fr 2fr 1fr;width: 230px;height: 54px;align-items: center;margin: 0.5rem;}
+.inventory_window main .item_group .group .item {width: 50px;height: 50px;background-image: url("images/ui/frames/item_frame.png");background-size: contain;position: relative;cursor: pointer;}
+.inventory_window main .item_group .group .item img {width: 80%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.5s;}
+.inventory_window main .item_group .group .item img:hover,
+.inventory_window main .item_group .group .item .hover_sell:hover + img {width: 100%;transition: all 0.1s;}
+.inventory_window main .item_group .group .item_count::before {content: "x ";}
+.inventory_window main .item_group .group .item .hover_sell {
+  position: absolute;top: 0;left: 0;z-index: 1;
+  width: 100%;
+  height: 100%;opacity: 0;transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.inventory_window main .item_group .group .item .hover_sell:hover {opacity: 1;background-color: rgba(0, 0, 0, 0.5);}
+
+.inventory_window main .item_group .group .item .hover_sell span {
+
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-white);
+  opacity: 0.5;
+  text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);
+  transition: all .1s;
+}
+
+.inventory_window main .item_group .group .item .hover_sell span:hover {
+  opacity: 1;
+  transform: scale(1.6);
+}
+
+.inventory_window main .item_group .group .item .hover_sell span:first-child:hover {
+  color: var(--color-gold);
+}
+
+.inventory_window main .item_group .group .item .hover_sell span:nth-child(2):hover {
+  color: var(--color-sky);
+}
+
+.inventory_window main .item_group .group .item .hover_sell span:last-child:hover {
+  color: var(--color-red);
+}
+
+.inventory_window main .item_group .group .item_name {font-size: 1.25rem;}
+.inventory_window main .item_group .group .item_count {font-size: 1.2rem;text-align: center;}
+.sword_book_window main {display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;max-height: 440px;}
+.sword_book_window main header {font-size: 1.5rem;}
+.sword_book_window main header span {color: var(--color-gold);margin: 0.25rem;font-size: 2rem;}
+.sword_book_window main .swords {display: flex;justify-content: center;flex-wrap: wrap;gap: 8px;margin: 0 8px;width: 100%;max-width: 400px;}
+.sword_book_window main .swords .sword_icon {width: 15%;padding-bottom: 15%;display: flex;justify-content: center;align-items: center;position: relative;cursor: pointer;transition: all 0.1s;}
+.sword_book_window main .swords .sword_icon.sword {background: center / contain url("images/ui/frames/item_frame.png");}
+.sword_book_window main .swords .sword_icon.unknown {background: center / contain url("images/ui/frames/sword_frame.png");}
+.sword_book_window main .swords .sword_icon img {width: 90%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.3s;}
+.sword_book_window main .swords .sword_icon .sword_name {position: absolute;bottom: 0;left: 50%;transform: translate(-50%, 50%);color: white;font-size: 1rem;opacity: 0;line-height: 90%;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
+.sword_book_window main .swords .sword_icon.sword:hover {transform: scale(1.2);transition: all 0.5s;z-index: 1;}
+.sword_book_window main .swords .sword_icon.sword:hover img {transform: translate(-50%, -50%) scale(1.3);transition: all 0.3s;}
+.sword_book_window main .swords .sword_icon.sword:hover .sword_name {opacity: 1;transition: all 0.3s;}
+.sword_book_window main .swords .sword_icon.unknown:hover {transform: scale(0.8);transition: all 0.5s;z-index: 1;}
+.sword_book_window main .swords .sword_icon.unknown:hover img {transform: translate(-50%, -50%) scale(0.7);transition: all 0.3s;}
+.maker_window main {height: 100%;display: flex;flex-direction: column;justify-content: space-evenly;align-items: center;}
+.maker_window main .select_box {list-style: none;display: flex;justify-content: center;position: relative;}
+.maker_window main .select_box li {width: 70px;height: 40px;}
+.maker_window main .select_box li input {display: none;}
+.maker_window main .select_box li label {display: flex;justify-content: center;align-items: center;width: 100%;height: 100%;font-size: 1.25rem;cursor: pointer;transition: all .2s;}
+.maker_window main .select_box li:first-child label {color: var(--color-blue);}
+.maker_window main .select_box li:nth-child(2) label {color: var(--color-purple);}
+.maker_window main .select_box li input:checked + label {font-size: 1.5rem;}
+.maker_window main .select_box li .underline {position: absolute;width: 70px;height: 5px;background-color: var(--color-purple);bottom: 0;transform: translateX(50%);transition: all .2s;}
+.maker_window main .select_box li:first-child input:checked ~ .underline {background-color: var(--color-blue);transform: translateX(-50%);}
+.maker_window main .recipe_box {width: 90%;max-width: 600px;height: 80%;max-height: 400px;position: relative;overflow: hidden;}
+.maker_window main .recipe_box .recipes {display: flex;justify-content: center;flex-wrap: wrap;width: 100%;height: 100%;overflow: hidden scroll;gap: 8px;transition: all .3s;}
+.maker_window main .recipe_box .recipes:last-child {position: absolute;top: 0;left: 100%;}
+.maker_window main .recipe_box .recipes.active {transform: translateX(-100%);}
+.maker_window main .recipe_box .recipes .group {display: grid;grid-template-columns: 4fr 2fr 1fr;width: 100%;max-width: 400px;align-items: center;position: relative;}
+.maker_window main .recipe_box .recipes .group .material {display: flex;justify-content: space-between;padding: 4px;border: solid 4px var(--color-gray);border-radius: 4px;}
+.maker_window main .recipe_box .recipes .group .material.one {justify-content: center;}
+.maker_window main .recipe_box .recipes .group .result {display: flex;justify-content: center;}
+.maker_window main .recipe_box .recipes .group .material .item {width: 50px;height: 50px;background-image: url("images/ui/frames/item_frame.png");background-size: contain;position: relative;}
+.maker_window main .recipe_box .recipes .group .result .item {width: 55px;height: 55px;background-image: url("images/ui/frames/result_frame.png");background-size: contain;position: relative;}
+.maker_window main .recipe_box .recipes .group .item img {width: 90%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.3s;}
+.maker_window main .recipe_box .recipes .group .result .item img {filter: drop-shadow(2px 2px 3px var(--color-light-gray));}
+.maker_window main .recipe_box .recipes .group .item .count {position: absolute;bottom: -10%;left: 50%;transform: translateX(-50%);font-size: 16px;color: var(--color-white);pointer-events: none;transition: opacity 0.3s;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
+.maker_window main .recipe_box .recipes .group .item .count.unable {color: var(--color-red);text-shadow: -1px -1px 0px var(--color-white),-1px 1px 0px var(--color-white),1px 1px 0px var(--color-white),1px -1px 0px var(--color-white),-1px 0px 0px var(--color-white),1px 0px 0px var(--color-white),0px 1px 0px var(--color-white),0px -1px 0px var(--color-white);}
+.maker_window main .recipe_box .recipes .group .material .item img:hover {width: 110%;}
+.maker_window main .recipe_box .recipes .group .item .name {position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);font-size: 17px;text-align: center;color: var(--color-white);pointer-events: none;opacity: 0;transition: opacity 0.3s;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
+.maker_window main .recipe_box .recipes .group .result .item img:hover {filter: brightness(0.7);}
+.maker_window main .recipe_box .recipes .group .item img:hover ~ .name {opacity: 1;}
+.maker_window main .recipe_box .recipes .group .item img:hover ~ .count {opacity: 0;}
+.maker_window main .recipe_box .recipes .group button {background-color: var(--color-white);width: 50px;height: 50px;font-size: 1.25rem;border-radius: 2.4px;box-shadow:inset 0 -9.6px 0 -5.6px rgba(0,0,0,0.2);text-align:center;border: solid 2px var(--color-black);cursor: pointer;transition: color, background-color .3s;}
+.maker_window main .recipe_box .recipes .group button.blue {color: var(--color-blue);}
+.maker_window main .recipe_box .recipes .group button.purple {color: var(--color-purple);}
+.maker_window main .recipe_box .recipes .group button:disabled {background-color: var(--color-light-gray);color: var(--color-dark-gray);font-size: 1.1rem;transform: scale(0.9);}
+.maker_window main .recipe_box .recipes .group button:disabled::after {content: " 불가";}
+.maker_window main .recipe_box .recipes .group button:not(:disabled):hover {color: var(--color-white);}
+.maker_window main .recipe_box .recipes .group button.blue:not(:disabled):hover {background-color: var(--color-blue);}
+.maker_window main .recipe_box .recipes .group button.purple:not(:disabled):hover {background-color: var(--color-purple);}
+.maker_window main .recipe_box .recipes .group button:active {transform: scale(0.9);}
+.tip {font-size: 1rem;color: var(--color-dark-gray);}
+.loading {display: none;width: 100vw;height: 100vh;position: fixed;top: 0;left: 0;z-index: 1;background: rgba(243, 243, 243, 0.7);}
+.loading .lodding_img {width: 100px;height: 100px;position: fixed;z-index: 3;top: 50%;left: 50%;transform: translate(calc(-50% - 38.4765625px), -50%);transform-origin: 76.953125px 100px;}
+.loading .lodding_img img {width: 100%;height: 100%;opacity: 0.8;}
+.stat_window main {max-width: 750px;height: 470px;display: flex;flex-direction: column;justify-content: space-between;}
+.stat_window main .stat_point {font-size: 1.3rem;}
+.stat_window main .stat_point #stat-point-count {font-size: 2rem;color: var(--color-gold);}
+.stat_window main .stats {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;width: 100%;height: 80%;overflow: hidden scroll;}
+.stat_window main .stats .stat {display: flex;flex-direction: column;align-items: center;justify-content: space-between;width: 200px;height: 160px;margin: 10px 20px;}
+.stat_window main .stats .stat .icon {width: 70px;height: 70px;position: relative;cursor: pointer;}
+.stat_window main .stats .stat .icon img {width: 100%;height: 100%;border-radius: 50%;border: solid 5px;transition: all .3s;}
+.stat_window main .stats .stat.blue .icon img {border-color: var(--color-blue);}
+.stat_window main .stats .stat.red .icon img {border-color: var(--color-red);}
+.stat_window main .stats .stat.purple .icon img {border-color: var(--color-purple);}
+.stat_window main .stats .stat.green .icon img {border-color: var(--color-green);}
+.stat_window main .stats .stat.sky .icon img {border-color: var(--color-sky);}
+.stat_window main .stats .stat.navy .icon img {border-color: var(--color-navy);}
+.stat_window main .stats .stat .icon .stat_up {width: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);opacity: 0;transition: all .3s;}
+.stat_window main .stats .stat .icon .stat_up::before {content: "스탯 강화";color: var(--color-white);font-size: 1.2rem;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
+.stat_window main .stats .stat .icon:hover img {filter: brightness(0.6);transform: scale(1.1);}
+.stat_window main .stats .stat .icon:active img {transform: scale(0.9);}
+.stat_window main .stats .stat .icon:hover .stat_up {opacity: 1;}
+.stat_window main .stats .stat .level {margin: 0.4rem 0;}
+.stat_window main .stats .stat .level ul {list-style: none;display: flex;justify-content: space-around;}
+.stat_window main .stats .stat .level ul .point {width: 12px;height: 12px;background-color: #194d3d;border: solid 2.5px #3b4312;border-radius: 50%;margin: 0 1px;}
+.stat_window main .stats .stat .level ul .point.active {background-color: #5FD7B1;border: solid 2.5px #8C9949;transition: all .3s;}
+.stat_window main .stats .stat .level ul .point.active:hover,
+.stat_window main .stats .stat .level ul .point.active:hover ~ .point.active {transform: scale(1.2);}
+.stat_window main .stats .stat .info {border-radius: 5px;padding: 0 1rem;pointer-events: none;}
+.stat_window main .stats .stat .info .name {font-size: 1.2rem;}
+.stat_window main .stats .stat.blue .info .name {color: var(--color-blue);}
+.stat_window main .stats .stat.red .info .name {color: var(--color-red);}
+.stat_window main .stats .stat.purple .info .name {color: var(--color-purple);}
+.stat_window main .stats .stat.green .info .name {color: var(--color-green);}
+.stat_window main .stats .stat.sky .info .name {color: var(--color-sky);}
+.stat_window main .stats .stat.navy .info .name {color: var(--color-navy);}
+.stat_window main .stats .stat .info .description {font-size: 1rem;color: var(--color-dark-gray);}
+.stat_window main .stats .stat .info .detail {font-size: 1rem;color: var(--color-light-gray);list-style: none;display: flex;justify-content: center;align-items: center;}
+.stat_window main .stats .stat .info .detail li:not(:first-child):before {content: ">";font-size: 1.1rem;color: var(--color-gray);margin: 0 0.2rem;}
+.stat_window main .stats .stat .info .detail li.active {color: var(--color-red);}
+#developer-mod-button {position: fixed;top: 0;right: 0;width: 20px;height: 20px;}

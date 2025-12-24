@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>검 강화하기</title>
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon:400" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css"/>
+    <link type="image/x-icon" rel="shortcut icon" href="images/swords/dagger.png"/>
+
+    <script type="module" src="./scripts/js/other/main.js"></script>
+  </head>
+  <body ondragstart="return false">
+    <header class="main_header">
+      <h1>검 강화하기</h1>
+      <!-- <input type="checkbox" id="logo-chb" hidden> <label for="logo-chb"> <img class="main_logo" src="images/logo/word.png"> <img class="sub_logo left_sword" src="images/logo/sword1.png"> <img class="sub_logo right_sword" src="images/logo/sword2.png"> </label> -->
+      <input type="checkbox" id="toturial-button">
+      <label for="toturial-button">
+        <span></span>
+        <img src="images/ui/tutorial.png" alt="tutorial" class="first">
+        <img src="images/swords/dagger.png" alt="main game" class="second">
+      </label>
+      <iframe class='html_window' id="html-window" src="tutorial.html"></iframe>
+    </header>
+    <main class="main_main" id="main-body"></main>
+    <footer class="main_footer">
+      <ul>
+        <li><a id="main-game-button"><div class="icon sword"><img src="images/ui/icons.png" alt="검강화" /></div>검강화</a></li>
+        <li><a id="information-button"><div class="icon information"><img src="images/ui/icons.png" alt="검도감" /></div>검도감</a></li>
+        <li><a id="inventory-button"><div class="icon inventory"><img src="images/ui/icons.png" alt="보관함" /></div>보관함</a></li>
+        <li><a id="making-button"><div class="icon making"><img src="images/ui/icons.png" alt="제작소" /></div>제작소</a></li>
+        <li><a id="stat-button"><div class="icon stat"><img src="images/ui/icons.png" alt="강화소" /></div>강화소</a></li>
+      </ul>
+      <div class="coinbox">
+        보유자산: <span id="money-number"></span>원 <span id="money-change"></span>
+        <div id="money-record"><p class="record_title">최근 기록</p><div id="records"></div></div>
+      </div>
+    </footer>
+    <template id="game-interface">
+      <div class="swordbox">
+        <img id="sword-image"/>
+        <section class="infomation"><span id="sword-number"></span> <span id="sword-name"></span> <span id="sword-prob"></span> <span id="sword-cost"></span> <span id="sword-price"></span></section>
+      </div>
+      <div id="main-game-button" class="buttons end_swort">
+        <a class="brown tobottom decrease hide" id="save-button"><img src="images/ui/buttons/save.png" alt="보관하기" /> <span>보관하기</span></a>
+        <a class="blue toleft rotate center" id="upgrade-button"><img src="images/ui/buttons/upgrade.png" alt="강화하기" /> <span>강화하기</span></a>
+        <a class="red increase hide" id="sell-button"><img src="images/ui/buttons/sell.png" alt="판매하기" /> <span>판매하기</span></a>
+      </div>
+      <!-- <div class="message" id="game-making-last-sword-message">
+        <div class="message_main">
+          <div class="text">
+            <div class="title">!히든 엔딩 달성!</div>
+            <div class="subtitle">달성 - 제작소에서 제국의 명령 제작하기</div>
+            <div class="paragraph"><p>창을 닫아도 게임은 계속됩니다.</p></div>
+          </div>
+          <div class="buttons"><a class="red_button rotate" id="making-last-sword-close-button"><img src="images/ui/buttons/close.png" alt="창 닫기" /><span>창 닫기</span></a></div>
+        </div>
+      </div> -->
+    </template>
+    <template id="inventory">
+      <div class="window inventory_window">
+        <header>보관함</header>
+        <main id="inventory-items"></main>
+      </div>
+    </template>
+    <template id="game-information">
+      <div class="window sword_book_window">
+        <header>검도감</header>
+        <main><header>현재 <span id="found-sword-count"></span>개의 검 발견</header><div class="swords" id="found-swords"></div></main>
+        <p class="tip">검을 클릭해 발견된 검의 상세 정보를 할 수 있습니다.</p>
+      </div>
+    </template>
+    <template id="making">
+      <div class="window maker_window">
+        <header>제작소</header>
+        <main>
+          <ul class="select_box">
+            <li>
+              <input type="radio" name="making_page" id="making-recipes" checked>
+              <label for="making-recipes"> 복구권 </label>
+              <span class="underline"></span>
+            </li>
+            <li>
+              <input type="radio" name="making_page" id="making-swords">
+              <label for="making-swords"> 검 제작 </label>
+            </li>
+          </ul>
+          <div class="recipe_box">
+            <section class="recipes" id="repair-recipes"></section>
+            <section class="recipes" id="sword-recipes"></section>
+          </div>
+        </main>
+        <p class="tip">발견되지 않은 검은 제작 가능하나, 발견 또는 제작 전에는 이름을 확인 할 수 없습니다.</p>
+      </div>
+    </template>
+    <template id="game-stat">
+      <div class="window stat_window">
+        <header>강화소</header>
+        <main>
+          <div class="stat_point"> 현재 스탯 포인트: <span id="stat-point-count">0</span>개</div>
+          <div class="stats" id="stat_box"></div>
+          <p class="tip">스탯 포인트는 새로운 검을 발견할 때마다 한개씩 지급됩니다.</p>
+        </main>
+      </div>
+    </template>
+    <div class="loading" id="maker-window-lodding"><div class="lodding_img"><img src="images/ui/buttons/make.png" alt="제작하기"/></div></div>
+    
+    <div id="developer-mod-button"></div>
+
+    <div id="popup-message-box" class="message" style="display: none;"></div>
+    <div id="img-loadder" style="display: none;"></div>
+  </body>
+</html>
