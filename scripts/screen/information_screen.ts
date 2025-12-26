@@ -1,19 +1,32 @@
 import { onClickSwordInfoButton } from "../other/click_events.js";
-import { GameContext } from "../other/context.js";
+import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
-import { Color, Item, Sword, SwordItem, UnknownItem } from "../other/entity.js";
+import { Color, SwordItem, UnknownItem } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { ColoredText, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
 
 export class InformationScreen extends Screen {
 
-    id = "game-information";
+    protected id = "game-information";
+
+    elements: {
+        foundSwords?: HTMLDivElement,
+        swordCount?: HTMLSpanElement
+    } = {};
+
+    override changeBody() {
+        super.changeBody();
+
+        this.elements.foundSwords = $<HTMLDivElement>("#found-swords");
+        this.elements.swordCount = $<HTMLSpanElement>("#found-sword-count");
+
+    }
 
     private makeIcon(item: SwordItem | UnknownItem): HTMLDivElement {
         const created_div = createElementWith<HTMLDivElement>("div", {classes: ["sword_icon", (item instanceof SwordItem) ? "sword" : "unknown"]});
 
-        created_div.appendChild(createImageWithSrc(Game.Path[item.id], item.name));
+        created_div.appendChild(createImageWithSrc(item.imgSrc, item.name));
 
         if(item instanceof SwordItem) {
             created_div.appendChild(createElementWith("span", {classes: ["sword_name"], text: item.name}));
@@ -23,18 +36,15 @@ export class InformationScreen extends Screen {
         return created_div;
     }
 
-    render(event?: GameContext) {
+    protected render(context?: GameContext) {
 
-        // if(event?.type != ContextType.INVENTORY) return;
+        if(context?.type != ContextType.FOUND_SWORDS) return;
 
-        const element_found_swords = $<HTMLDivElement>("#found-swords");
-        const element_sword_count = $<HTMLSpanElement>("#found-sword-count");
+        const created_found = context.swords.map(this.makeIcon);
 
-        const created_found = Game.swordManager.getAllSwords().map(this.makeIcon);
+        this.elements.foundSwords?.replaceChildren(...created_found);
 
-        element_found_swords.replaceChildren(...created_found);
-
-        element_sword_count.textContent = `${Game.swordManager.getFoundSwordCount()}`;
+        write(this.elements.swordCount, context.count);
     }
 
     popupSwordInfoMessage(id: string) {
@@ -43,16 +53,14 @@ export class InformationScreen extends Screen {
 
         const popup = new Popup();
 
-        popup.setIcon(Game.Path[id]);
+        popup.setIcon(sword.imgSrc);
 
-        popup.setTitlte(`<${sword.name}> 상세 정보`, Color.PURPLE);
+        popup.setTitle(`<${sword.name}> 상세 정보`, Color.PURPLE);
 
         popup.addParagraphElement(
             new ColoredText<HTMLParagraphElement>("p").add("강화 확률: ", Color.DARK_GRAY).add(sword.prob * 100, Color.GOLD).add("%", Color.DARK_GRAY).build()
         );
         
-        
-
         popup.addParagraphElement(
             new ColoredText<HTMLParagraphElement>("p").add("강화 비용: ", Color.DARK_GRAY).add(sword.cost, Color.GOLD).add("원", Color.DARK_GRAY).build()
         );
@@ -77,9 +85,9 @@ export class InformationScreen extends Screen {
             sword.pieces.forEach(
                 piece => {
                     const created_div = createElementWith("div", {classes: ["dropped_piece_info"]});
-                    created_div.appendChild(createImageWithSrc(Game.Path[piece.id]));
+                    created_div.appendChild(createImageWithSrc(piece.imgSrc));
                     created_div.appendChild(createElementWith("span", {classes: ["name"], text: piece.name}));
-                    created_div.appendChild(createElementWith("span", {classes: ["count"], text: `0~${piece.max_drop}개`}));
+                    created_div.appendChild(createElementWith("span", {classes: ["count"], text: `0~${piece.maxDrop}개`}));
 
                     popup.addParagraphElement(created_div);
                 }
@@ -92,7 +100,6 @@ export class InformationScreen extends Screen {
 
         popup.build();
         popup.show();
-
 
     }
 }

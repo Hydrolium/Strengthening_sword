@@ -3,6 +3,7 @@ export var ContextType;
     ContextType["MONEY_CHANGE"] = "MONEY_CHANGE";
     ContextType["SYSTEM_MONEY_GIFT"] = "SYSTEM_MONEY_GIFT";
     ContextType["SWORD"] = "SWORD";
+    ContextType["FOUND_SWORDS"] = "FOUND_SWORDS";
     ContextType["INVENTORY"] = "INVENTORY";
     ContextType["SWORD_UPGRADE"] = "SWORD_UPGRADE";
     ContextType["SWORD_SELL"] = "SWORD_SELL";

@@ -6,10 +6,12 @@ export function write(element, text) {
         element.textContent = `${text}`;
 }
 export function visible(element) {
-    element.style.visibility = "visible";
+    if (element)
+        element.style.visibility = "visible";
 }
 export function invisible(element) {
-    element.style.visibility = "hidden";
+    if (element)
+        element.style.visibility = "hidden";
 }
 export function createImageWithSrc(src, alt = "") {
     const img = new Image();
@@ -25,7 +27,7 @@ export function createElementWith(tag, attribute) {
     if (attribute.classes)
         element.classList.add(...attribute.classes);
     if (attribute.text)
-        element.textContent = attribute.text.toString();
+        element.textContent = `${attribute.text}`;
     if (attribute.id)
         element.id = attribute.id;
     return element;

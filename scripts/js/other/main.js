@@ -22,8 +22,6 @@ export class Game {
     }
 }
 Game.startMoney = 500000;
-Game.Path = {};
-Game.Korean = {};
 async function loadAllImg(srcs) {
     const promises = srcs.map(src => {
         return new Promise((resolve) => {
@@ -42,10 +40,6 @@ async function loadAllImg(srcs) {
 async function gameStart() {
     Game.dataManager = new DataManager();
     const data = await Game.dataManager.loadAllData();
-    if (data === null || data === void 0 ? void 0 : data.path)
-        Game.Path = data.path;
-    if (data === null || data === void 0 ? void 0 : data.korean)
-        Game.Korean = data.korean;
     if (data == null)
         return;
     if (data.path != undefined) {

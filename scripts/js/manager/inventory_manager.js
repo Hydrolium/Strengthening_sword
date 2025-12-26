@@ -4,10 +4,10 @@ import { Game } from '../other/main.js';
 export class InventoryManager extends Observer {
     constructor() {
         super(...arguments);
-        this.swords = new Storage(this, SwordItem);
-        this.pieces = new Storage(this, PieceItem);
+        this.swords = new Storage(this, SwordItem, () => Game.developerMod.infinityMaterial);
+        this.pieces = new Storage(this, PieceItem, () => Game.developerMod.infinityMaterial);
         this._money = 0;
-        this.repair_paper = 0;
+        this.repairPaper = 0;
     }
     get money() {
         return this._money;
@@ -15,17 +15,17 @@ export class InventoryManager extends Observer {
     set money(m) {
         this.notify({
             type: ContextType.MONEY_CHANGE,
-            changed_money: m - this._money,
-            having_money: m
+            changedMoney: m - this._money,
+            havingMoney: m
         });
         this._money = m;
     }
-    getRenderEvent() {
+    get inventoryContext() {
         return {
             type: ContextType.INVENTORY,
             swords: this.swords,
             pieces: this.pieces,
-            repair_papers: this.repair_paper
+            repairPapers: this.repairPaper
         };
     }
     hasMoney(money) {
@@ -47,16 +47,16 @@ export class InventoryManager extends Observer {
         return this.money;
     }
     hasRepairPaper(repair_paper) {
-        return this.repair_paper >= repair_paper;
+        return this.repairPaper >= repair_paper;
     }
     saveRepairPaper(repair_paper) {
-        this.repair_paper += repair_paper;
+        this.repairPaper += repair_paper;
     }
     takeRepairPaper(repair_paper) {
-        this.repair_paper -= repair_paper;
+        this.repairPaper -= repair_paper;
     }
     getRepairPaper() {
-        return this.repair_paper;
+        return this.repairPaper;
     }
     hasItems(items) {
         for (const item of items) {
@@ -83,9 +83,9 @@ export class InventoryManager extends Observer {
     }
     save(item) {
         if (item instanceof SwordItem)
-            this.swords.add(item.id, item.count);
+            this.swords.add(item);
         else if (item instanceof PieceItem)
-            this.pieces.add(item.id, item.count);
+            this.pieces.add(item);
     }
     sellSword(id) {
         if (this.swords.hasEnough(id, 1)) {
@@ -106,7 +106,7 @@ export class InventoryManager extends Observer {
             }
             this.swords.remove(id, 1);
             Game.swordManager.jumpTo(Game.swordManager.getIndex(id));
-            Game.mainScreen.show(Game.swordManager.getRenderEvent());
+            Game.mainScreen.show(Game.swordManager.swordContext);
         }
     }
     breakSword(id) {

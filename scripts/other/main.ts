@@ -1,7 +1,7 @@
 import { DataManager } from "../manager/data_manager.js";
 import { InventoryManager } from "../manager/inventory_manager.js";
 import { MakingManager } from "../manager/making_manager.js";
-import { StatID, StatManager } from "../manager/stat_manager.js";
+import { StatManager } from "../manager/stat_manager.js";
 import { SwordManager } from "../manager/sword_manager.js";
 import { DeveloperMod } from "../screen/developer_mod.js";
 import { InformationScreen } from "../screen/information_screen.js";
@@ -34,10 +34,6 @@ export class Game {
     static recordStorage: RecordStorage;
 
     static developerMod: DeveloperMod;
-
-    static Path: Record<string, string> = {};
-
-    static Korean: Record<string, string> = {};
 
     static currentScreenId: string;
 
@@ -74,9 +70,6 @@ async function gameStart() {
     Game.dataManager = new DataManager();
     
     const data = await Game.dataManager.loadAllData();
-
-    if(data?.path) Game.Path = data.path;
-    if(data?.korean) Game.Korean = data.korean;
 
     if(data == null) return;
 

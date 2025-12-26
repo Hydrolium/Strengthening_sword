@@ -9,67 +9,69 @@ export class StatScreen extends Screen {
     constructor() {
         super(...arguments);
         this.id = "game-stat";
+        this.elements = {};
     }
-    makeIconDiv(img_src, onclick) {
-        const created_icon_box = createElementWith("div", { classes: ["icon"] });
-        created_icon_box.addEventListener("click", onclick);
-        const created_stat_up = createElementWith("div", { classes: ["stat_up"] });
-        created_icon_box.appendChild(createImageWithSrc(img_src));
-        created_icon_box.appendChild(created_stat_up);
-        return created_icon_box;
+    changeBody() {
+        super.changeBody();
+        this.elements.statBox = $("#stat_box");
+        this.elements.statPointCount = $("#stat-point-count");
+    }
+    makeIconDiv(src, onclick) {
+        const created_iconBox = createElementWith("div", { classes: ["icon"] });
+        created_iconBox.addEventListener("click", onclick);
+        const created_statUpDiv = createElementWith("div", { classes: ["stat_up"] });
+        created_iconBox.appendChild(createImageWithSrc(src));
+        created_iconBox.appendChild(created_statUpDiv);
+        return created_iconBox;
     }
     ;
     makeLevelDiv(stat) {
-        const created_level_box = createElementWith("div", { classes: ["level"] });
+        const created_levelBox = createElementWith("div", { classes: ["level"] });
         const created_ul = createElement("ul");
         for (let i = 0; i < stat.getMaxLevel(); i++) {
-            const created_li_point = createElementWith("li", { classes: ["point"] });
+            const created_liPoint = createElementWith("li", { classes: ["point"] });
             if (i < stat.getCurrentLevel())
-                created_li_point.classList.add("active");
-            created_ul.appendChild(created_li_point);
+                created_liPoint.classList.add("active");
+            created_ul.appendChild(created_liPoint);
         }
-        created_level_box.appendChild(created_ul);
-        return created_level_box;
+        created_levelBox.appendChild(created_ul);
+        return created_levelBox;
     }
     ;
     makeInfoDiv(stat) {
-        const created_info_box = createElementWith("div", { classes: ["info"] });
-        const created_pname = createElementWith("p", { classes: ["name"] });
-        write(created_pname, stat.name);
-        const created_pdescription = createElementWith("p", { classes: ["description"] });
-        write(created_pdescription, stat.description);
+        const created_infoBox = createElementWith("div", { classes: ["info"] });
+        const created_pName = createElementWith("p", { classes: ["name"], text: stat.name });
+        const created_pDescription = createElementWith("p", { classes: ["description"], text: stat.description });
         const created_details = createElementWith("ul", { classes: ["detail"] });
         for (let i = 0; i < stat.getMaxLevel(); i++) {
-            const stat_li = createElement("li");
-            write(stat_li, stat.prefix + stat.values[i] + stat.suffix);
+            const stat_li = createElementWith("li", { text: stat.prefix + stat.values[i] + stat.suffix });
             if (stat.getCurrentLevel() == i + 1)
                 stat_li.classList.add("active");
             created_details.appendChild(stat_li);
         }
-        created_info_box.appendChild(created_pname);
-        created_info_box.appendChild(created_pdescription);
-        created_info_box.appendChild(created_details);
-        return created_info_box;
+        created_infoBox.appendChild(created_pName);
+        created_infoBox.appendChild(created_pDescription);
+        created_infoBox.appendChild(created_details);
+        return created_infoBox;
     }
     ;
     makeStatSection(stat) {
         const created_section = createElementWith("section", { classes: ["stat", stat.color] });
-        created_section.appendChild(this.makeIconDiv(Game.Path[stat.id], () => onStatUp(stat.id)));
+        created_section.appendChild(this.makeIconDiv(stat.imgSrc, () => onStatUp(stat.id)));
         created_section.appendChild(this.makeLevelDiv(stat));
         created_section.appendChild(this.makeInfoDiv(stat));
         return created_section;
     }
     ;
     render() {
-        const element_stat_box = $("#stat_box");
-        const element_stat_point_count = $("#stat-point-count");
+        var _a;
         const created_stb = Object.keys(StatID).map(stat => this.makeStatSection(Game.statManager.getStat(stat)));
-        element_stat_box.replaceChildren(...created_stb);
-        write(element_stat_point_count, Game.statManager.getStatPoint());
+        (_a = this.elements.statBox) === null || _a === void 0 ? void 0 : _a.replaceChildren(...created_stb);
+        write(this.elements.statPointCount, Game.statManager.getStatPoint());
     }
     popupMaxStatMessage() {
         const popup = new Popup();
-        popup.setTitlte("이미 최대로 강화된 스탯입니다!", Color.PURPLE);
+        popup.setTitle("이미 최대로 강화된 스탯입니다!", Color.PURPLE);
         popup.setSubTitle("다른 스탯을 강화해 보세요.");
         popup.addCloseButton();
         popup.build();
@@ -77,7 +79,7 @@ export class StatScreen extends Screen {
     }
     popupStatPointLackMessage() {
         const popup = new Popup();
-        popup.setTitlte("스탯 포인트가 부족합니다!", Color.RED);
+        popup.setTitle("스탯 포인트가 부족합니다!", Color.RED);
         popup.setSubTitle("새로운 검을 발견해 스탯 포인트를 얻어보세요.");
         popup.addCloseButton();
         popup.build();
@@ -85,7 +87,7 @@ export class StatScreen extends Screen {
     }
     popupGameAllStatMessage() {
         const popup = new Popup();
-        popup.setTitlte("모든 스탯을 끝까지 업그레이드 했습니다", Color.GOLD);
+        popup.setTitle("모든 스탯을 끝까지 업그레이드 했습니다", Color.GOLD);
         popup.setSubTitle("고대 룬의 마법이 당신과 함께합니다!");
         popup.addParagraphText("창을 닫아도 게임은 계속됩니다.");
         popup.addCloseButton();

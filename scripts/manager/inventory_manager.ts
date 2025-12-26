@@ -1,15 +1,15 @@
-import { ContextType, GameContext, ItemContext } from '../other/context.js';
+import { ContextType, GameContext, InventoryContext } from '../other/context.js';
 import { Observer, Storage, Item, SwordItem, PieceItem, MoneyItem, RepairPaperItem } from '../other/entity.js';
 import { Game } from '../other/main.js';
 
 export class InventoryManager extends Observer {
 
-    private swords: Storage<SwordItem> = new Storage<SwordItem>(this, SwordItem);
-    private pieces: Storage<PieceItem> = new Storage<PieceItem>(this, PieceItem);
+    private swords: Storage<SwordItem> = new Storage<SwordItem>(this, SwordItem, () => Game.developerMod.infinityMaterial);
+    private pieces: Storage<PieceItem> = new Storage<PieceItem>(this, PieceItem, () => Game.developerMod.infinityMaterial);
 
     private _money: number = 0;
 
-    private repair_paper: number = 0;
+    private repairPaper: number = 0;
 
     private get money(): number {
         return this._money;
@@ -19,19 +19,19 @@ export class InventoryManager extends Observer {
 
         this.notify({
             type: ContextType.MONEY_CHANGE,
-            changed_money: m - this._money,
-            having_money: m
+            changedMoney: m - this._money,
+            havingMoney: m
         });
 
         this._money = m;
     }
 
-    getRenderEvent(): ItemContext {
+    get inventoryContext(): InventoryContext {
         return {
             type: ContextType.INVENTORY,
             swords: this.swords,
             pieces: this.pieces,
-            repair_papers: this.repair_paper
+            repairPapers: this.repairPaper
         };
     }
 
@@ -55,16 +55,16 @@ export class InventoryManager extends Observer {
     }
 
     hasRepairPaper(repair_paper: number): boolean {
-        return this.repair_paper >= repair_paper;
+        return this.repairPaper >= repair_paper;
     }
     saveRepairPaper(repair_paper: number) {
-        this.repair_paper += repair_paper;
+        this.repairPaper += repair_paper;
     }
     takeRepairPaper(repair_paper: number) {
-        this.repair_paper -= repair_paper;
+        this.repairPaper -= repair_paper;
     }
     getRepairPaper(): number {
-        return this.repair_paper;
+        return this.repairPaper;
     }
 
     hasItems(items: Item[]): boolean {
@@ -96,8 +96,8 @@ export class InventoryManager extends Observer {
     }
 
     save(item: SwordItem | PieceItem) {
-        if (item instanceof SwordItem) this.swords.add(item.id, item.count);
-        else if (item instanceof PieceItem) this.pieces.add(item.id, item.count);
+        if (item instanceof SwordItem) this.swords.add(item);
+        else if (item instanceof PieceItem) this.pieces.add(item);
     }
 
     sellSword(id: string) {
@@ -127,7 +127,7 @@ export class InventoryManager extends Observer {
             this.swords.remove(id, 1);
             
             Game.swordManager.jumpTo(Game.swordManager.getIndex(id));
-            Game.mainScreen.show(Game.swordManager.getRenderEvent());
+            Game.mainScreen.show(Game.swordManager.swordContext);
 
         }
     }

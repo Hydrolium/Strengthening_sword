@@ -1,16 +1,16 @@
 import { ContextType, GameContext } from "../other/context.js";
-import { $, write } from "../other/element_controller.js";
+import { $ } from "../other/element_controller.js";
 import { Keyframes, Refreshable } from "./screen.js";
 
 export class MoneyDisplay extends Refreshable {
 
     animateChangingMoney(money: number) {
 
-        const element_money_change = $("#money-change")
+        const element_moneyChange = $("#money-change")
 
-        write(element_money_change, ((money >= 0) ? "+" + money : money) + "원");
+        element_moneyChange.textContent = `${((money >= 0) ? "+" + money : money)}원`;
 
-        element_money_change.animate(Keyframes.money_change_kef, {duration: 300, fill: "both"});
+        element_moneyChange.animate(Keyframes.moneyChangeKef, {duration: 300, fill: "both"});
 
     }
 
@@ -18,10 +18,10 @@ export class MoneyDisplay extends Refreshable {
 
         if(event?.type != ContextType.MONEY_CHANGE) return;
 
-        if(event.changed_money == 0) return;
+        if(event.changedMoney == 0) return;
 
-        this.animateChangingMoney(event.changed_money);
-        write($("#money-number"), event.having_money);
+        this.animateChangingMoney(event.changedMoney);
+        $("#money-number").textContent = `${event.havingMoney}`;
         
     }
 

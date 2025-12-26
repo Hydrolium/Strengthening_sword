@@ -27,14 +27,14 @@ export class DeveloperMod {
         const created_checkbox = createElement("input");
         created_checkbox.type = "checkbox";
         created_checkbox.checked = checked;
-        created_checkbox.addEventListener("change", event => changeEvent(created_checkbox.checked));
+        created_checkbox.addEventListener("change", () => changeEvent(created_checkbox.checked));
         created_label.appendChild(created_checkbox);
         created_cover.appendChild(created_label);
         return created_cover;
     }
     popupDeveloperModMessage() {
         const popup = new Popup();
-        popup.setTitlte("개발자 모드", Color.DARK_BLUE);
+        popup.setTitle("개발자 모드", Color.DARK_BLUE);
         popup.addParagraphElement(this.makeCheckBox("골드 무한", this.infinityGold, checked => {
             this.infinityGold = checked;
             if (checked)

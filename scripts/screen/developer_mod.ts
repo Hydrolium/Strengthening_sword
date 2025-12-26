@@ -1,5 +1,5 @@
 import { ContextType } from "../other/context.js";
-import { $, createElement, createElementWith } from "../other/element_controller.js";
+import { $, createElement } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
@@ -33,7 +33,7 @@ export class DeveloperMod {
         const created_checkbox = createElement<HTMLInputElement>("input");
         created_checkbox.type = "checkbox";
         created_checkbox.checked = checked;
-        created_checkbox.addEventListener("change", event => changeEvent(created_checkbox.checked));
+        created_checkbox.addEventListener("change", () => changeEvent(created_checkbox.checked));
 
         created_label.appendChild(created_checkbox);
 
@@ -44,7 +44,7 @@ export class DeveloperMod {
 
     popupDeveloperModMessage() {
         const popup = new Popup();
-        popup.setTitlte("개발자 모드", Color.DARK_BLUE);
+        popup.setTitle("개발자 모드", Color.DARK_BLUE);
 
 
         popup.addParagraphElement(

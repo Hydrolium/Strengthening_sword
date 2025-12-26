@@ -5,7 +5,7 @@ export class RecordStorage extends Refreshable {
     constructor() {
         super(...arguments);
         this.records = [];
-        this.max_recordable_count = 10;
+        this.maxRecordableCount = 10;
         this.refresh = (event) => {
             switch (event === null || event === void 0 ? void 0 : event.type) {
                 case ContextType.SYSTEM_MONEY_GIFT:
@@ -33,7 +33,7 @@ export class RecordStorage extends Refreshable {
     }
     add(record) {
         this.records.push(record);
-        if (this.records.length > this.max_recordable_count)
+        if (this.records.length > this.maxRecordableCount)
             this.records = this.records.slice(1);
     }
     render() {

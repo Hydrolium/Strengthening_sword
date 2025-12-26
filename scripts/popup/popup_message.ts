@@ -60,23 +60,23 @@ export class Popup {
     }
 
     show() {
-        const element_popup_message_box = $("#popup-message-box");
+        const element_popupMessageBox = $("#popup-message-box");
 
-        element_popup_message_box.replaceChildren(this.created_message_main);
+        element_popupMessageBox.replaceChildren(this.created_message_main);
 
-        display(element_popup_message_box);
-        element_popup_message_box.animate(
-            Keyframes.popup_kef,
+        display(element_popupMessageBox);
+        element_popupMessageBox.animate(
+            Keyframes.popupKef,
             {duration: 300, fill: "both"}
         );
     }
 
     close() {
 
-        const element_popup_message_box = $("#popup-message-box");
-        hide(element_popup_message_box);
+        const element_popupMessageBox = $("#popup-message-box");
+        hide(element_popupMessageBox);
 
-        element_popup_message_box.replaceChildren();
+        element_popupMessageBox.replaceChildren();
     }
 
     setIcon(imgSrc: string) {
@@ -84,7 +84,7 @@ export class Popup {
         this.created_icon.src = imgSrc;
     }
 
-    setTitlte(text: string, color: Color) {
+    setTitle(text: string, color: Color) {
         this.created_title.textContent = text;
         this.created_title.classList.add(color);
     }
@@ -123,7 +123,7 @@ export class Popup {
     addButton(text: string, color: Color, buttonType: ButtonType, hoverEffect: HoverEffect, clickEvent: (popup: Popup) => void) {
 
         const created_button = createElementWith<HTMLAnchorElement>("a", {classes: [color, hoverEffect]});
-        created_button.appendChild(createImageWithSrc(Game.Path[buttonType], text));
+        created_button.appendChild(createImageWithSrc(`images/ui/buttons/${buttonType}.png`, text));
         created_button.appendChild(createElementWith("span", {text: text}));
 
         created_button.addEventListener("click", () => clickEvent(this));
@@ -146,11 +146,11 @@ export enum HoverEffect {
 }
 
 export enum ButtonType {
-    CLOSE = "ui_close",
-    MAKE = "ui_make",
-    REGAME = "ui_regame",
-    REPAIR = "ui_repair",
-    SAVE = "ui_save",
-    SELL = "ui_sell",
-    UPGRADE = "ui_upgrade"
+    CLOSE = "close",
+    MAKE = "make",
+    REGAME = "regame",
+    REPAIR = "repair",
+    SAVE = "save",
+    SELL = "sell",
+    UPGRADE = "upgrade"
 }

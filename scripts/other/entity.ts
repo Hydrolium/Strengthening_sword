@@ -4,7 +4,7 @@ import { GameContext } from "./context.js";
 import { Game } from "./main.js";
 
 
-export abstract class Observer {
+export class Observer {
 
     private observers: Refreshable[] = [];
 
@@ -14,24 +14,19 @@ export abstract class Observer {
     notify(context?: GameContext) {
         this.observers.forEach(Refreshable => Refreshable.refresh(context));
     }
-
-    abstract getRenderEvent(): GameContext | undefined;
 }
 
 
 export class Item { 
-    constructor(public id: string, public count: number) {}
-
-    get name(): string {
-        return Game.Korean[this.id] ?? this.id;
-    }
+    constructor(public id: string, public name: string, public imgSrc: string, public count: number) {}
 
 }
-export class PieceItem extends Item { constructor(id: string, count: number) { super(id, count); } }
-export class SwordItem extends Item { constructor(id: string, count: number) { super(id, count); } }
-export class MoneyItem extends Item { constructor(count: number) { super("money", count); } }
-export class RepairPaperItem extends Item { constructor(count: number) { super("repair_paper", count); } }
-export class UnknownItem extends Item { constructor() { super("unknown", 1); } }
+
+export class PieceItem extends Item { constructor(id: string, name: string, imgSrc: string, count: number) { super(id, name, imgSrc, count); } }
+export class SwordItem extends Item { constructor(id: string, name: string, imgSrc: string, count: number) { super(id, name, imgSrc, count); } }
+export class MoneyItem extends Item { constructor(count: number) { super("money", "돈", "images/items/money.png", count); } }
+export class RepairPaperItem extends Item { constructor(count: number) { super("repair_paper", "복구권", "images/items/repair_paper.png", count); } }
+export class UnknownItem extends Item { constructor() { super("unknown", "발견 안됨", "images/items/unknown.png", 1); } }
 
 export class Storage<T extends Item> {
     
@@ -39,26 +34,27 @@ export class Storage<T extends Item> {
 
     constructor(
         private owner: InventoryManager,
-        private stockClass: new (id: string, count: number) => T) {}
+        private stockClass: new (id: string, name: string, imgSrc: string, count: number) => T,
+        private infinityCheck: () => boolean) {}
 
     get length(): number {
         return this.items.size;
     }
 
     getCount(id: string): number {
-        return (Game.developerMod.infinityMaterial) ? Infinity : this.items.get(id)?.count ?? 0;
+        return (this.infinityCheck()) ? Infinity : this.items.get(id)?.count ?? 0;
     }
 
-    add(id: string, count: number) {
-        if(count <= 0) return;
+    add(item: T) {
+        if(item.count <= 0) return;
 
-        const exisiting = this.items.get(id);
+        const exisiting = this.items.get(item.id);
 
-        if(exisiting) exisiting.count += count;
-        else this.items.set(id, new this.stockClass(id, count));
+        if(exisiting) exisiting.count += item.count;
+        else this.items.set(item.id, new this.stockClass(item.id, item.name, item.imgSrc, item.count));
 
         this.owner.notify(
-            this.owner.getRenderEvent()
+            this.owner.inventoryContext
         );
     }
 
@@ -77,7 +73,7 @@ export class Storage<T extends Item> {
         if(exisiting.count <= 0) this.items.delete(id);
 
         this.owner.notify(
-            this.owner.getRenderEvent()
+            this.owner.inventoryContext
         );
     }
 
@@ -91,23 +87,17 @@ export class Storage<T extends Item> {
 export class Sword {
     constructor(
         public readonly id: string,
-        private readonly _prob: number,
+        public readonly name: string,
+        public readonly imgSrc: string,
+        public readonly prob: number,
         public readonly cost: number,
         public readonly price: number,
         public readonly requiredRepairs: number,
         public readonly canSave: boolean,
         public readonly pieces: Piece[]) {}
 
-    get name(): string {
-        return Game.Korean[this.id] ?? this.id;
-    }
-
-    get prob(): number {
-        return (Game.developerMod.alwaysSuccess) ? 1 : this._prob;
-    }
-
     toItem(): SwordItem {
-        return new SwordItem(this.id, 1);
+        return new SwordItem(this.id, this.name, this.imgSrc, 1);
     }
 }
 
@@ -115,24 +105,31 @@ export class Piece {
 
     constructor(
         public readonly id: string,
+        public readonly name: string,
+        public readonly imgSrc: string,
         public readonly prob: number,
-        public readonly max_drop: number = 1) {}
-
-    get name(): string {
-        return Game.Korean[this.id] ?? this.id;
-    }
+        public readonly maxDrop: number = 1) {}
 
     drop(): PieceItem {
-        if(Math.random() < this.prob) return new PieceItem(this.id, Math.floor(Math.random() * this.max_drop +1));
-        return new PieceItem(this.id, 0);
+        if(Math.random() < this.prob) return new PieceItem(this.id, this.name, this.imgSrc, Math.floor(Math.random() * this.maxDrop +1));
+        return new PieceItem(this.id, this.name, this.imgSrc, 0);
     } 
 }
 
-export enum TestResult {
-    RESOURCES_LACK,
-    MAX_UPGRADE,
-    SUCCESS
-    
+export enum SwordTestResult {
+    REJECTED_BY_MONEY_LACK,
+    REJECTED_BY_MAX_UPGRADE,
+    SUCCESS,
+    GREAT_SUCCESS,
+    FAIL_BUT_INVALIDATED,
+    FAIL
+}
+
+export enum StatTestResult {
+    REJECTED_BY_POINT_LACK,
+    REJECTED_BY_MAX_UPGRADE,
+    SUCCESS,
+    SUCCESS_AND_ALL_MAX
 }
 
 export class Recipe {
@@ -152,3 +149,54 @@ export enum Color {
     DARK_GRAY = "dark_gray"
 }
 
+
+export type StatClass = new (
+        id: string,
+        name: string,
+        imgSrc: string,
+        description: string,
+        values: number[],
+        default_value: number,
+        color: Color,
+        prefix: string,
+        suffix: string) => Stat;
+
+export abstract class Stat {
+    private current: number = 0;
+    private readonly maxStatLevel: number;
+  
+    constructor(
+        public readonly id: string,
+        public readonly name: string,
+        public readonly imgSrc: string,
+        public readonly description: string,
+        public readonly values: number[],
+        public readonly default_value: number,
+        public readonly color: Color,
+        public readonly prefix: string,
+        public readonly suffix: string) {
+            this.maxStatLevel = values.length;
+        }
+
+    getCurrentLevel(): number {
+        return this.current;
+    }
+
+    getCurrentValue(): number {
+        return (this.current == 0) ? 0 : this.values[this.current-1];
+    }
+
+    getMaxLevel(): number {
+        return this.maxStatLevel;
+    }
+
+    isMaxLevel(): boolean {
+        return this.current >= this.maxStatLevel;
+    }
+
+    levelUp() {
+        this.current++;
+    }
+
+    abstract calculate(initialValue?: number): number;
+}

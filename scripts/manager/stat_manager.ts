@@ -1,69 +1,14 @@
 import { GameContext } from '../other/context.js';
-import { Observer, Color, TestResult } from '../other/entity.js';
-import { Game } from '../other/main.js';
+import { Observer, StatTestResult, Stat, StatClass } from '../other/entity.js';
 
-export type StatClass = new (
-        id: string,
-        description: string,
-        values: number[],
-        default_value: number,
-        color: Color,
-        prefix: string,
-        suffix: string) => Stat;
-
-export abstract class Stat {
-    private current: number = 0;
-    private readonly max_stat_level: number;
-  
-    constructor(
-        public readonly id: string,
-        public readonly description: string,
-        public readonly values: number[],
-        public readonly default_value: number,
-        public readonly color: Color,
-        public readonly prefix: string,
-        public readonly suffix: string) {
-            this.max_stat_level = values.length;
-        }
-
-    get name(): string {
-        return Game.Korean[this.id] ?? this.id;
-    }
-
-    getCurrentLevel(): number {
-        return this.current;
-    }
-
-    getCurrentValue(): number {
-        return (this.current == 0) ? 0 : this.values[this.current-1];
-    }
-
-    getMaxLevel(): number {
-        return this.max_stat_level;
-    }
-
-    isMaxLevel(): boolean {
-        return this.current >= this.max_stat_level;
-    }
-
-    levelUp() {
-        this.current++;
-    }
-
-    abstract calculate(initialValue?: number): number;
-}
-
-export class LukcyBracelet extends Stat {
+export class LuckyBracelet extends Stat {
     calculate(initialProb: number): number {
-        return Math.min(
-            initialProb + this.getCurrentValue()/100,
-            1
-        );
+        return Math.min(initialProb + this.getCurrentValue()/100, 1);
     }
 }
 export class GodHand extends Stat {
     calculate(): number {
-        return this.getCurrentValue();
+        return this.getCurrentValue()/100;
     }
 }
 export class BigMerchant extends Stat {
@@ -77,13 +22,11 @@ export class Smith extends Stat {
     }
 }
 export class InvalidatedSphere extends Stat {
-        calculate(): number {
+    calculate(): number {
         return this.getCurrentValue();
     }
 }
 export class MagicHat extends Stat {
-
-    static readonly minCount = 1;
 
     calculate(initialMaxDrop: number): number {
         return initialMaxDrop + this.getCurrentValue();
@@ -104,7 +47,7 @@ export type StatID = typeof StatID[keyof typeof StatID];
 export function getStatClass(statID: StatID): StatClass {
 
     switch(statID) {
-        case StatID.LUCKY_BRACELET: return LukcyBracelet;
+        case StatID.LUCKY_BRACELET: return LuckyBracelet;
         case StatID.GOD_HAND: return GodHand;
         case StatID.BIG_MERCHANT: return BigMerchant;
         case StatID.SMITH: return Smith;
@@ -121,10 +64,6 @@ export class StatManager extends Observer {
     constructor(stats: Record<StatID, Stat> = {} as Record<StatID, Stat>) {
         super();
         this.stats = stats;
-    }
-
-    getRenderEvent(): GameContext | undefined {
-        return;;
     }
 
     getStat(id: StatID): Stat {
@@ -151,17 +90,23 @@ export class StatManager extends Observer {
         
         this.stat_point--;
         stat.levelUp();
-        
-        if(Object.values(this.stats).every(s => s.isMaxLevel())) {
-            Game.statScreen.popupGameAllStatMessage();
-        }
 
         this.notify();
     }
 
-    test(id: StatID) {
-        if(this.stats[id].isMaxLevel()) return TestResult.MAX_UPGRADE;
-        else if(this.stat_point <= 0) return TestResult.RESOURCES_LACK;
-        return TestResult.SUCCESS;
+    tryUpgrade(statId: StatID): StatTestResult {
+        
+        if(this.stats[statId].isMaxLevel()) return StatTestResult.REJECTED_BY_MAX_UPGRADE;
+        if(this.stat_point <= 0) return StatTestResult.REJECTED_BY_POINT_LACK;
+
+        this.upgradeStat(statId);
+
+        if(Object.values(this.stats).every(s => s.isMaxLevel())) {
+            return StatTestResult.SUCCESS_AND_ALL_MAX;
+        }
+
+        return StatTestResult.SUCCESS;
+        
     }
+
 }

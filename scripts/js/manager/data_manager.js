@@ -20,10 +20,9 @@ export class DataManager {
             const koreans = await koreanRes.json();
             return {
                 path: paths,
-                sword: this.convertSword(swords),
-                recipe: this.convertRecipe(recipes),
-                stat: this.convertStat(stats),
-                korean: koreans
+                sword: this.convertSword(swords, paths, koreans),
+                recipe: this.convertRecipe(recipes, paths, koreans),
+                stat: this.convertStat(stats, paths, koreans),
             };
         }
         catch (error) {
@@ -31,24 +30,24 @@ export class DataManager {
         }
         return null;
     }
-    convertSword(swords) {
-        return swords.map(sword => new Sword(sword.id, sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave, sword.pieces.map(drop => new Piece(drop.id, drop.prob, drop.max_drop))));
+    convertSword(swords, paths, koreans) {
+        return swords.map(sword => new Sword(sword.id, koreans[sword.id], paths[sword.id], sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave, sword.pieces.map(drop => new Piece(drop.id, koreans[drop.id], paths[drop.id], drop.prob, drop.max_drop))));
     }
-    convertRecipe(recipes) {
+    convertRecipe(recipes, paths, koreans) {
         return recipes.map(recipeData => new Recipe((recipeData.result.type == "sword")
-            ? new SwordItem(recipeData.result.id, recipeData.result.count)
-            : new PieceItem(recipeData.result.id, recipeData.result.count), recipeData.materials.map(recipe_item => {
-            if (recipe_item.type == "sword")
-                return new SwordItem(recipe_item.id, recipe_item.count);
+            ? new SwordItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count)
+            : new PieceItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count), recipeData.materials.map(recipeItem => {
+            if (recipeItem.type == "sword")
+                return new SwordItem(recipeItem.id, koreans[recipeItem.id], paths[recipeItem.id], recipeItem.count);
             else
-                return new PieceItem(recipe_item.id, recipe_item.count);
+                return new PieceItem(recipeItem.id, koreans[recipeItem.id], paths[recipeItem.id], recipeItem.count);
         })));
     }
-    convertStat(stats) {
+    convertStat(stats, paths, koreans) {
         const g = {};
-        for (const stat of stats) {
-            const statID = StatID[stat.id.toUpperCase()];
-            g[statID] = new (getStatClass(statID))(stat.id, stat.description, stat.values, stat.default_value, Color[stat.color], stat.prefix, stat.suffix);
+        for (const statData of stats) {
+            const statID = StatID[statData.id.toUpperCase()];
+            g[statID] = new (getStatClass(statID))(statData.id, koreans[statData.id], paths[statData.id], statData.description, statData.values, statData.default_value, Color[statData.color], statData.prefix, statData.suffix);
         }
         return g;
     }

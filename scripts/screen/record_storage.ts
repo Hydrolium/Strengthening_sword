@@ -2,20 +2,14 @@ import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith } from "../other/element_controller.js";
 import { Refreshable } from "./screen.js";
 
-interface RecordInfo {
-    type: "upgrade" | "sell",
-    name: string,
-    change: number
-}
-
 export class RecordStorage extends Refreshable {
     
     private records: string[] = [];
-    private max_recordable_count: number = 10;
+    private maxRecordableCount: number = 10;
 
     private add(record: string) {
         this.records.push(record);
-        if(this.records.length > this.max_recordable_count) this.records = this.records.slice(1);
+        if(this.records.length > this.maxRecordableCount) this.records = this.records.slice(1);
     }
 
     private render() {

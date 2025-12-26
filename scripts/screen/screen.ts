@@ -3,10 +3,10 @@ import { $ } from "../other/element_controller.js";
 import { Game } from "../other/main.js";
 
 export class Keyframes{
-    static lodding_kef = [{opacity: '0'}, {opacity: '1'}];
-    static hammer_kef = [{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0deg)", offset: 0, easing: "ease" },{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0.2turn)", offset: .4, easing: "ease" },{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0turn)", offset: .7, easing: "ease" },{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0.2turn)", offset: 1, easing: "ease" }];
-    static popup_kef = [{opacity: '0'}, {opacity: '1'}];
-    static money_change_kef = [{opacity: '1', transform: 'translate(-30%, 0%)'},{opacity: '0', transform: 'translate(-30%, -70%)'}];
+    static loadingKef = [{opacity: '0'}, {opacity: '1'}];
+    static hammerKef = [{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0deg)", offset: 0, easing: "ease" },{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0.2turn)", offset: .4, easing: "ease" },{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0turn)", offset: .7, easing: "ease" },{ transform: "translate(calc(-50% - 38.4765625px), -50%) rotate(0.2turn)", offset: 1, easing: "ease" }];
+    static popupKef = [{opacity: '0'}, {opacity: '1'}];
+    static moneyChangeKef = [{opacity: '1', transform: 'translate(-30%, 0%)'},{opacity: '0', transform: 'translate(-30%, -70%)'}];
 };
 
 export abstract class Refreshable {
@@ -15,24 +15,23 @@ export abstract class Refreshable {
 
 export abstract class Screen extends Refreshable {
 
-    abstract id: string;
+    protected abstract id: string;
 
-    static changeBody(id: string) {
-        Game.currentScreenId = id;
-        const element_template = $<HTMLTemplateElement>("#" + id);
+    protected changeBody() {
+        Game.currentScreenId = this.id;
+        const element_template = $<HTMLTemplateElement>("#" + this.id);
         document.querySelector("#main-body")?.replaceChildren(document.importNode(element_template.content, true));
     }
 
-    show(event?: GameContext) {
-        Screen.changeBody(this.id);
-        this.refresh(event);
+    show(context?: GameContext) {
+        this.changeBody();
+        this.refresh(context);
     }
 
-    refresh = (event?: GameContext) => {
-        if(Game.currentScreenId == this.id) this.render(event);
+    refresh = (context?: GameContext) => {
+        if(Game.currentScreenId == this.id) this.render(context);
     }
 
-
-    abstract render(context?: GameContext): void;
+    protected abstract render(context?: GameContext): void;
 
 }

@@ -16,7 +16,7 @@
   --color-light-gray: rgb(199, 199, 199);
 }
 * {font-family: 'Do Hyeon';text-align: center;user-select: none;word-break: keep-all;margin: 0;padding: 0;box-sizing: border-box;}
-body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hidden}
+body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hidden;}
 .main_header {width: 100%;display: flex;justify-content: center;align-items: center;}
 .main_header h1 {width: fit-content;background: linear-gradient(to right, var(--color-red), var(--color-gold));-webkit-background-clip: text;-webkit-text-fill-color: transparent;font-size:2.75rem;}
 #logo-chb + label {width: 200px;height: 140px;position: relative;cursor: pointer;}

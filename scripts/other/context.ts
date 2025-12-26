@@ -1,11 +1,12 @@
-import { PieceItem, Storage, Sword, SwordItem } from "./entity";
+import { Item, PieceItem, Storage, Sword, SwordItem } from "./entity";
 
-export type GameContext = MoneyChangeContext | SystemMoneyGiftContext | SwordContext | ItemContext | SWordUpgradeContext | SWordSellContext | SWordRestoreContext | ByeUsingMoneyContext;
+export type GameContext = MoneyChangeContext | SystemMoneyGiftContext | SwordContext | FoundSwordsContext | InventoryContext | SWordUpgradeContext | SWordSellContext | SWordRestoreContext | ByeUsingMoneyContext;
 
 export enum ContextType {
     MONEY_CHANGE = "MONEY_CHANGE",
     SYSTEM_MONEY_GIFT = "SYSTEM_MONEY_GIFT",
     SWORD = "SWORD",
+    FOUND_SWORDS = "FOUND_SWORDS",
     INVENTORY = "INVENTORY",
 
     SWORD_UPGRADE = "SWORD_UPGRADE",
@@ -18,8 +19,8 @@ export interface MoneyChangeContext {
 
     type: ContextType.MONEY_CHANGE;
 
-    changed_money: number;
-    having_money: number
+    changedMoney: number;
+    havingMoney: number
 }
 
 export interface SystemMoneyGiftContext {
@@ -37,13 +38,21 @@ export interface SwordContext {
     isMax: boolean;
 }
 
-export interface ItemContext {
+export interface FoundSwordsContext {
+
+    type: ContextType.FOUND_SWORDS;
+
+    count: number,
+    swords: Item[]
+}
+
+export interface InventoryContext {
 
     type: ContextType.INVENTORY;
 
     swords: Storage<SwordItem>;
     pieces: Storage<PieceItem>;
-    repair_papers: number;
+    repairPapers: number;
 }
 
 export interface SWordUpgradeContext {

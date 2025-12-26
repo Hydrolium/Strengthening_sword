@@ -4,16 +4,13 @@ import { ContextType } from '../other/context.js';
 export class MakingManager extends Observer {
     constructor(recipes) {
         super();
-        this.repair_paper_recipes = [new MoneyItem(300)];
+        this.repairPaperRecipes = [new MoneyItem(300)];
         this.recipes = [];
         if (recipes)
             this.recipes = recipes;
     }
-    getRenderEvent() {
-        return;
-    }
     setRepairPaperRecipe(...materials) {
-        this.repair_paper_recipes = materials;
+        this.repairPaperRecipes = materials;
     }
     setRecipe(result, ...materials) {
         this.recipes.push(new Recipe(result, materials));
@@ -25,10 +22,10 @@ export class MakingManager extends Observer {
                 newArray.push(new MoneyItem(item.count));
             }
             else if (item instanceof PieceItem) {
-                newArray.push(new PieceItem(item.id, item.count));
+                newArray.push(new PieceItem(item.id, item.name, item.imgSrc, item.count));
             }
             else if (item instanceof SwordItem) {
-                newArray.push(new SwordItem(item.id, item.count));
+                newArray.push(new SwordItem(item.id, item.name, item.imgSrc, item.count));
             }
             else if (item instanceof RepairPaperItem) {
                 newArray.push(new RepairPaperItem(item.count));
@@ -43,7 +40,7 @@ export class MakingManager extends Observer {
         return newItems;
     }
     makeRepairPaper(amount) {
-        const required_materials = this.getMultipliedItems(this.repair_paper_recipes, amount);
+        const required_materials = this.getMultipliedItems(this.repairPaperRecipes, amount);
         if (!Game.inventoryManager.hasItems(required_materials))
             return;
         required_materials.forEach(material => {

@@ -4,7 +4,7 @@ import { ContextType, GameContext } from '../other/context.js';
 
 export class MakingManager extends Observer {
 
-    public repair_paper_recipes: Item[] = [new MoneyItem(300)];
+    public repairPaperRecipes: Item[] = [new MoneyItem(300)];
     public recipes: Recipe[] = [];
 
     constructor(recipes?: Recipe[]) {
@@ -12,12 +12,8 @@ export class MakingManager extends Observer {
         if(recipes) this.recipes = recipes;
     }
 
-    getRenderEvent(): GameContext | undefined {
-        return;
-    }
-
     setRepairPaperRecipe(...materials: Item[]) {
-        this.repair_paper_recipes = materials;
+        this.repairPaperRecipes = materials;
     }
 
     setRecipe(result: Item, ...materials: Item[]) {
@@ -30,9 +26,9 @@ export class MakingManager extends Observer {
             if(item instanceof MoneyItem) {
                 newArray.push(new MoneyItem(item.count));
             } else if(item instanceof PieceItem) {
-                newArray.push(new PieceItem(item.id, item.count));
+                newArray.push(new PieceItem(item.id, item.name, item.imgSrc, item.count));
             } else if(item instanceof SwordItem) {
-                newArray.push(new SwordItem(item.id, item.count));      
+                newArray.push(new SwordItem(item.id, item.name, item.imgSrc, item.count));      
             } else if(item instanceof RepairPaperItem) {
                 newArray.push(new RepairPaperItem(item.count));
             }
@@ -47,7 +43,7 @@ export class MakingManager extends Observer {
     }
 
     makeRepairPaper(amount: number) {
-        const required_materials = this.getMultipliedItems(this.repair_paper_recipes, amount);
+        const required_materials = this.getMultipliedItems(this.repairPaperRecipes, amount);
         if(!Game.inventoryManager.hasItems(required_materials)) return;
 
         required_materials.forEach(material => {

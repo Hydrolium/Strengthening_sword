@@ -9,24 +9,30 @@ export class InventoryScreen extends Screen {
     constructor() {
         super(...arguments);
         this.id = "inventory";
+        this.elements = {};
+    }
+    changeBody() {
+        super.changeBody();
+        this.elements.inventoryItems = $("#inventory-items");
+        this.elements.windowMain = $(".inventory_window main");
     }
     makeSwordHoverMenuDiv(sword) {
         const created_div = createElementWith("div", { classes: ["hover_sell"] });
-        const created_sell_button = createElementWith("span", { text: "판매하기" });
-        const created_move_button = createElementWith("span", { text: "꺼내기" });
-        const created_break_button = createElementWith("span", { text: "파괴하기" });
-        created_sell_button.addEventListener("click", () => onClickSwordItemSellButton(sword.id));
-        created_move_button.addEventListener("click", () => onClickSwordSwapButton(sword.id));
-        created_break_button.addEventListener("click", () => onClickSwordBreakButton(sword.id));
-        created_div.appendChild(created_sell_button);
-        created_div.appendChild(created_move_button);
-        created_div.appendChild(created_break_button);
+        const created_sellButton = createElementWith("span", { text: "판매하기" });
+        const created_moveButton = createElementWith("span", { text: "꺼내기" });
+        const created_breakButton = createElementWith("span", { text: "파괴하기" });
+        created_sellButton.addEventListener("click", () => onClickSwordItemSellButton(sword.id));
+        created_moveButton.addEventListener("click", () => onClickSwordSwapButton(sword.id));
+        created_breakButton.addEventListener("click", () => onClickSwordBreakButton(sword.id));
+        created_div.appendChild(created_sellButton);
+        created_div.appendChild(created_moveButton);
+        created_div.appendChild(created_breakButton);
         return created_div;
     }
     makeInventoryArticle(item) {
         const created_article = createElementWith("article", { classes: ["group"] });
         const created_div = createElementWith("div", { classes: ["item"] });
-        const created_img = createImageWithSrc(Game.Path[item.id]);
+        const created_img = createImageWithSrc(item.imgSrc);
         if (item instanceof SwordItem)
             created_div.appendChild(this.makeSwordHoverMenuDiv(item));
         created_div.appendChild(created_img);
@@ -36,57 +42,56 @@ export class InventoryScreen extends Screen {
         return created_article;
     }
     makeRepairGroupSection() {
-        const created_repair_group = createElementWith("section", { classes: ["item_group"] });
-        created_repair_group.appendChild(createElementWith("div", { classes: ["underline", "bok"] }));
-        created_repair_group.appendChild(this.makeInventoryArticle(new RepairPaperItem(Game.inventoryManager.getRepairPaper())));
-        return created_repair_group;
+        const created_repairGroup = createElementWith("section", { classes: ["item_group"] });
+        created_repairGroup.appendChild(createElementWith("div", { classes: ["underline", "bok"] }));
+        created_repairGroup.appendChild(this.makeInventoryArticle(new RepairPaperItem(Game.inventoryManager.getRepairPaper())));
+        return created_repairGroup;
     }
     makePieceGroupSection(pieceList) {
-        const created_piece_group = createElementWith("section", { classes: ["item_group"] });
-        created_piece_group.appendChild(createElementWith("div", { classes: ["underline", "pie"] }));
-        pieceList.forEach(piece => created_piece_group.appendChild(this.makeInventoryArticle(piece)));
-        return created_piece_group;
+        const created_pieceGroup = createElementWith("section", { classes: ["item_group"] });
+        created_pieceGroup.appendChild(createElementWith("div", { classes: ["underline", "pie"] }));
+        pieceList.forEach(piece => created_pieceGroup.appendChild(this.makeInventoryArticle(piece)));
+        return created_pieceGroup;
     }
     makeSwordGroupSection(swordList) {
-        const created_sword_group = createElementWith("section", { classes: ["item_group"] });
-        created_sword_group.appendChild(createElementWith("div", { classes: ["underline", "swo"] }));
+        const created_swordGroup = createElementWith("section", { classes: ["item_group"] });
+        created_swordGroup.appendChild(createElementWith("div", { classes: ["underline", "swo"] }));
         swordList.forEach(sword => {
-            created_sword_group.appendChild(this.makeInventoryArticle(sword));
+            created_swordGroup.appendChild(this.makeInventoryArticle(sword));
         });
-        return created_sword_group;
+        return created_swordGroup;
     }
     render(context) {
+        var _a, _b, _c;
         if ((context === null || context === void 0 ? void 0 : context.type) != ContextType.INVENTORY)
             return;
-        const element_inventory_items = $("#inventory-items");
-        const element_window_main = $(".inventory_window main");
         const inner = [];
-        if (context.repair_papers > 0)
+        if (context.repairPapers > 0)
             inner.push(this.makeRepairGroupSection());
         if (context.pieces.length != 0)
             inner.push(this.makePieceGroupSection(context.pieces.sorted((a, b) => a.count - b.count)));
         if (context.swords.length != 0)
             inner.push(this.makeSwordGroupSection(context.swords.sorted((a, b) => Game.swordManager.getIndex(a.id) - Game.swordManager.getIndex(b.id))));
         if (context.pieces.length == 0 && context.swords.length == 0) {
-            element_window_main.classList.add("empty_inventory");
-            if (context.repair_papers <= 0)
+            (_a = this.elements.windowMain) === null || _a === void 0 ? void 0 : _a.classList.add("empty_inventory");
+            if (context.repairPapers <= 0)
                 inner.push(createElementWith("p", { classes: ["no_item"], text: "보관된 아이템이 없습니다." }));
         }
         else
-            element_window_main.classList.remove("empty_inventory");
-        element_inventory_items.replaceChildren(...inner);
+            (_b = this.elements.windowMain) === null || _b === void 0 ? void 0 : _b.classList.remove("empty_inventory");
+        (_c = this.elements.inventoryItems) === null || _c === void 0 ? void 0 : _c.replaceChildren(...inner);
     }
     popupSwordItemBreakMessage(sword, breakFunc) {
         const popup = new Popup();
-        popup.setTitlte("정말로 검을 파괴하시겠습니까?", Color.BROWN);
+        popup.setTitle("정말로 검을 파괴하시겠습니까?", Color.BROWN);
         // popup.setSubTitle("")
         if (sword.pieces.length > 0) {
             popup.addParagraphText("다음 조각이 확률적으로 떨어집니다.");
             sword.pieces.forEach(piece => {
                 const created_div = createElementWith("div", { classes: ["dropped_piece_info"] });
-                created_div.appendChild(createImageWithSrc(Game.Path[piece.id]));
+                created_div.appendChild(createImageWithSrc(piece.imgSrc));
                 created_div.appendChild(createElementWith("span", { classes: ["name"], text: piece.name }));
-                created_div.appendChild(createElementWith("span", { classes: ["count"], text: `0~${piece.max_drop}개` }));
+                created_div.appendChild(createElementWith("span", { classes: ["count"], text: `0~${piece.maxDrop}개` }));
                 popup.addParagraphElement(created_div);
             });
         }
@@ -100,12 +105,12 @@ export class InventoryScreen extends Screen {
     }
     popupBreakMessage(pieces) {
         const popup = new Popup();
-        popup.setTitlte("검을 파괴했습니다.", Color.BLUE);
+        popup.setTitle("검을 파괴했습니다.", Color.BLUE);
         if (pieces.length > 0) {
             popup.addParagraphText("<떨어진 조각 목록>");
             pieces.forEach(pieceItem => {
                 const created_div = createElementWith("div", { classes: ["dropped_piece_info"] });
-                created_div.appendChild(createImageWithSrc(Game.Path[pieceItem.id]));
+                created_div.appendChild(createImageWithSrc(pieceItem.imgSrc));
                 created_div.appendChild(createElementWith("span", { classes: ["name"], text: pieceItem.name }));
                 created_div.appendChild(createElementWith("span", { classes: ["count"], text: pieceItem.count }));
                 popup.addParagraphElement(created_div);
@@ -119,7 +124,7 @@ export class InventoryScreen extends Screen {
     }
     popupSwordItemSellMessage(sword, sellFunc) {
         const popup = new Popup();
-        popup.setTitlte("정말로 검을 판매하시겠습니까?", Color.BROWN);
+        popup.setTitle("정말로 검을 판매하시겠습니까?", Color.BROWN);
         popup.addParagraphElement(new ColoredText("p").add("획득 가능한 금액: ", Color.DARK_GRAY).add(sword.price, Color.GOLD).add("원", Color.DARK_GRAY).build());
         popup.addButton("판매하기", Color.BROWN, ButtonType.SELL, HoverEffect.INCREASE, sellFunc);
         popup.addCloseButton();

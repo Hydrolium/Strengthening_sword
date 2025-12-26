@@ -1,5 +1,6 @@
 import { onClickSwordInfoButton } from "../other/click_events.js";
-import { $, createElementWith, createImageWithSrc } from "../other/element_controller.js";
+import { ContextType } from "../other/context.js";
+import { $, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
 import { Color, SwordItem } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { ColoredText, Popup } from "../popup/popup_message.js";
@@ -8,29 +9,35 @@ export class InformationScreen extends Screen {
     constructor() {
         super(...arguments);
         this.id = "game-information";
+        this.elements = {};
+    }
+    changeBody() {
+        super.changeBody();
+        this.elements.foundSwords = $("#found-swords");
+        this.elements.swordCount = $("#found-sword-count");
     }
     makeIcon(item) {
         const created_div = createElementWith("div", { classes: ["sword_icon", (item instanceof SwordItem) ? "sword" : "unknown"] });
-        created_div.appendChild(createImageWithSrc(Game.Path[item.id], item.name));
+        created_div.appendChild(createImageWithSrc(item.imgSrc, item.name));
         if (item instanceof SwordItem) {
             created_div.appendChild(createElementWith("span", { classes: ["sword_name"], text: item.name }));
             created_div.addEventListener("click", () => onClickSwordInfoButton(item.id));
         }
         return created_div;
     }
-    render(event) {
-        // if(event?.type != ContextType.INVENTORY) return;
-        const element_found_swords = $("#found-swords");
-        const element_sword_count = $("#found-sword-count");
-        const created_found = Game.swordManager.getAllSwords().map(this.makeIcon);
-        element_found_swords.replaceChildren(...created_found);
-        element_sword_count.textContent = `${Game.swordManager.getFoundSwordCount()}`;
+    render(context) {
+        var _a;
+        if ((context === null || context === void 0 ? void 0 : context.type) != ContextType.FOUND_SWORDS)
+            return;
+        const created_found = context.swords.map(this.makeIcon);
+        (_a = this.elements.foundSwords) === null || _a === void 0 ? void 0 : _a.replaceChildren(...created_found);
+        write(this.elements.swordCount, context.count);
     }
     popupSwordInfoMessage(id) {
         const sword = Game.swordManager.getSwordWithId(id);
         const popup = new Popup();
-        popup.setIcon(Game.Path[id]);
-        popup.setTitlte(`<${sword.name}> 상세 정보`, Color.PURPLE);
+        popup.setIcon(sword.imgSrc);
+        popup.setTitle(`<${sword.name}> 상세 정보`, Color.PURPLE);
         popup.addParagraphElement(new ColoredText("p").add("강화 확률: ", Color.DARK_GRAY).add(sword.prob * 100, Color.GOLD).add("%", Color.DARK_GRAY).build());
         popup.addParagraphElement(new ColoredText("p").add("강화 비용: ", Color.DARK_GRAY).add(sword.cost, Color.GOLD).add("원", Color.DARK_GRAY).build());
         if (sword.price != 0)
@@ -44,9 +51,9 @@ export class InformationScreen extends Screen {
             popup.addParagraphText("파괴 시 획득 가능한 조각 목록");
             sword.pieces.forEach(piece => {
                 const created_div = createElementWith("div", { classes: ["dropped_piece_info"] });
-                created_div.appendChild(createImageWithSrc(Game.Path[piece.id]));
+                created_div.appendChild(createImageWithSrc(piece.imgSrc));
                 created_div.appendChild(createElementWith("span", { classes: ["name"], text: piece.name }));
-                created_div.appendChild(createElementWith("span", { classes: ["count"], text: `0~${piece.max_drop}개` }));
+                created_div.appendChild(createElementWith("span", { classes: ["count"], text: `0~${piece.maxDrop}개` }));
                 popup.addParagraphElement(created_div);
             });
         }

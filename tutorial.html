@@ -8,28 +8,30 @@
   <link type="image/x-icon" rel="shortcut icon" href="images/ui/tutorial.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
   <style>
-    * {font-family: 'IBM Plex Sans KR', sans-serif;user-select: none;word-break: keep-all;}
+    * {font-family: 'IBM Plex Sans KR', sans-serif;user-select: none;word-break: keep-all;margin: 0;padding: 0;}
+
+    body {
+      padding: 10px;
+    }
     summary {
       background-color: gray;
       padding: 8px;
-      border-radius: 50px;
+      border-radius: 10px;
       font-size: 1.1rem;
-      margin-bottom: 1rem;
+      margin: 0.5rem 0;
       cursor: pointer;
-      width: 100%;
+      width: 90%;
     }
     details {
       display: flex;
       flex-direction: column;
       justify-content: left;
-    
-      width: 100%;
-      
     }
-    details > p {
-      border-bottom: 1px solid black;
-
-      width: 100%;
+    ol {
+      margin: 0 20px;
+    }
+    ul {
+      margin: 0 20px;
     }
     a {
       scroll-behavior: smooth;
@@ -45,6 +47,7 @@
       background: linear-gradient(to right, rgba(0,0,0,0) 50%, rgb(255, 255, 71) 50%);
       background-size: 200%;
       transition: .5s;
+      border-bottom: 1px solid black;
     }
     .highlight.blue {background: linear-gradient(to right, rgba(0,0,0,0) 50%, rgb(71, 135, 255) 50%);background-size: 200%;}
     .highlight.red{background: linear-gradient(to right, rgba(0,0,0,0) 50%, rgb(255, 71, 71) 50%);background-size: 200%;}
@@ -59,7 +62,7 @@
 </head>
 <body ondragstart="return false">
   <h1>검 강화하기 튜토리얼</h1>
-  <p">이 게임의 목표는 검을 끝까지 강화하는 것입니다. 검은 총 30개가 있으며 0강부터 29강까지 강화할 수 있습니다.</p>
+  <p>이 게임의 목표는 검을 끝까지 강화하는 것입니다. 검은 총 30개가 있으며 0강부터 29강까지 강화할 수 있습니다.</p>
   <p>오른쪽 아래의 '돈'은 검을 강화하는 가장 기초적인 재화입니다.</p>
   <p>돈이 부족할 시 검을 강화할 수 없습니다.</p>
   <p>돈은 검을 판매하여 얻을 수 있으며, 보유자산에 마우스를 올리면 최근 기록을 볼 수 있습니다.</p>
@@ -101,32 +104,32 @@
   <details>
     <summary id="making">제작소</summary>
     <p>다음을 구매할 수 있습니다.</p>
-    <ul>
+    <ol>
       <li class="highlight">복구권: 검 강화 실패시 검을 유지하기 위해 사용됩니다.</li>
       <li>
         <p class="highlight">검: 떨어진 조각과 보관한 검을 이용하여 특정 검을 구매할 수 있습니다.</p>
-        <p>구매한 검은 보관함에 지급됩니다.</p>
-        <p>검은 발견되기 전까지 재료와 결과 칸에서 비공개 처리됩니다.</p>
+        <ul>
+          <li>구매한 검은 보관함에 지급됩니다.</li>
+          <li>검은 발견되기 전까지 재료와 결과 칸에서 비공개 처리됩니다.</li>
+        </ul>
       </li>
-    </ul>
+    </ol>
   </details>
   <details>
     <summary>강화소</summary>
     <p class="highlight">새로운 검을 발견할 때마다 스탯 포인트를 하나씩 얻습니다.</p>
-    <p class="highlight">룬(Rune)의 아이콘을 누르면 스탯 포인트를 하나 소모하여 강화할 수 있습니다.</p>
-    <p class="highlight">한번 투자한 스탯 포인트는 되돌릴 수 없으니 신중히 선택하세요.</p>
+    <p>룬(Rune)의 아이콘을 누르면 스탯 포인트를 하나 소모하여 강화할 수 있습니다.</p>
+    <p>한번 투자한 스탯 포인트는 되돌릴 수 없으니 신중히 선택하세요.</p>
     <p>
-      각 룬은 모두 고유한 효과를 지니고 있습니다.
-      <ui>
-        <li class="highlight blue">행운 팔찌: 성공 확률을 증가시킵니다. 표기된 '포인트' 만큼 증가합니다.</li>
-        <li class="highlight red">신의 손: 검 강화시 일정확률로 +2강 됩니다.</li>
-        <li class="highlight aqua">대상인: 판매 가격을 증가시킵니다. 표기된 '퍼센트' 만큼 증가합니다.</li>
-        <li class="highlight green">대장장이: 강화 비용을 감소시킵니다. 표기된 '퍼센트' 만큼 감소합니다.</li>
-        <li class="highlight pink">무효화 구체: 검이 파괴되면 이를 무효화합니다. 파괴 시 획득 가능한 조각을 얻을 수 있으며, 강화비용이 반환됩니다.</li>
-        <li class="highlight purple">마법 모자: 검 파괴시 떨어지는 조각의 최대 갯수가 증가합니다.</li>
-      </ui>
-    </p>
-    
+      각 룬은 모두 고유한 효과를 지니고 있습니다.</p>
+    <ol>
+      <li class="highlight blue">행운 팔찌: 성공 확률을 증가시킵니다. 표기된 '포인트' 만큼 증가합니다.</li>
+      <li class="highlight red">신의 손: 검 강화시 일정확률로 +2강 됩니다.</li>
+      <li class="highlight aqua">대상인: 판매 가격을 증가시킵니다. 표기된 '퍼센트' 만큼 증가합니다.</li>
+      <li class="highlight green">대장장이: 강화 비용을 감소시킵니다. 표기된 '퍼센트' 만큼 감소합니다.</li>
+      <li class="highlight pink">무효화 구체: 검이 파괴되면 이를 무효화합니다. 파괴 시 획득 가능한 조각을 얻을 수 있으며, 강화비용이 반환됩니다.</li>
+      <li class="highlight purple">마법 모자: 검 파괴시 떨어지는 조각의 최대 갯수가 증가합니다.</li>
+    </ol>
   </details>
 </body>
 </html>

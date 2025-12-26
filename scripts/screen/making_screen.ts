@@ -10,22 +10,45 @@ type ButtonColor = "blue" | "purple";
 
 export class MakingScreen extends Screen {
 
-    id = "making";
+    protected id = "making";
 
-    private makeMaterialDiv(item: Item, having_count: number): HTMLDivElement {
+    private elements: {
+        recipes?: NodeListOf<HTMLElement>,
+        makingRecipes?: HTMLInputElement,
+        makingSwords?:  HTMLInputElement,
+        repairRecipes?: HTMLElement,
+        swordRecipes?: HTMLElement
+    } = {};
 
-        let required_count = item.count;
+    override changeBody(): void {
+        super.changeBody();
+
+        this.elements.recipes = document.querySelectorAll(".recipes");
+        
+        this.elements.makingRecipes = $<HTMLInputElement>("#making-recipes");
+        this.elements.makingSwords = $<HTMLInputElement>("#making-swords");
+        this.elements.repairRecipes = $("#repair-recipes");
+        this.elements.swordRecipes = $("#sword-recipes");
+
+        
+
+        this.elements.makingRecipes.onclick = () => this.render();
+
+        this.elements.makingSwords.onclick = () => this.render();
+    }
+
+    private makeMaterialDiv(material: Item, havingCount: number): HTMLDivElement {
 
         const created_div = createElementWith<HTMLDivElement>("div", {classes: ["item"]});
 
-        const created_img = createImageWithSrc(Game.Path[item.id]);
+        const created_img = createImageWithSrc(material.imgSrc);
 
         created_div.appendChild(created_img);
 
-        if(!(item instanceof MoneyItem)) created_div.appendChild(createElementWith("span", {classes: ["name"], text: item.name}));
+        if(!(material instanceof MoneyItem)) created_div.appendChild(createElementWith("span", {classes: ["name"], text: material.name}));
 
-        const count_span = createElementWith("span", {classes: ["count"], text: (item instanceof MoneyItem) ? required_count + "원" : having_count + "/" + required_count });
-        if(having_count < required_count) count_span.classList.add("unable");
+        const count_span = createElementWith("span", {classes: ["count"], text: (material instanceof MoneyItem) ? material.count + "원" : havingCount + "/" + material.count });
+        if(havingCount < material.count) count_span.classList.add("unable");
         created_div.appendChild(count_span);
         return created_div;
     };
@@ -36,25 +59,21 @@ export class MakingScreen extends Screen {
         if(materials.length == 1) created_materials.classList.add("one");
 
         for(const material of materials) {
-            let having_count: number;
             
             if(material instanceof MoneyItem) {
-                having_count = Game.inventoryManager.getMoney();
 
-                created_materials.appendChild(this.makeMaterialDiv(material, having_count));
+                created_materials.appendChild(this.makeMaterialDiv(material, Game.inventoryManager.getMoney()));
             } 
             else if(material instanceof SwordItem) {
-                having_count = Game.inventoryManager.getSwords().getCount(material.id);
+                const havingCount = Game.inventoryManager.getSwords().getCount(material.id);
 
                 if(Game.swordManager.isFound(material.id))
-                    created_materials.appendChild(this.makeMaterialDiv(material, having_count));
+                    created_materials.appendChild(this.makeMaterialDiv(material, havingCount));
                 else
-                    created_materials.appendChild(this.makeMaterialDiv(new UnknownItem(), having_count));
+                    created_materials.appendChild(this.makeMaterialDiv(new UnknownItem(), havingCount));
             }
             else if(material instanceof PieceItem) {
-                having_count = Game.inventoryManager.getPieces().getCount(material.id);
-
-                created_materials.appendChild(this.makeMaterialDiv(material, having_count));
+                created_materials.appendChild(this.makeMaterialDiv(material, Game.inventoryManager.getPieces().getCount(material.id)));
             }
 
         }
@@ -63,23 +82,23 @@ export class MakingScreen extends Screen {
     
     private makeResultSection(item: Item): HTMLElement  {
         const created_result = createElementWith("section", {classes: ["result"]});
-        const created_img_div = createElementWith("div", {classes: ["item"]});
+        const created_imgDiv = createElementWith("div", {classes: ["item"]});
 
-        created_img_div.appendChild(createImageWithSrc(Game.Path[item.id]));
-        created_img_div.appendChild(createElementWith("span", {classes: ["name"], text: item.name}));
+        created_imgDiv.appendChild(createImageWithSrc(item.imgSrc));
+        created_imgDiv.appendChild(createElementWith("span", {classes: ["name"], text: item.name}));
 
-        if(!(item instanceof UnknownItem)) created_img_div.appendChild(createElementWith("span", {classes: ["count"], text: "+" + item.count}));
-        created_result.appendChild(created_img_div);
+        if(!(item instanceof UnknownItem)) created_imgDiv.appendChild(createElementWith("span", {classes: ["count"], text: "+" + item.count}));
+        created_result.appendChild(created_imgDiv);
 
         return created_result;
     }
 
-    private makeGroupArticle(material_section: HTMLElement, result_section: HTMLElement, color: ButtonColor, canMake: boolean, clickFunction: () => void) {
+    private makeGroupArticle(material_section: HTMLElement, resultSection: HTMLElement, color: ButtonColor, canMake: boolean, clickFunction: () => void) {
 
         const created_article = createElementWith("article", {classes: [ "group"]});
 
         created_article.appendChild(material_section);
-        created_article.appendChild(result_section);
+        created_article.appendChild(resultSection);
         
         const btn = createElementWith<HTMLButtonElement>("button", {classes: [color], text: "제작"});
         btn.addEventListener("click", clickFunction);
@@ -93,7 +112,7 @@ export class MakingScreen extends Screen {
         
     private makeRepairPaperGroup(amount: number = 1): HTMLElement {
 
-        const recipe = Game.makingManager.getMultipliedItems(Game.makingManager.repair_paper_recipes, amount) ?? [];
+        const recipe = Game.makingManager.getMultipliedItems(Game.makingManager.repairPaperRecipes, amount) ?? [];
 
         return this.makeGroupArticle(
             this.makeMaterialSection(recipe), 
@@ -129,48 +148,31 @@ export class MakingScreen extends Screen {
 
     }
 
-    animateLodding(speed: number, onfinish: () => void) {
+    protected render() {
+
+        if(this.elements.makingRecipes?.checked) this.elements.recipes?.forEach(element => element.classList.remove("active"));
+        else if(this.elements.makingSwords?.checked) this.elements.recipes?.forEach(element => element.classList.add("active"));
+
+        this.elements.repairRecipes?.replaceChildren(...this.makeRepairPaperPage());
+        this.elements.swordRecipes?.replaceChildren(...this.makeSwordPage());
+    }
+
+    animateLoading(speed: number, onfinish: () => void) {
 
         const element_loadding = $<HTMLDivElement>("#maker-window-lodding");
         const element_hammer = $<HTMLDivElement>("#maker-window-lodding div");
         
         display(element_loadding);
-        element_loadding.animate(Keyframes.lodding_kef, {duration: speed/2});
-        element_hammer.animate(Keyframes.hammer_kef, {duration: speed, fill: "both"}).onfinish = () => {
+        element_loadding.animate(Keyframes.loadingKef, {duration: speed/2});
+        element_hammer.animate(Keyframes.hammerKef, {duration: speed, fill: "both"}).onfinish = () => {
             onfinish();
-            element_loadding.animate(Keyframes.lodding_kef, {duration: speed/2, direction: "reverse"}).onfinish = () => hide(element_loadding);
+            element_loadding.animate(Keyframes.loadingKef, {duration: speed/2, direction: "reverse"}).onfinish = () => hide(element_loadding);
         };
-    }
-    
-    render() {
-
-        const element_recipes = document.querySelectorAll(".recipes");
-        
-        const element_making_recipes = $<HTMLInputElement>("#making-recipes");
-        const element_making_swords = $<HTMLInputElement>("#making-swords");
-        const element_repair_recipes = $("#repair-recipes");
-        const element_sword_recipes = $("#sword-recipes");
-
-
-        if(element_making_recipes.checked) element_recipes.forEach(element => element.classList.remove("active"));
-        else if(element_making_swords.checked) element_recipes.forEach(element => element.classList.add("active"));
-
-        element_repair_recipes.replaceChildren(...this.makeRepairPaperPage());
-        element_sword_recipes.replaceChildren(...this.makeSwordPage());
-
-
-        element_making_recipes.addEventListener("click", () => {
-            Game.makingScreen.render();
-        })
-
-        element_making_swords.addEventListener("click", () => {
-            Game.makingScreen.render();
-        })
     }
 
     popupCreatedSwordMessage() {
         const popup = new Popup();
-        popup.setTitlte("검을 제작했습니다.", Color.SKY);
+        popup.setTitle("검을 제작했습니다.", Color.SKY);
         popup.setSubTitle("보관함으로 검이 지급되었습니다.");
         popup.addCloseButton();
         popup.build();

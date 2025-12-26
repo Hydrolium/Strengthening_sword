@@ -1,5 +1,5 @@
-import { getStatClass, Stat, StatID } from "./stat_manager.js";
-import { Color, Piece, PieceItem, Recipe, Sword, SwordItem } from "../other/entity.js";
+import { getStatClass, StatID } from "./stat_manager.js";
+import { Color, Piece, PieceItem, Recipe, Stat, Sword, SwordItem } from "../other/entity.js";
 
 export type StatIDs = "luckly_bracelet" | "god_hand" | "big_merchant" | "smith" | "invalidated_sphere" | "magic_hat"
 
@@ -15,7 +15,6 @@ interface SwordData {
 
 interface StatData {
     id: StatIDs;
-    name: string;
     description: string;
     values: number[];
     default_value: number;
@@ -40,7 +39,6 @@ interface Data {
     sword?: Sword[];
     recipe?: Recipe[];
     stat?: Record<StatID, Stat>;
-    korean?: Record<string, string>
 }
 
 export class DataManager {
@@ -69,10 +67,9 @@ export class DataManager {
 
             return {
                 path: paths,
-                sword: this.convertSword(swords),
-                recipe: this.convertRecipe(recipes as any),
-                stat: this.convertStat(stats as any),
-                korean: koreans
+                sword: this.convertSword(swords, paths, koreans),
+                recipe: this.convertRecipe(recipes as any, paths, koreans),
+                stat: this.convertStat(stats as any, paths, koreans),
             };
 
         } catch(error) {
@@ -81,50 +78,52 @@ export class DataManager {
         return null;
     }
 
-    private convertSword(swords: SwordData[]): Sword[] {
+    private convertSword(swords: SwordData[], paths: Record<string, string>, koreans: Record<string, string>): Sword[] {
         return swords.map(
                 sword =>
                     new Sword(
-                        sword.id, sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave,
+                        sword.id, koreans[sword.id], paths[sword.id], sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave,
                         sword.pieces.map(
-                            drop => new Piece(drop.id, drop.prob, drop.max_drop)
+                            drop => new Piece(drop.id, koreans[drop.id], paths[drop.id], drop.prob, drop.max_drop)
                         )
                     )
             );
     }
 
-    private convertRecipe(recipes: RecipeData[]): Recipe[] {
+    private convertRecipe(recipes: RecipeData[], paths: Record<string, string>, koreans: Record<string, string>): Recipe[] {
         return recipes.map(
                 recipeData =>
                     new Recipe(
                         (recipeData.result.type == "sword")
-                        ? new SwordItem(recipeData.result.id, recipeData.result.count)
-                        : new PieceItem(recipeData.result.id, recipeData.result.count),
+                        ? new SwordItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count)
+                        : new PieceItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count),
                         recipeData.materials.map(
-                            recipe_item => {
-                                if(recipe_item.type == "sword") return new SwordItem(recipe_item.id, recipe_item.count);
-                                else return new PieceItem(recipe_item.id, recipe_item.count);
+                            recipeItem => {
+                                if(recipeItem.type == "sword") return new SwordItem(recipeItem.id, koreans[recipeItem.id], paths[recipeItem.id],recipeItem.count);
+                                else return new PieceItem(recipeItem.id, koreans[recipeItem.id], paths[recipeItem.id], recipeItem.count);
                             }
                         )
                     )
             );
     }
 
-    private convertStat(stats: StatData[]): Record<StatID, Stat> {
+    private convertStat(stats: StatData[], paths: Record<string, string>, koreans: Record<string, string>): Record<StatID, Stat> {
         const g = {} as Record<StatID, Stat>;
 
-        for(const stat of stats) {
+        for(const statData of stats) {
 
-            const statID = StatID[stat.id.toUpperCase() as keyof typeof StatID];
+            const statID = StatID[statData.id.toUpperCase() as keyof typeof StatID];
 
             g[statID] = new (getStatClass(statID))(
-                stat.id,
-                stat.description,
-                stat.values,
-                stat.default_value,
-                Color[stat.color as keyof typeof Color],
-                stat.prefix,
-                stat.suffix);
+                statData.id,
+                koreans[statData.id],
+                paths[statData.id],
+                statData.description,
+                statData.values,
+                statData.default_value,
+                Color[statData.color as keyof typeof Color],
+                statData.prefix,
+                statData.suffix);
         }
 
         return g;
