@@ -210,7 +210,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .inventory_window main .item_group .underline.swo::before {content: "검";color: var(--color-blue);}
 .inventory_window main .item_group .underline.swo::after {content: " (마우스를 아이콘 위에 올려 메뉴 확인)";font-size: 0.9rem;color: var(--color-dark-gray);}
 .inventory_window main .item_group .group {display: grid;grid-template-columns: 1fr 2fr 1fr;width: 230px;height: 54px;align-items: center;margin: 0.5rem;}
-.inventory_window main .item_group .group .item {width: 50px;height: 50px;background-image: url("images/ui/frames/item_frame.png");background-size: contain;position: relative;cursor: pointer;}
+.inventory_window main .item_group .group .item {width: 50px;height: 50px;background-image: url("/images/ui/frames/item_frame.png");background-size: contain;position: relative;cursor: pointer;}
 .inventory_window main .item_group .group .item img {width: 80%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.5s;}
 .inventory_window main .item_group .group .item img:hover,
 .inventory_window main .item_group .group .item .hover_menu:hover + img {width: 100%;transition: all 0.1s;}
@@ -264,8 +264,8 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .sword_book_window main header span {color: var(--color-gold);margin: 0.25rem;font-size: 2rem;}
 .sword_book_window main .swords {display: flex;justify-content: center;flex-wrap: wrap;gap: 8px;margin: 0 8px;width: 100%;max-width: 400px;}
 .sword_book_window main .swords .sword_icon {width: 15%;padding-bottom: 15%;display: flex;justify-content: center;align-items: center;position: relative;cursor: pointer;transition: all 0.1s;}
-.sword_book_window main .swords .sword_icon.sword {background: center / contain url("images/ui/frames/item_frame.png");}
-.sword_book_window main .swords .sword_icon.unknown {background: center / contain url("images/ui/frames/sword_frame.png");}
+.sword_book_window main .swords .sword_icon.sword {background: center / contain url("/images/ui/frames/item_frame.png");}
+.sword_book_window main .swords .sword_icon.unknown {background: center / contain url("/images/ui/frames/sword_frame.png");}
 .sword_book_window main .swords .sword_icon img {width: 90%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.3s;}
 .sword_book_window main .swords .sword_icon .sword_name {position: absolute;bottom: 0;left: 50%;transform: translate(-50%, 50%);color: white;font-size: 1rem;opacity: 0;line-height: 90%;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
 .sword_book_window main .swords .sword_icon.sword:hover {transform: scale(1.2);transition: all 0.5s;z-index: 1;}
@@ -291,8 +291,8 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .maker_window main .recipe_box .recipes .group .material {display: flex;justify-content: space-between;padding: 4px;border: solid 4px var(--color-gray);border-radius: 4px;}
 .maker_window main .recipe_box .recipes .group .material.one {justify-content: center;}
 .maker_window main .recipe_box .recipes .group .result {display: flex;justify-content: center;}
-.maker_window main .recipe_box .recipes .group .material .item {width: 50px;height: 50px;background-image: url("images/ui/frames/item_frame.png");background-size: contain;position: relative;}
-.maker_window main .recipe_box .recipes .group .result .item {width: 55px;height: 55px;background-image: url("images/ui/frames/result_frame.png");background-size: contain;position: relative;}
+.maker_window main .recipe_box .recipes .group .material .item {width: 50px;height: 50px;background-image: url("/images/ui/frames/item_frame.png");background-size: contain;position: relative;}
+.maker_window main .recipe_box .recipes .group .result .item {width: 55px;height: 55px;background-image: url("/images/ui/frames/result_frame.png");background-size: contain;position: relative;}
 .maker_window main .recipe_box .recipes .group .item img {width: 90%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.3s;}
 .maker_window main .recipe_box .recipes .group .result .item img {filter: drop-shadow(2px 2px 3px var(--color-light-gray));}
 .maker_window main .recipe_box .recipes .group .item .count {position: absolute;bottom: -10%;left: 50%;transform: translateX(-50%);font-size: 16px;color: var(--color-white);pointer-events: none;transition: opacity 0.3s;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
