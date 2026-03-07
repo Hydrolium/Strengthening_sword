@@ -1,5 +1,5 @@
 import { getStatClass, StatID } from "./stat_manager.js";
-import { Color, Piece, PieceItem, Recipe, Stat, Sword, SwordItem } from "../other/entity.js";
+import { Color, Piece, PieceItem, RecipeInfo, Stat, Sword, SwordItem } from "../other/entity.js";
 
 export type StatIDs = "luckly_bracelet" | "god_hand" | "big_merchant" | "smith" | "invalidated_sphere" | "magic_hat"
 
@@ -37,7 +37,7 @@ interface RecipeData {
 interface Data {
     path?: Record<string, string>;
     sword?: Sword[];
-    recipe?: Recipe[];
+    recipe?: RecipeInfo[];
     stat?: Record<StatID, Stat>;
 }
 
@@ -90,10 +90,10 @@ export class DataManager {
             );
     }
 
-    private convertRecipe(recipes: RecipeData[], paths: Record<string, string>, koreans: Record<string, string>): Recipe[] {
+    private convertRecipe(recipes: RecipeData[], paths: Record<string, string>, koreans: Record<string, string>): RecipeInfo[] {
         return recipes.map(
                 recipeData =>
-                    new Recipe(
+                    new RecipeInfo(
                         (recipeData.result.type == "sword")
                         ? new SwordItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count)
                         : new PieceItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count),

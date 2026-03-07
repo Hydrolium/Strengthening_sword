@@ -81,7 +81,7 @@ export class MainScreen extends Screen {
         else invisible(this.elements.saveButton);
     }
 
-    popupFallMessage(loss: number, pieces: PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {
+    popupFallMessage(loss: number, pieces: readonly PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {
 
 
         const popup = new Popup();
@@ -151,7 +151,7 @@ export class MainScreen extends Screen {
         popup.show();
     }
 
-    popupInvalidationMessage(pieces: PieceItem[]) {
+    popupInvalidationMessage(pieces: readonly PieceItem[]) {
 
         const popup = new Popup();
         popup.setTitle("검이 파괴되었지만 복구되었습니다.", Color.BLUE);

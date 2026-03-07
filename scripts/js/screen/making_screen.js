@@ -47,7 +47,7 @@ export class MakingScreen extends Screen {
                 if (Game.swordManager.isFound(material.id))
                     created_materials.appendChild(this.makeMaterialDiv(material, havingCount));
                 else
-                    created_materials.appendChild(this.makeMaterialDiv(new UnknownItem(), havingCount));
+                    created_materials.appendChild(this.makeMaterialDiv(UnknownItem.instance, havingCount));
             }
             else if (material instanceof PieceItem) {
                 created_materials.appendChild(this.makeMaterialDiv(material, Game.inventoryManager.getPieces().getCount(material.id)));
@@ -81,7 +81,7 @@ export class MakingScreen extends Screen {
     makeSwordPage(recipes) {
         return recipes.map(recipe => this.makeGroupArticle(this.makeMaterialSection(recipe.materials), (Game.swordManager.isFound(recipe.result.id))
             ? this.makeResultSection(recipe.result)
-            : this.makeResultSection(new UnknownItem()), "purple", !(Game.inventoryManager.hasItems(recipe.materials)), () => onClickMakingButton(recipe)));
+            : this.makeResultSection(UnknownItem.instance), "purple", !(Game.inventoryManager.hasItems(recipe.materials)), () => onClickMakingButton(recipe)));
     }
     render(context) {
         var _a, _b, _c, _d, _e, _f;

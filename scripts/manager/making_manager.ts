@@ -1,19 +1,19 @@
-import { Observer, Item, PieceItem, Recipe, MoneyItem, SwordItem, RepairPaperItem } from '../other/entity.js';
+import { Observer, Item, PieceItem, RecipeInfo, MoneyItem, SwordItem, RepairPaperItem } from '../other/entity.js';
 import { Game } from '../other/main.js';
 import { ContextType, GameContext, MakingContext } from '../other/context.js';
 
 export class MakingManager extends Observer {
 
-    public repairPaperRecipes: Recipe[] = [
-        new Recipe(new RepairPaperItem(1), [new MoneyItem(300)]),
-        new Recipe(new RepairPaperItem(5), [new MoneyItem(1500)]),
-        new Recipe(new RepairPaperItem(10), [new MoneyItem(3000)]),
-        new Recipe(new RepairPaperItem(15), [new MoneyItem(4500)]),
+    public readonly repairPaperRecipes: readonly RecipeInfo[] = [
+        new RecipeInfo(new RepairPaperItem(1), [new MoneyItem(300)]),
+        new RecipeInfo(new RepairPaperItem(5), [new MoneyItem(1500)]),
+        new RecipeInfo(new RepairPaperItem(10), [new MoneyItem(3000)]),
+        new RecipeInfo(new RepairPaperItem(15), [new MoneyItem(4500)]),
     ];
 
-    public swordRecipes: Recipe[] = [];
+    public readonly swordRecipes: readonly RecipeInfo[] = [];
 
-    constructor(swordRecipes?: Recipe[]) {
+    constructor(swordRecipes?: readonly RecipeInfo[]) {
         super();
         if(swordRecipes) this.swordRecipes = swordRecipes;
     }
@@ -31,11 +31,7 @@ export class MakingManager extends Observer {
         }
     }
 
-    setSwordRecipe(result: SwordItem, ...materials: Item[]) {
-        this.swordRecipes.push(new Recipe(result, materials));
-    }
-
-    copyItems(items: Item[]): Item[] {
+    copyItems(items: readonly Item[]): readonly Item[] {
         const newArray: Item[] = [];
         for(const item of items) {
             if(item instanceof MoneyItem) {
@@ -51,13 +47,13 @@ export class MakingManager extends Observer {
         return newArray;
     }
 
-    getMultipliedItems(items: Item[], amount: number): Item[] {
-        const newItems = this.copyItems(items);
-        for(const item of newItems) item.count *= amount;
-        return newItems;
+    getMultipliedItems(items: readonly Item[], amount: number): readonly Item[] {
+        return items.map(
+            item => new Item(item.id, item.name, item.imgSrc, item.count * amount)
+        );
     }
 
-    makeWithRecipe(recipe: Recipe) {
+    makeWithRecipe(recipe: RecipeInfo) {
         if(!Game.inventoryManager.hasItems(recipe.materials)) return;
 
         if(recipe.result instanceof SwordItem) {

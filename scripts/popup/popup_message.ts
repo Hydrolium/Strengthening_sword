@@ -12,7 +12,7 @@ export class ColoredTextElement {
         return this;
     }
 
-    build(): HTMLElement[] {
+    build(): readonly HTMLElement[] {
         return this.elements;
     }
 }

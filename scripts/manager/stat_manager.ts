@@ -57,9 +57,9 @@ export function getStatClass(statID: StatID): StatClass {
 export class StatManager extends Observer {
     
     private statPoint = 0;
-    private stats: Record<StatID, Stat> = {} as Record<StatID, Stat>;
+    private stats: Readonly<Record<StatID, Stat>> = {} as Record<StatID, Stat>;
 
-    constructor(stats: Record<StatID, Stat> = {} as Record<StatID, Stat>) {
+    constructor(stats: Readonly<Record<StatID, Stat>> = {} as Record<StatID, Stat>) {
         super();
         this.stats = stats;
     }

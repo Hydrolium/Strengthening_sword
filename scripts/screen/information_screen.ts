@@ -41,7 +41,7 @@ export class InformationScreen extends Screen {
 
         const created_found = context.swords.map((sword, index) => {
             if(context.founds.has(index)) return this.makeIcon(sword.toItem());
-            return this.makeIcon(new UnknownItem());
+            return this.makeIcon(UnknownItem.instance);
         });
 
         this.elements.foundSwords?.replaceChildren(...created_found);

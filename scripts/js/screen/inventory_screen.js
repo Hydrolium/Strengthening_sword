@@ -79,7 +79,7 @@ export class InventoryScreen extends Screen {
         if (context.pieceStorage.size != 0)
             inner.push(this.makePieceGroupSection(context.pieceStorage.sorted((a, b) => a.count - b.count)));
         if (context.swordStorage.size != 0)
-            inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.items.values())));
+            inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.getAll())));
         if (context.pieceStorage.size == 0 && context.swordStorage.size == 0) {
             (_a = this.elements.windowMain) === null || _a === void 0 ? void 0 : _a.classList.add("empty_inventory");
             if (context.repairPapers <= 0)
@@ -154,7 +154,7 @@ export class InventoryScreen extends Screen {
         const popup = new Popup();
         popup.setIcon(pieceItem.imgSrc);
         popup.setTitle(`<${pieceItem.name}> 획득처`, Color.GREEN);
-        const unknown = new UnknownItem();
+        const unknown = UnknownItem.instance;
         swords.forEach(sword => {
             const created_div = createElementWith("div", { classes: ["img_name_count_paragraph"] });
             if (founds.has(sword.index)) {

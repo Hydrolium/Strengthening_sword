@@ -1,8 +1,7 @@
 import { onStatUp } from "../other/click_events.js";
 import { ContextType, GameContext } from "../other/context.js";
 import { $, createElement, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
-import { Color, Stat } from "../other/entity.js";
-import { Game } from "../other/main.js";
+import { Color, StatInfo } from "../other/entity.js";
 import { Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
 
@@ -33,7 +32,7 @@ export class StatScreen extends Screen {
         return created_iconBox;
     };
 
-    private  makeLevelDiv(stat: Stat): HTMLDivElement {
+    private  makeLevelDiv(stat: StatInfo): HTMLDivElement {
 
         const created_levelBox = createElementWith<HTMLDivElement>("div", {classes: ["level"]});
         const created_ul = createElement("ul");
@@ -47,7 +46,7 @@ export class StatScreen extends Screen {
         return created_levelBox;
     };
 
-    private makeInfoDiv(stat: Stat): HTMLDivElement {
+    private makeInfoDiv(stat: StatInfo): HTMLDivElement {
         const created_infoBox = createElementWith<HTMLDivElement>("div", {classes: ["info"]});
 
         const created_pName = createElementWith("p", {classes: ["name"], text: stat.name});
@@ -71,7 +70,7 @@ export class StatScreen extends Screen {
     };
 
 
-    private makeStatSection(stat: Stat): HTMLElement {
+    private makeStatSection(stat: StatInfo): HTMLElement {
 
         const created_section = createElementWith("section", {classes: ["stat", stat.color]});
 

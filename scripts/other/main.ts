@@ -45,7 +45,7 @@ export class Game {
     }
 }
 
-async function loadAllImg(srcs: string[]): Promise<void> {
+async function loadAllImg(srcs: readonly string[]): Promise<void> {
 
     const promises = srcs.map(src => {
         return new Promise<void>((resolve) => {

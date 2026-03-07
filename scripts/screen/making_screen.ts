@@ -1,7 +1,7 @@
 import { onClickMakingButton } from "../other/click_events.js";
 import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, display, hide } from "../other/element_controller.js";
-import { Color, Item, MoneyItem, PieceItem, Recipe, RepairPaperItem, Storage, SwordItem, UnknownItem } from "../other/entity.js";
+import { Color, Item, MoneyItem, PieceItem, RecipeInfo, RepairPaperItem, Storage, SwordItem, UnknownItem } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 import { Keyframes, Screen } from "./screen.js";
@@ -53,7 +53,7 @@ export class MakingScreen extends Screen {
         return created_div;
     };
     
-    private makeMaterialSection(materials: Item[]): HTMLElement {
+    private makeMaterialSection(materials: readonly Item[]): HTMLElement {
         const created_materials = createElementWith("section", {classes: ["material"]});
 
         if(materials.length == 1) created_materials.classList.add("one");
@@ -70,7 +70,7 @@ export class MakingScreen extends Screen {
                 if(Game.swordManager.isFound(material.id))
                     created_materials.appendChild(this.makeMaterialDiv(material, havingCount));
                 else
-                    created_materials.appendChild(this.makeMaterialDiv(new UnknownItem(), havingCount));
+                    created_materials.appendChild(this.makeMaterialDiv(UnknownItem.instance, havingCount));
             }
             else if(material instanceof PieceItem) {
                 created_materials.appendChild(this.makeMaterialDiv(material, Game.inventoryManager.getPieces().getCount(material.id)));
@@ -109,7 +109,7 @@ export class MakingScreen extends Screen {
         return created_article;
     }
     
-    private makeRepairPaperPage(recipes: Recipe[]): HTMLElement[] {
+    private makeRepairPaperPage(recipes: readonly RecipeInfo[]): readonly HTMLElement[] {
 
         return recipes.map(
             recipe =>
@@ -123,14 +123,14 @@ export class MakingScreen extends Screen {
         );
     }
 
-    private makeSwordPage(recipes: Recipe[]): HTMLElement[] {
+    private makeSwordPage(recipes: readonly RecipeInfo[]): readonly HTMLElement[] {
 
         return recipes.map(
             recipe => this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials), 
                     (Game.swordManager.isFound(recipe.result.id))
                     ? this.makeResultSection(recipe.result)
-                    : this.makeResultSection(new UnknownItem()),
+                    : this.makeResultSection(UnknownItem.instance),
                     "purple",
                     !(Game.inventoryManager.hasItems(recipe.materials)),
                     () => onClickMakingButton(recipe)

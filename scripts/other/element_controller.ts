@@ -22,9 +22,9 @@ export function createImageWithSrc(src: string, alt=""): HTMLImageElement {
 }
 
 export interface Attribute {
-    classes?: string[];
-    text?: any;
-    id?: string;
+    readonly classes?: readonly string[];
+    readonly text?: any;
+    readonly id?: string;
 }
 
 export function createElement<T extends HTMLElement>(tag: string): T {

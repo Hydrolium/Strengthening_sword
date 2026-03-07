@@ -1,5 +1,5 @@
 import { ContextType, GameContext, InventoryContext } from '../other/context.js';
-import { Observer, Storage, Item, SwordItem, PieceItem, MoneyItem, RepairPaperItem } from '../other/entity.js';
+import { Observer, Storage, Item, SwordItem, PieceItem, MoneyItem, RepairPaperItem, StorageInfo } from '../other/entity.js';
 import { Game } from '../other/main.js';
 
 export class InventoryManager extends Observer {
@@ -67,7 +67,7 @@ export class InventoryManager extends Observer {
         return this.repairPaper;
     }
 
-    hasItems(items: Item[]): boolean {
+    hasItems(items: readonly Item[]): boolean {
         for(const item of items) {
             if(
                 item instanceof MoneyItem
@@ -133,7 +133,7 @@ export class InventoryManager extends Observer {
         }
     }
 
-    breakSword(id: string): PieceItem[] {
+    breakSword(id: string): readonly PieceItem[] {
         if(this.swordStorage.hasEnough(id, 1)) {
 
             const pieces = Game.swordManager.getCalculatedSwordWithId(id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
@@ -147,11 +147,11 @@ export class InventoryManager extends Observer {
         return [];
     }
 
-    getPieces(): Storage<PieceItem> {
+    getPieces(): StorageInfo<PieceItem> {
         return this.pieceStorage;
     }
 
-    getSwords(): Storage<SwordItem> {
+    getSwords(): StorageInfo<SwordItem> {
         return this.swordStorage;
     }
 }

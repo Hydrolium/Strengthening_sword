@@ -1,4 +1,4 @@
-import { Item, PieceItem, Recipe, Stat, Storage, Sword, SwordItem } from "./entity";
+import { PieceItem, RecipeInfo, StatInfo, StorageInfo, Sword, SwordItem } from "./entity";
 
 export type GameContext = MoneyChangeContext | SystemMoneyGiftContext | SwordContext | FoundSwordsContext | InventoryContext | SWordUpgradeContext | SWordSellContext | SWordRestoreContext | BuyUsingMoneyContext | StatContext | MakingContext;
 
@@ -54,8 +54,8 @@ export interface InventoryContext {
 
     type: ContextType.INVENTORY;
 
-    swordStorage: Storage<SwordItem>;
-    pieceStorage: Storage<PieceItem>;
+    swordStorage: StorageInfo<SwordItem>;
+    pieceStorage: StorageInfo<PieceItem>;
     repairPapers: number;
 }
 
@@ -92,14 +92,14 @@ export interface StatContext {
     type: ContextType.STAT,
 
     statPoint: number,
-    stats: Stat[]
+    stats: readonly StatInfo[]
 }
 
 export interface MakingContext {
     type: ContextType.MAKING,
 
-    havingPieces: Storage<PieceItem>
-    havingSwords: Storage<SwordItem>,
-    repairPaperRecipes: Recipe[],
-    swordRecipes: Recipe[]
+    havingPieces: StorageInfo<PieceItem>
+    havingSwords: StorageInfo<SwordItem>,
+    repairPaperRecipes: readonly RecipeInfo[],
+    swordRecipes: readonly RecipeInfo[]
 }

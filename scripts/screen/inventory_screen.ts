@@ -80,7 +80,7 @@ export class InventoryScreen extends Screen {
         return created_repairGroup;
     }
 
-    private makePieceGroupSection(pieceItemList: PieceItem[]): HTMLElement {
+    private makePieceGroupSection(pieceItemList: readonly PieceItem[]): HTMLElement {
         const created_pieceGroup = createElementWith("section", {classes: ["item_group"]});
         created_pieceGroup.appendChild(createElementWith("div", {classes: ["underline", "pie"]}));
         pieceItemList.forEach(
@@ -88,7 +88,7 @@ export class InventoryScreen extends Screen {
         return created_pieceGroup;
     }
 
-    private makeSwordGroupSection(swordItemList: SwordItem[]): HTMLElement {
+    private makeSwordGroupSection(swordItemList: readonly SwordItem[]): HTMLElement {
         const created_swordGroup = createElementWith("section", {classes: ["item_group"]});
         created_swordGroup.appendChild(createElementWith("div", {classes: ["underline", "swo"]}));
 
@@ -112,7 +112,7 @@ export class InventoryScreen extends Screen {
 
         if(context.pieceStorage.size != 0) inner.push(this.makePieceGroupSection(context.pieceStorage.sorted((a, b) => a.count - b.count)));
         
-        if(context.swordStorage.size != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.items.values())));
+        if(context.swordStorage.size != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.getAll())));
         
         if(context.pieceStorage.size == 0 && context.swordStorage.size == 0) {
             this.elements.windowMain?.classList.add("empty_inventory");
@@ -164,7 +164,7 @@ export class InventoryScreen extends Screen {
         popup.show();
     }
 
-    popupBreakMessage(pieces: PieceItem[]) {
+    popupBreakMessage(pieces: readonly PieceItem[]) {
         
         const popup = new Popup();
         popup.setTitle("검을 파괴했습니다.", Color.BLUE);
@@ -217,7 +217,7 @@ export class InventoryScreen extends Screen {
         popup.setIcon(pieceItem.imgSrc)
         popup.setTitle(`<${pieceItem.name}> 획득처`, Color.GREEN);
 
-        const unknown = new UnknownItem();
+        const unknown = UnknownItem.instance;
 
         swords.forEach(
                 sword => {

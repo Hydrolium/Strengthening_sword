@@ -5,20 +5,17 @@ import { StatID } from './stat_manager.js';
 
 export class SwordManager extends Observer {
 
-    // private _ds: DataStorage;
-
-    private _swords: ReadonlyArray<Sword>;
+    private readonly _swords: readonly Sword[];
 
     private _current_sword_index: number = 0;
-    private _swordCount: number;
-    private _pieceInfos: ReadonlyMap<String, ReadonlyArray<SwordInfoByPiece>>;
+    private readonly _swordCount: number;
+    private readonly _pieceInfos: ReadonlyMap<String, ReadonlyArray<SwordInfoByPiece>>;
 
-    private _foundSwordIndexes = new Set<number>();
+    private readonly _foundSwordIndexes = new Set<number>();
 
-    public maxUpgradableIndex: number;
+    public readonly maxUpgradableIndex: number;
 
-
-    constructor(swords?: Sword[]) {
+    constructor(swords?: readonly Sword[]) {
         super();
         this._swords = swords ?? [];
 
@@ -73,7 +70,7 @@ export class SwordManager extends Observer {
         }
     }
 
-    getSwordsByPieceId(pieceId: string): ReadonlyArray<SwordInfoByPiece> {
+    getSwordsByPieceId(pieceId: string): readonly SwordInfoByPiece[] {
         return this._pieceInfos.get(pieceId) ?? [];
     }
 
@@ -174,7 +171,7 @@ export class SwordManager extends Observer {
         return this.getSwordWithIdx(Math.min(this.current_sword_index +1, this.maxUpgradableIndex));
     }
 
-    tryUpgrade(): {result: SwordTestResult, result_index: number, sword?: Sword, dropped_pieces?: PieceItem[]} {
+    tryUpgrade(): {result: SwordTestResult, result_index: number, sword?: Sword, dropped_pieces?: readonly PieceItem[]} {
         
         const sword = this.getCalculatedCurrentSword();
 

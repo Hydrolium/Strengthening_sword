@@ -1,5 +1,5 @@
 import { getStatClass, StatID } from "./stat_manager.js";
-import { Color, Piece, PieceItem, Recipe, Sword, SwordItem } from "../other/entity.js";
+import { Color, Piece, PieceItem, RecipeInfo, Sword, SwordItem } from "../other/entity.js";
 export class DataManager {
     async loadAllData() {
         try {
@@ -34,7 +34,7 @@ export class DataManager {
         return swords.map((sword, index) => new Sword(sword.id, index, koreans[sword.id], paths[sword.id], sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave, sword.pieces.map(drop => new Piece(drop.id, koreans[drop.id], paths[drop.id], drop.prob, drop.max_drop))));
     }
     convertRecipe(recipes, paths, koreans) {
-        return recipes.map(recipeData => new Recipe((recipeData.result.type == "sword")
+        return recipes.map(recipeData => new RecipeInfo((recipeData.result.type == "sword")
             ? new SwordItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count)
             : new PieceItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count), recipeData.materials.map(recipeItem => {
             if (recipeItem.type == "sword")

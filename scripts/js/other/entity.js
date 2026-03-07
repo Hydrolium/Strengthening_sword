@@ -30,49 +30,60 @@ export class RepairPaperItem extends Item {
     constructor(count) { super("repair_paper", "복구권", "images/items/repair_paper.png", count); }
 }
 export class UnknownItem extends Item {
-    constructor() { super("unknown", "발견 안됨", "images/items/unknown.png", 1); }
+    constructor() {
+        super("unknown", "발견 안됨", "images/items/unknown.png", 1);
+    }
+    static get instance() {
+        if (this._instance)
+            return this._instance;
+        this._instance = new UnknownItem();
+        return this._instance;
+    }
 }
 export class Storage {
     constructor(owner, stockClass, infinityCheck) {
         this.owner = owner;
         this.stockClass = stockClass;
         this.infinityCheck = infinityCheck;
-        this.items = new Map();
+        this._items = new Map();
     }
     get size() {
-        return this.items.size;
+        return this._items.size;
+    }
+    getAll() {
+        return Array.from(this._items.values());
     }
     getCount(id) {
         var _a, _b;
-        return (this.infinityCheck()) ? Infinity : (_b = (_a = this.items.get(id)) === null || _a === void 0 ? void 0 : _a.count) !== null && _b !== void 0 ? _b : 0;
-    }
-    add(item) {
-        if (item.count <= 0)
-            return;
-        const exisiting = this.items.get(item.id);
-        if (exisiting)
-            exisiting.count += item.count;
-        else
-            this.items.set(item.id, new this.stockClass(item.id, item.name, item.imgSrc, item.count));
-        this.owner.notify(this.owner.inventoryContext);
+        return (this.infinityCheck()) ? Infinity : (_b = (_a = this._items.get(id)) === null || _a === void 0 ? void 0 : _a.count) !== null && _b !== void 0 ? _b : 0;
     }
     hasEnough(id, count) {
         return this.getCount(id) >= count;
     }
+    sorted(compareFn) {
+        return Array.from(this._items.values())
+            .sort(compareFn);
+    }
+    add(item) {
+        if (item.count <= 0)
+            return;
+        const exisiting = this._items.get(item.id);
+        if (exisiting)
+            this._items.set(item.id, new this.stockClass(item.id, item.name, item.imgSrc, item.count + exisiting.count));
+        else
+            this._items.set(item.id, new this.stockClass(item.id, item.name, item.imgSrc, item.count));
+        this.owner.notify(this.owner.inventoryContext);
+    }
     remove(id, count) {
         if (count <= 0)
             return;
-        const exisiting = this.items.get(id);
+        const exisiting = this._items.get(id);
         if (!exisiting)
             return;
-        exisiting.count -= count;
+        this._items.set(exisiting.id, new this.stockClass(exisiting.id, exisiting.name, exisiting.imgSrc, exisiting.count - count));
         if (exisiting.count <= 0)
-            this.items.delete(id);
+            this._items.delete(id);
         this.owner.notify(this.owner.inventoryContext);
-    }
-    sorted(compareFn) {
-        return Array.from(this.items.values())
-            .sort(compareFn);
     }
 }
 export class Sword {
@@ -132,7 +143,7 @@ export var StatTestResult;
     StatTestResult[StatTestResult["SUCCESS"] = 2] = "SUCCESS";
     StatTestResult[StatTestResult["SUCCESS_AND_ALL_MAX"] = 3] = "SUCCESS_AND_ALL_MAX";
 })(StatTestResult || (StatTestResult = {}));
-export class Recipe {
+export class RecipeInfo {
     constructor(result, materials) {
         this.result = result;
         this.materials = materials;
