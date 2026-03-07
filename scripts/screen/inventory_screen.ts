@@ -110,11 +110,11 @@ export class InventoryScreen extends Screen {
 
         if(context.repairPapers > 0) inner.push(this.makeRepairGroupSection(context.repairPapers));
 
-        if(context.pieces.length != 0) inner.push(this.makePieceGroupSection(context.pieces.sorted((a, b) => a.count - b.count)));
+        if(context.pieceStorage.size != 0) inner.push(this.makePieceGroupSection(context.pieceStorage.sorted((a, b) => a.count - b.count)));
         
-        if(context.swords.length != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swords.items.values())));
+        if(context.swordStorage.size != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.items.values())));
         
-        if(context.pieces.length == 0 && context.swords.length == 0) {
+        if(context.pieceStorage.size == 0 && context.swordStorage.size == 0) {
             this.elements.windowMain?.classList.add("empty_inventory");
             
             if(context.repairPapers <= 0) inner.push(createElementWith("p", {classes: ["no_item"], text: "보관된 아이템이 없습니다."}));

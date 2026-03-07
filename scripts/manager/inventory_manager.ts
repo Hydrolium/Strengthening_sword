@@ -4,8 +4,8 @@ import { Game } from '../other/main.js';
 
 export class InventoryManager extends Observer {
 
-    private swords: Storage<SwordItem> = new Storage<SwordItem>(this, SwordItem, () => Game.developerMod.infinityMaterial);
-    private pieces: Storage<PieceItem> = new Storage<PieceItem>(this, PieceItem, () => Game.developerMod.infinityMaterial);
+    private swordStorage: Storage<SwordItem> = new Storage<SwordItem>(this, SwordItem, () => Game.developerMod.infinityMaterial);
+    private pieceStorage: Storage<PieceItem> = new Storage<PieceItem>(this, PieceItem, () => Game.developerMod.infinityMaterial);
 
     private _money: number = 0;
 
@@ -29,8 +29,8 @@ export class InventoryManager extends Observer {
     get inventoryContext(): InventoryContext {
         return {
             type: ContextType.INVENTORY,
-            swords: this.swords,
-            pieces: this.pieces,
+            swordStorage: this.swordStorage,
+            pieceStorage: this.pieceStorage,
             repairPapers: this.repairPaper
         };
     }
@@ -75,11 +75,11 @@ export class InventoryManager extends Observer {
             ) return false;
             else if (
                 item instanceof SwordItem
-                && !this.swords.hasEnough(item.id, item.count)
+                && !this.swordStorage.hasEnough(item.id, item.count)
             ) return false;
             else if (
                 item instanceof PieceItem
-                && !this.pieces.hasEnough(item.id, item.count)
+                && !this.pieceStorage.hasEnough(item.id, item.count)
             ) return false;
             else if (
                 item instanceof RepairPaperItem
@@ -90,20 +90,20 @@ export class InventoryManager extends Observer {
     }
 
     take(item: SwordItem | PieceItem | RepairPaperItem) {
-        if (item instanceof SwordItem) this.swords.remove(item.id, item.count);
-        else if (item instanceof PieceItem) this.pieces.remove(item.id, item.count);
+        if (item instanceof SwordItem) this.swordStorage.remove(item.id, item.count);
+        else if (item instanceof PieceItem) this.pieceStorage.remove(item.id, item.count);
         else if (item instanceof RepairPaperItem) this.saveRepairPaper(item.count);
     }
 
     save(item: SwordItem | PieceItem | RepairPaperItem) {
-        if (item instanceof SwordItem) this.swords.add(item);
-        else if (item instanceof PieceItem) this.pieces.add(item);
+        if (item instanceof SwordItem) this.swordStorage.add(item);
+        else if (item instanceof PieceItem) this.pieceStorage.add(item);
         else if (item instanceof RepairPaperItem) this.saveRepairPaper(item.count);
     }
 
     sellSword(id: string) {
 
-        if(this.swords.hasEnough(id, 1)) {
+        if(this.swordStorage.hasEnough(id, 1)) {
             
             const sword = Game.swordManager.getCalculatedSwordWithId(id);
 
@@ -113,19 +113,19 @@ export class InventoryManager extends Observer {
                 price: sword.price
             })
 
-            this.swords.remove(id, 1);
+            this.swordStorage.remove(id, 1);
         }
     }
 
     swapSword(id: string) {
-        if(this.swords.hasEnough(id, 1)) {
+        if(this.swordStorage.hasEnough(id, 1)) {
 
             const sword = Game.swordManager.getCalculatedCurrentSword()
             if(sword.canSave) {
                 this.save(sword.toItem());
             }
 
-            this.swords.remove(id, 1);
+            this.swordStorage.remove(id, 1);
             
             Game.swordManager.jumpTo(Game.swordManager.getIndex(id));
             Game.mainScreen.show(Game.swordManager.swordContext);
@@ -134,11 +134,11 @@ export class InventoryManager extends Observer {
     }
 
     breakSword(id: string): PieceItem[] {
-        if(this.swords.hasEnough(id, 1)) {
+        if(this.swordStorage.hasEnough(id, 1)) {
 
             const pieces = Game.swordManager.getCalculatedSwordWithId(id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
 
-            this.swords.remove(id, 1);
+            this.swordStorage.remove(id, 1);
             pieces.forEach(piece => this.save(piece));
 
             return pieces;
@@ -148,10 +148,10 @@ export class InventoryManager extends Observer {
     }
 
     getPieces(): Storage<PieceItem> {
-        return this.pieces;
+        return this.pieceStorage;
     }
 
     getSwords(): Storage<SwordItem> {
-        return this.swords;
+        return this.swordStorage;
     }
 }

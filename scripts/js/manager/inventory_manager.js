@@ -4,8 +4,8 @@ import { Game } from '../other/main.js';
 export class InventoryManager extends Observer {
     constructor() {
         super(...arguments);
-        this.swords = new Storage(this, SwordItem, () => Game.developerMod.infinityMaterial);
-        this.pieces = new Storage(this, PieceItem, () => Game.developerMod.infinityMaterial);
+        this.swordStorage = new Storage(this, SwordItem, () => Game.developerMod.infinityMaterial);
+        this.pieceStorage = new Storage(this, PieceItem, () => Game.developerMod.infinityMaterial);
         this._money = 0;
         this.repairPaper = 0;
     }
@@ -23,8 +23,8 @@ export class InventoryManager extends Observer {
     get inventoryContext() {
         return {
             type: ContextType.INVENTORY,
-            swords: this.swords,
-            pieces: this.pieces,
+            swordStorage: this.swordStorage,
+            pieceStorage: this.pieceStorage,
             repairPapers: this.repairPaper
         };
     }
@@ -64,10 +64,10 @@ export class InventoryManager extends Observer {
                 && !this.hasMoney(item.count))
                 return false;
             else if (item instanceof SwordItem
-                && !this.swords.hasEnough(item.id, item.count))
+                && !this.swordStorage.hasEnough(item.id, item.count))
                 return false;
             else if (item instanceof PieceItem
-                && !this.pieces.hasEnough(item.id, item.count))
+                && !this.pieceStorage.hasEnough(item.id, item.count))
                 return false;
             else if (item instanceof RepairPaperItem
                 && !this.hasRepairPaper(item.count))
@@ -77,55 +77,55 @@ export class InventoryManager extends Observer {
     }
     take(item) {
         if (item instanceof SwordItem)
-            this.swords.remove(item.id, item.count);
+            this.swordStorage.remove(item.id, item.count);
         else if (item instanceof PieceItem)
-            this.pieces.remove(item.id, item.count);
+            this.pieceStorage.remove(item.id, item.count);
         else if (item instanceof RepairPaperItem)
             this.saveRepairPaper(item.count);
     }
     save(item) {
         if (item instanceof SwordItem)
-            this.swords.add(item);
+            this.swordStorage.add(item);
         else if (item instanceof PieceItem)
-            this.pieces.add(item);
+            this.pieceStorage.add(item);
         else if (item instanceof RepairPaperItem)
             this.saveRepairPaper(item.count);
     }
     sellSword(id) {
-        if (this.swords.hasEnough(id, 1)) {
+        if (this.swordStorage.hasEnough(id, 1)) {
             const sword = Game.swordManager.getCalculatedSwordWithId(id);
             this.saveMoney(sword.price, {
                 type: ContextType.SWORD_SELL,
                 name: sword.name,
                 price: sword.price
             });
-            this.swords.remove(id, 1);
+            this.swordStorage.remove(id, 1);
         }
     }
     swapSword(id) {
-        if (this.swords.hasEnough(id, 1)) {
+        if (this.swordStorage.hasEnough(id, 1)) {
             const sword = Game.swordManager.getCalculatedCurrentSword();
             if (sword.canSave) {
                 this.save(sword.toItem());
             }
-            this.swords.remove(id, 1);
+            this.swordStorage.remove(id, 1);
             Game.swordManager.jumpTo(Game.swordManager.getIndex(id));
             Game.mainScreen.show(Game.swordManager.swordContext);
         }
     }
     breakSword(id) {
-        if (this.swords.hasEnough(id, 1)) {
+        if (this.swordStorage.hasEnough(id, 1)) {
             const pieces = Game.swordManager.getCalculatedSwordWithId(id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
-            this.swords.remove(id, 1);
+            this.swordStorage.remove(id, 1);
             pieces.forEach(piece => this.save(piece));
             return pieces;
         }
         return [];
     }
     getPieces() {
-        return this.pieces;
+        return this.pieceStorage;
     }
     getSwords() {
-        return this.swords;
+        return this.swordStorage;
     }
 }

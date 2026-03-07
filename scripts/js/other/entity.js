@@ -39,7 +39,7 @@ export class Storage {
         this.infinityCheck = infinityCheck;
         this.items = new Map();
     }
-    get length() {
+    get size() {
         return this.items.size;
     }
     getCount(id) {

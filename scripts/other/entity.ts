@@ -32,7 +32,7 @@ export class Storage<T extends Item> {
         private stockClass: ItemClass<T>,
         private infinityCheck: () => boolean) {}
 
-    get length(): number {
+    get size(): number {
         return this.items.size;
     }
 

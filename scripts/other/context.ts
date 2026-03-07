@@ -54,8 +54,8 @@ export interface InventoryContext {
 
     type: ContextType.INVENTORY;
 
-    swords: Storage<SwordItem>;
-    pieces: Storage<PieceItem>;
+    swordStorage: Storage<SwordItem>;
+    pieceStorage: Storage<PieceItem>;
     repairPapers: number;
 }
 
