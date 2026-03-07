@@ -62,7 +62,7 @@ export class MainScreen extends Screen {
 
             const prob = context.sword.prob;
 
-            write(this._elements.swordProb, Math.round(prob*100));
+            write(this._elements.swordProb, Math.floor(prob*100));
             write(this._elements.swordCost, `${context.sword.cost}`);
         } else {
             write(this._elements.swordProb, "");

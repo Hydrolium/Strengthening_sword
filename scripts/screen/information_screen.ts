@@ -60,7 +60,7 @@ export class InformationScreen extends Screen {
 
         if(sword.prob > 0)
             popup.addColoredParagraph(
-                new ColoredTextElement().add("강화 확률: ", Color.DARK_GRAY).add(sword.prob * 100, Color.GOLD).add("%", Color.DARK_GRAY)
+                new ColoredTextElement().add("강화 확률: ", Color.DARK_GRAY).add(Math.floor(sword.prob*100), Color.GOLD).add("%", Color.DARK_GRAY)
             );
 
         
@@ -93,7 +93,7 @@ export class InformationScreen extends Screen {
                     new ColoredTextElement()
                         .add(`${piece.name}`, Color.DARK_BLUE)
                         .add(`이(가) `, Color.DARK_GRAY)
-                        .add(`${piece.prob * 100}`, Color.PURPLE)
+                        .add(`${Math.floor(piece.prob * 100)}`, Color.PURPLE)
                         .add(`% 확률로 `, Color.DARK_GRAY)
                         .add((piece.maxDrop == 1) ? "1": `1~${piece.maxDrop}`, Color.GOLD)
                         .add(`개`, Color.DARK_GRAY)
