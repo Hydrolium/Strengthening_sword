@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>검 강화하기</title>
     <link href="https://fonts.googleapis.com/css?family=Do+Hyeon:400" rel="stylesheet"/>
-    <link type="image/x-icon" rel="shortcut icon" href="/Strengthening_sword/assets/dagger-DO2bbjPa.png"/>
+    <link type="image/x-icon" rel="shortcut icon" href="images/swords/dagger.png"/>
 
-    <script type="module" crossorigin src="/Strengthening_sword/assets/index-BoZw7HZF.js"></script>
-    <link rel="stylesheet" crossorigin href="/Strengthening_sword/assets/index-BOGf5ow-.css">
+    <script type="module" crossorigin src="/Strengthening_sword/assets/index-BFFOYISH.js"></script>
+    <link rel="stylesheet" crossorigin href="/Strengthening_sword/assets/index-ByqU8nbg.css">
   </head>
   <body ondragstart="return false">
     <header class="main_header">
@@ -17,19 +17,19 @@
       <input type="checkbox" id="toturial-button">
       <label for="toturial-button">
         <span></span>
-        <img src="/Strengthening_sword/assets/tutorial-DUjJM8ma.png" alt="tutorial" class="first">
-        <img src="/Strengthening_sword/assets/dagger-DO2bbjPa.png" alt="main game" class="second">
+        <img src="images/ui/tutorial.png" alt="tutorial" class="first">
+        <img src="images/swords/dagger.png" alt="main game" class="second">
       </label>
-      <iframe class='html_window' id="html-window" src="tutorial.html"></iframe>
+      <iframe class='html_window' id="html-window" src="./public/tutorial.html"></iframe>
     </header>
     <main class="main_main" id="main-body"></main>
     <footer class="main_footer">
       <ul>
-        <li><a id="main-game-button"><div class="icon sword"><img src="/Strengthening_sword/assets/icons-CKhkJ6Iq.png" alt="검강화" /></div>검강화</a></li>
-        <li><a id="information-button"><div class="icon information"><img src="/Strengthening_sword/assets/icons-CKhkJ6Iq.png" alt="검도감" /></div>검도감</a></li>
-        <li><a id="inventory-button"><div class="icon inventory"><img src="/Strengthening_sword/assets/icons-CKhkJ6Iq.png" alt="보관함" /></div>보관함</a></li>
-        <li><a id="making-button"><div class="icon making"><img src="/Strengthening_sword/assets/icons-CKhkJ6Iq.png" alt="제작소" /></div>제작소</a></li>
-        <li><a id="stat-button"><div class="icon stat"><img src="/Strengthening_sword/assets/icons-CKhkJ6Iq.png" alt="강화소" /></div>강화소</a></li>
+        <li><a id="main-game-button"><div class="icon sword"><img src="images/ui/icons.png" alt="검강화" /></div>검강화</a></li>
+        <li><a id="information-button"><div class="icon information"><img src="images/ui/icons.png" alt="검도감" /></div>검도감</a></li>
+        <li><a id="inventory-button"><div class="icon inventory"><img src="images/ui/icons.png" alt="보관함" /></div>보관함</a></li>
+        <li><a id="making-button"><div class="icon making"><img src="images/ui/icons.png" alt="제작소" /></div>제작소</a></li>
+        <li><a id="stat-button"><div class="icon stat"><img src="images/ui/icons.png" alt="강화소" /></div>강화소</a></li>
       </ul>
       <div class="coinbox">
         보유자산: <span id="money-number"></span>원 <span id="money-change"></span>
@@ -43,9 +43,9 @@
         <section class="infomation"><span id="sword-number"></span> <span id="sword-name"></span> <span id="sword-prob"></span> <span id="sword-cost"></span> <span id="sword-price"></span></section>
       </div>
       <div id="main-game-button" class="buttons end_swort">
-        <a class="brown tobottom decrease hide" id="save-button"><img src="/Strengthening_sword/assets/save-ovtc5pX3.png" alt="보관하기" /> <span>보관하기</span></a>
-        <a class="blue toleft rotate center" id="upgrade-button"><img src="/Strengthening_sword/assets/upgrade-BbmGqdKg.png" alt="강화하기" /> <span>강화하기</span></a>
-        <a class="red increase hide" id="sell-button"><img src="/Strengthening_sword/assets/sell-DkBCqWbB.png" alt="판매하기" /> <span>판매하기</span></a>
+        <a class="brown tobottom decrease hide" id="save-button"><img src="images/ui/buttons/save.png" alt="보관하기" /> <span>보관하기</span></a>
+        <a class="blue toleft rotate center" id="upgrade-button"><img src="images/ui/buttons/upgrade.png" alt="강화하기" /> <span>강화하기</span></a>
+        <a class="red increase hide" id="sell-button"><img src="images/ui/buttons/sell.png" alt="판매하기" /> <span>판매하기</span></a>
       </div>
     </template>
     <template id="inventory">
@@ -94,7 +94,7 @@
         </main>
       </div>
     </template>
-    <div class="loading" id="maker-window-lodding"><div class="lodding_img"><img src="/Strengthening_sword/assets/make-DISSJ8yj.png" alt="제작하기"/></div></div>
+    <div class="loading" id="maker-window-lodding"><div class="lodding_img"><img src="images/ui/buttons/make.png" alt="제작하기"/></div></div>
     
     <div id="developer-mod-button"></div>
 
