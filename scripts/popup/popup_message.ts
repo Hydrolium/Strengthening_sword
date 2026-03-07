@@ -97,7 +97,6 @@ export class Popup {
         this.addParagraphElement(created_p);
     }
 
-
     setFooter(text: string, color: Color) {
         if(!this.created_footer) this.created_footer = createElementWith<HTMLParagraphElement>("p", {classes: ["footer"]});
 
@@ -120,7 +119,6 @@ export class Popup {
             "창 닫기", Color.RED, ButtonType.CLOSE, HoverEffect.ROTATE, () => this.close()
         );
     }
-
 }
 
 export enum HoverEffect {

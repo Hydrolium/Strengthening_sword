@@ -16,7 +16,7 @@ import { $, createImageWithSrc, display, hide } from "./element_controller.js";
 
 export class Game {
 
-    static startMoney = 500000
+    static readonly startMoney = 500000
 
     static dataManager: DataManager;
 

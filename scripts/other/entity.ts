@@ -195,7 +195,6 @@ export type StatClass = new (
     prefix: string,
     suffix: string) => Stat;
 
-
 export interface StatInfo {
     readonly id: string;
     readonly name: string;

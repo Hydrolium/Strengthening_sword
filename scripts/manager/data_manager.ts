@@ -35,10 +35,10 @@ interface RecipeData {
 }
 
 interface Data {
-    path?: Record<string, string>;
-    sword?: Sword[];
-    recipe?: RecipeInfo[];
-    stat?: Record<StatID, Stat>;
+    path?: Readonly<Record<string, string>>;
+    sword?: readonly Sword[];
+    recipe?: readonly RecipeInfo[];
+    stat?: Readonly<Record<StatID, Stat>>;
 }
 
 export class DataManager {
@@ -78,7 +78,7 @@ export class DataManager {
         return null;
     }
 
-    private convertSword(swords: SwordData[], paths: Record<string, string>, koreans: Record<string, string>): Sword[] {
+    private convertSword(swords: readonly SwordData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): readonly Sword[] {
         return swords.map(
                 (sword, index) =>
                     new Sword(
@@ -90,7 +90,7 @@ export class DataManager {
             );
     }
 
-    private convertRecipe(recipes: RecipeData[], paths: Record<string, string>, koreans: Record<string, string>): RecipeInfo[] {
+    private convertRecipe(recipes: readonly RecipeData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): readonly RecipeInfo[] {
         return recipes.map(
                 recipeData =>
                     new RecipeInfo(
@@ -107,7 +107,7 @@ export class DataManager {
             );
     }
 
-    private convertStat(stats: StatData[], paths: Record<string, string>, koreans: Record<string, string>): Record<StatID, Stat> {
+    private convertStat(stats: readonly StatData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): Readonly<Record<StatID, Stat>> {
         const g = {} as Record<StatID, Stat>;
 
         for(const statData of stats) {
