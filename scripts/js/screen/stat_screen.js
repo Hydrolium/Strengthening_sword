@@ -7,13 +7,13 @@ import { Screen } from "./screen.js";
 export class StatScreen extends Screen {
     constructor() {
         super(...arguments);
-        this.id = "game-stat";
-        this.elements = {};
+        this._id = "game-stat";
+        this._elements = {};
     }
     changeBody() {
         super.changeBody();
-        this.elements.statBox = $("#stat_box");
-        this.elements.statPointCount = $("#stat-point-count");
+        this._elements.statBox = $("#stat_box");
+        this._elements.statPointCount = $("#stat-point-count");
     }
     makeIconDiv(src, onclick) {
         const created_iconBox = createElementWith("div", { classes: ["icon"] });
@@ -66,8 +66,8 @@ export class StatScreen extends Screen {
         var _a;
         if (context.type != ContextType.STAT)
             return;
-        (_a = this.elements.statBox) === null || _a === void 0 ? void 0 : _a.replaceChildren(...context.stats.map(stat => this.makeStatSection(stat)));
-        write(this.elements.statPointCount, context.statPoint);
+        (_a = this._elements.statBox) === null || _a === void 0 ? void 0 : _a.replaceChildren(...context.stats.map(stat => this.makeStatSection(stat)));
+        write(this._elements.statPointCount, context.statPoint);
     }
     popupMaxStatMessage() {
         const popup = new Popup();

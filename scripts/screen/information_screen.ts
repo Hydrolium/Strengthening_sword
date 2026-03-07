@@ -8,18 +8,18 @@ import { Screen } from "./screen.js";
 
 export class InformationScreen extends Screen {
 
-    protected id = "game-information";
+    protected readonly _id = "game-information";
 
-    elements: {
+    private readonly _elements: {
         foundSwords?: HTMLDivElement,
         swordCount?: HTMLSpanElement
     } = {};
 
-    override changeBody() {
+    public override changeBody() {
         super.changeBody();
 
-        this.elements.foundSwords = $<HTMLDivElement>("#found-swords");
-        this.elements.swordCount = $<HTMLSpanElement>("#found-sword-count");
+        this._elements.foundSwords = $<HTMLDivElement>("#found-swords");
+        this._elements.swordCount = $<HTMLSpanElement>("#found-sword-count");
 
     }
 
@@ -45,12 +45,12 @@ export class InformationScreen extends Screen {
             return this.makeIcon(UnknownItem.instance);
         });
 
-        this.elements.foundSwords?.replaceChildren(...created_found);
+        this._elements.foundSwords?.replaceChildren(...created_found);
 
-        write(this.elements.swordCount, context.founds.size);
+        write(this._elements.swordCount, context.founds.size);
     }
 
-    popupSwordInfoMessage(sword: Sword) {
+    public popupSwordInfoMessage(sword: Sword) {
 
         const popup = new Popup();
 

@@ -6,7 +6,8 @@
     "rootDir": "./scripts",
     "strict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitOverride": true
   },
   "include": ["scripts/**/*"]
 }

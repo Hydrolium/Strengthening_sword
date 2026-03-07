@@ -1,49 +1,55 @@
 import { getStatClass, StatID } from "./stat_manager.js";
-import { Color, Piece, PieceItem, RecipeInfo, Stat, Sword, SwordItem } from "../other/entity.js";
+import { Color, Piece, PieceItem, Recipe, Stat, Sword, SwordItem } from "../other/entity.js";
 
 export type StatIDs = "luckly_bracelet" | "god_hand" | "big_merchant" | "smith" | "invalidated_sphere" | "magic_hat"
 
+interface PieceData {
+    readonly id: string;
+    readonly prob: number;
+    readonly max_drop: number
+}
+
 interface SwordData {
-    id: string;
-    prob: number;
-    cost: number;
-    price: number;
-    requiredRepairs: number;
-    canSave: boolean;
-    pieces: {id: string; prob: number; max_drop: number}[];
+    readonly id: string;
+    readonly prob: number;
+    readonly cost: number;
+    readonly price: number;
+    readonly requiredRepairs: number;
+    readonly canSave: boolean;
+    readonly pieces: readonly PieceData[];
 }
 
 interface StatData {
-    id: StatIDs;
-    description: string;
-    values: number[];
-    default_value: number;
-    color: string;
-    prefix: string;
-    suffix: string;
+    readonly id: StatIDs;
+    readonly description: string;
+    readonly values: readonly number[];
+    readonly default_value: number;
+    readonly color: string;
+    readonly prefix: string;
+    readonly suffix: string;
 }
 
 interface RecipeItem {
-    type: "sword" | "piece";
-    id: string;
-    count: number;
+    readonly type: "sword" | "piece";
+    readonly id: string;
+    readonly count: number;
 }
 
 interface RecipeData {
-    materials: RecipeItem[];
-    result: RecipeItem;
+    readonly materials: readonly RecipeItem[];
+    readonly result: RecipeItem;
 }
 
 interface Data {
-    path?: Readonly<Record<string, string>>;
-    sword?: readonly Sword[];
-    recipe?: readonly RecipeInfo[];
-    stat?: Readonly<Record<StatID, Stat>>;
+    readonly path?: Readonly<Record<string, string>>;
+    readonly sword?: readonly Sword[];
+    readonly recipe?: readonly Recipe[];
+    readonly stat?: Readonly<Record<StatID, Stat>>;
 }
 
 export class DataManager {
 
-    async loadAllData(): Promise<Data | null> {
+    public async loadAllData(): Promise<Data | null> {
 
         try {
 
@@ -90,10 +96,10 @@ export class DataManager {
             );
     }
 
-    private convertRecipe(recipes: readonly RecipeData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): readonly RecipeInfo[] {
+    private convertRecipe(recipes: readonly RecipeData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): readonly Recipe[] {
         return recipes.map(
                 recipeData =>
-                    new RecipeInfo(
+                    new Recipe(
                         (recipeData.result.type == "sword")
                         ? new SwordItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count)
                         : new PieceItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count),

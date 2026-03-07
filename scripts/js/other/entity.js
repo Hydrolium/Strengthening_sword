@@ -143,7 +143,7 @@ export var StatTestResult;
     StatTestResult[StatTestResult["SUCCESS"] = 2] = "SUCCESS";
     StatTestResult[StatTestResult["SUCCESS_AND_ALL_MAX"] = 3] = "SUCCESS_AND_ALL_MAX";
 })(StatTestResult || (StatTestResult = {}));
-export class RecipeInfo {
+export class Recipe {
     constructor(result, materials) {
         this.result = result;
         this.materials = materials;

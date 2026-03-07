@@ -1,13 +1,13 @@
 import { createElementWith } from "./element_controller";
 export class ColoredTextElement {
     constructor() {
-        this.elements = [];
+        this._elements = [];
     }
     add(text, color) {
-        this.elements.push(createElementWith("span", { classes: ["colored_text", color], text: text }));
+        this._elements.push(createElementWith("span", { classes: ["colored_text", color], text: text }));
         return this;
     }
     build() {
-        return this.elements;
+        return this._elements;
     }
 }

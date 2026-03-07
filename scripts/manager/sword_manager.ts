@@ -9,7 +9,7 @@ export class SwordManager extends Observer {
 
     private _current_sword_index: number = 0;
     private readonly _swordCount: number;
-    private readonly _pieceInfos: ReadonlyMap<String, ReadonlyArray<SwordInfoByPiece>>;
+    private readonly _pieceInfos: ReadonlyMap<String, readonly SwordInfoByPiece[]>;
 
     private readonly _foundSwordIndexes = new Set<number>();
 
@@ -37,18 +37,18 @@ export class SwordManager extends Observer {
 
     }
 
-    get current_sword_index(): number {
+    public get current_sword_index(): number {
         return this._current_sword_index;
     }
 
-    set current_sword_index(value: number) {
+    public set current_sword_index(value: number) {
         value = Math.min(Math.max(value, 0), this.maxUpgradableIndex);
         this._current_sword_index = value;
 
         this.notify(this.swordContext);
     }
 
-    get swordContext(): SwordContext {
+    public get swordContext(): SwordContext {
         return {
             type: ContextType.SWORD,
             index: this._current_sword_index,
@@ -57,7 +57,7 @@ export class SwordManager extends Observer {
         };
     }
 
-    get foundSwordsContext(): FoundSwordsContext {
+    public get foundSwordsContext(): FoundSwordsContext {
         const swords: Sword[] = [];
         for(let i = 0; i < this._swordCount; i++) {
             if(this._foundSwordIndexes.has(i)) swords.push(this.getSwordWithIdx(i));
@@ -70,22 +70,22 @@ export class SwordManager extends Observer {
         }
     }
 
-    getSwordsByPieceId(pieceId: string): readonly SwordInfoByPiece[] {
+    public getSwordsByPieceId(pieceId: string): readonly SwordInfoByPiece[] {
         return this._pieceInfos.get(pieceId) ?? [];
     }
 
 
-    getSwordWithId(id: string): Sword {
+    public getSwordWithId(id: string): Sword {
         const res = this._swords.find(sword => sword.id == id)
         if(res === undefined) throw new Error(`Sword with ID ${id} not found.`);
         return res;
     }
 
-    getSwordWithIdx(index: number): Sword {
+    public getSwordWithIdx(index: number): Sword {
         return this._swords[index];
     }
 
-    getCalculatedSwordWithId(id: string): Sword {
+    public getCalculatedSwordWithId(id: string): Sword {
         const sword = this.getSwordWithId(id);
         return new Sword(
             sword.id,
@@ -101,7 +101,7 @@ export class SwordManager extends Observer {
         );
     }
 
-    getCalculatedSwordWithIdx(index: number): Sword {
+    public getCalculatedSwordWithIdx(index: number): Sword {
         const sword = this.getSwordWithIdx(index);
         return new Sword(
             sword.id,
@@ -117,33 +117,33 @@ export class SwordManager extends Observer {
         );
     }
 
-    getIndex(id: string): number {
+    public getIndex(id: string): number {
         return this._swords.indexOf(this.getSwordWithId(id));
     }
 
-    calculateLoss(index: number): number {
+    public calculateLoss(index: number): number {
         return this._swords.slice(0, index+1).reduce((pre, cur) => pre += Game.statManager.calculate(StatID.SMITH, cur.cost), 0);
     }
 
-    isFound(value: number | string): boolean {
+    public isFound(value: number | string): boolean {
         switch (typeof value) {
             case "number": return this._foundSwordIndexes.has(value);
             case "string": return this._foundSwordIndexes.has(this.getSwordWithId(value).index);
         }
     }
 
-    findSword(index: number) {
+    public findSword(index: number) {
         if(this.isFound(index)) return;
 
         this._foundSwordIndexes.add(index);
         Game.statManager.addStatPoint();
     }
 
-    getFoundSwordIndexes() : ReadonlySet<number> {
+    public getFoundSwordIndexes() : ReadonlySet<number> {
         return this._foundSwordIndexes;
     }
 
-    jumpTo(index: number) {
+    public jumpTo(index: number) {
 
         index = Math.min(Math.max(index, 0), this.maxUpgradableIndex);
 
@@ -152,26 +152,26 @@ export class SwordManager extends Observer {
         this.current_sword_index = index;
     }
 
-    upgradeSword(index: number = 1) {
+    public upgradeSword(index: number = 1) {
         this.jumpTo(this.current_sword_index + index);
     }
-    downgradeSword(index: number = 1) {
+    public downgradeSword(index: number = 1) {
         this.jumpTo(this.current_sword_index - index);
     }
 
-    getCurrentSword(): Sword {
+    public getCurrentSword(): Sword {
         return this.getSwordWithIdx(this.current_sword_index);
     }
 
-    getCalculatedCurrentSword(): Sword {
+    public getCalculatedCurrentSword(): Sword {
         return this.getCalculatedSwordWithIdx(this.current_sword_index);
     }
 
-    getNextSword(): Sword {
+    public getNextSword(): Sword {
         return this.getSwordWithIdx(Math.min(this.current_sword_index +1, this.maxUpgradableIndex));
     }
 
-    tryUpgrade(): {result: SwordTestResult, result_index: number, sword?: Sword, dropped_pieces?: readonly PieceItem[]} {
+    public tryUpgrade(): {result: SwordTestResult, result_index: number, sword?: Sword, dropped_pieces?: readonly PieceItem[]} {
         
         const sword = this.getCalculatedCurrentSword();
 

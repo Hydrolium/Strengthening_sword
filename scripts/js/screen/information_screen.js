@@ -8,13 +8,13 @@ import { Screen } from "./screen.js";
 export class InformationScreen extends Screen {
     constructor() {
         super(...arguments);
-        this.id = "game-information";
-        this.elements = {};
+        this._id = "game-information";
+        this._elements = {};
     }
     changeBody() {
         super.changeBody();
-        this.elements.foundSwords = $("#found-swords");
-        this.elements.swordCount = $("#found-sword-count");
+        this._elements.foundSwords = $("#found-swords");
+        this._elements.swordCount = $("#found-sword-count");
     }
     makeIcon(item) {
         const created_div = createElementWith("div", { classes: ["sword_icon", (item instanceof SwordItem) ? "sword" : "unknown"] });
@@ -34,8 +34,8 @@ export class InformationScreen extends Screen {
                 return this.makeIcon(sword.toItem());
             return this.makeIcon(UnknownItem.instance);
         });
-        (_a = this.elements.foundSwords) === null || _a === void 0 ? void 0 : _a.replaceChildren(...created_found);
-        write(this.elements.swordCount, context.founds.size);
+        (_a = this._elements.foundSwords) === null || _a === void 0 ? void 0 : _a.replaceChildren(...created_found);
+        write(this._elements.swordCount, context.founds.size);
     }
     popupSwordInfoMessage(sword) {
         const popup = new Popup();

@@ -9,57 +9,57 @@ import { ColoredTextElement } from "../other/colored_text.js";
 export class MainScreen extends Screen {
     constructor() {
         super(...arguments);
-        this.id = "game-interface";
-        this.elements = {};
+        this._id = "game-interface";
+        this._elements = {};
     }
     changeBody() {
         super.changeBody();
-        this.elements.swordImage = $("#sword-image");
-        this.elements.swordNumber = $("#sword-number");
-        this.elements.swordName = $("#sword-name");
-        this.elements.swordProb = $("#sword-prob");
-        this.elements.swordCost = $("#sword-cost");
-        this.elements.swordPrice = $("#sword-price");
-        this.elements.sellButton = $("#sell-button");
-        this.elements.upgradeButton = $("#upgrade-button");
-        this.elements.saveButton = $("#save-button");
-        this.elements.sellButton.onclick = () => onClickSellButton();
-        this.elements.upgradeButton.onclick = () => onClickUpgradeButton();
-        this.elements.saveButton.onclick = () => onClickSaveButton();
+        this._elements.swordImage = $("#sword-image");
+        this._elements.swordNumber = $("#sword-number");
+        this._elements.swordName = $("#sword-name");
+        this._elements.swordProb = $("#sword-prob");
+        this._elements.swordCost = $("#sword-cost");
+        this._elements.swordPrice = $("#sword-price");
+        this._elements.sellButton = $("#sell-button");
+        this._elements.upgradeButton = $("#upgrade-button");
+        this._elements.saveButton = $("#save-button");
+        this._elements.sellButton.onclick = () => onClickSellButton();
+        this._elements.upgradeButton.onclick = () => onClickUpgradeButton();
+        this._elements.saveButton.onclick = () => onClickSaveButton();
     }
     render(context) {
         var _a, _b, _c;
         if ((context === null || context === void 0 ? void 0 : context.type) != ContextType.SWORD)
             return;
-        this.elements.swordImage.src = context.sword.imgSrc;
-        write(this.elements.swordNumber, context.index);
+        this._elements.swordImage.src = context.sword.imgSrc;
+        write(this._elements.swordNumber, context.index);
         if (context.isMax)
-            (_a = this.elements.swordNumber) === null || _a === void 0 ? void 0 : _a.classList.add("hightlight");
-        write(this.elements.swordName, context.sword.name);
-        (_b = this.elements.swordProb) === null || _b === void 0 ? void 0 : _b.setAttribute("enabled", `${!context.isMax}`);
-        (_c = this.elements.swordCost) === null || _c === void 0 ? void 0 : _c.setAttribute("enabled", `${!context.isMax}`);
+            (_a = this._elements.swordNumber) === null || _a === void 0 ? void 0 : _a.classList.add("hightlight");
+        write(this._elements.swordName, context.sword.name);
+        (_b = this._elements.swordProb) === null || _b === void 0 ? void 0 : _b.setAttribute("enabled", `${!context.isMax}`);
+        (_c = this._elements.swordCost) === null || _c === void 0 ? void 0 : _c.setAttribute("enabled", `${!context.isMax}`);
         if (!context.isMax) {
             const prob = context.sword.prob;
-            write(this.elements.swordProb, Math.round(prob * 100));
-            write(this.elements.swordCost, `${context.sword.cost}`);
+            write(this._elements.swordProb, Math.round(prob * 100));
+            write(this._elements.swordCost, `${context.sword.cost}`);
         }
         else {
-            write(this.elements.swordProb, "");
-            write(this.elements.swordCost, "");
+            write(this._elements.swordProb, "");
+            write(this._elements.swordCost, "");
         }
         if (context.sword.price > 0) {
-            write(this.elements.swordPrice, `${context.sword.price}`);
-            visible(this.elements.sellButton);
-            visible(this.elements.swordPrice);
+            write(this._elements.swordPrice, `${context.sword.price}`);
+            visible(this._elements.sellButton);
+            visible(this._elements.swordPrice);
         }
         else {
-            invisible(this.elements.swordPrice);
-            invisible(this.elements.sellButton);
+            invisible(this._elements.swordPrice);
+            invisible(this._elements.sellButton);
         }
         if (context.sword.canSave)
-            visible(this.elements.saveButton);
+            visible(this._elements.saveButton);
         else
-            invisible(this.elements.saveButton);
+            invisible(this._elements.saveButton);
     }
     popupFallMessage(loss, pieces, havingRepairPaper, requiredRepairPaper) {
         const popup = new Popup();

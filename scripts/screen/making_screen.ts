@@ -1,7 +1,7 @@
 import { onClickMakingButton } from "../other/click_events.js";
 import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, display, hide } from "../other/element_controller.js";
-import { Color, Item, MoneyItem, PieceItem, RecipeInfo, RepairPaperItem, Storage, SwordItem, UnknownItem } from "../other/entity.js";
+import { Color, Item, MoneyItem, PieceItem, Recipe, RepairPaperItem, Storage, SwordItem, UnknownItem } from "../other/entity.js";
 import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 import { Keyframes, Screen } from "./screen.js";
@@ -10,9 +10,9 @@ type ButtonColor = "blue" | "purple";
 
 export class MakingScreen extends Screen {
 
-    protected id = "making";
+    protected readonly _id = "making";
 
-    private elements: {
+    private readonly _elements: {
         recipes?: NodeListOf<HTMLElement>,
         makingRecipes?: HTMLInputElement,
         makingSwords?:  HTMLInputElement,
@@ -20,21 +20,21 @@ export class MakingScreen extends Screen {
         swordRecipes?: HTMLElement
     } = {};
 
-    override changeBody(): void {
+    public override changeBody(): void {
         super.changeBody();
 
-        this.elements.recipes = document.querySelectorAll(".recipes");
+        this._elements.recipes = document.querySelectorAll(".recipes");
         
-        this.elements.makingRecipes = $<HTMLInputElement>("#making-recipes");
-        this.elements.makingSwords = $<HTMLInputElement>("#making-swords");
-        this.elements.repairRecipes = $("#repair-recipes");
-        this.elements.swordRecipes = $("#sword-recipes");
+        this._elements.makingRecipes = $<HTMLInputElement>("#making-recipes");
+        this._elements.makingSwords = $<HTMLInputElement>("#making-swords");
+        this._elements.repairRecipes = $("#repair-recipes");
+        this._elements.swordRecipes = $("#sword-recipes");
 
         
 
-        this.elements.makingRecipes.onclick = () => this.render(Game.makingManager.makingContext);
+        this._elements.makingRecipes.onclick = () => this.render(Game.makingManager.makingContext);
 
-        this.elements.makingSwords.onclick = () => this.render(Game.makingManager.makingContext);
+        this._elements.makingSwords.onclick = () => this.render(Game.makingManager.makingContext);
     }
 
     private makeMaterialDiv(material: Item, havingCount: number): HTMLDivElement {
@@ -109,7 +109,7 @@ export class MakingScreen extends Screen {
         return created_article;
     }
     
-    private makeRepairPaperPage(recipes: readonly RecipeInfo[]): readonly HTMLElement[] {
+    private makeRepairPaperPage(recipes: readonly Recipe[]): readonly HTMLElement[] {
 
         return recipes.map(
             recipe =>
@@ -123,7 +123,7 @@ export class MakingScreen extends Screen {
         );
     }
 
-    private makeSwordPage(recipes: readonly RecipeInfo[]): readonly HTMLElement[] {
+    private makeSwordPage(recipes: readonly Recipe[]): readonly HTMLElement[] {
 
         return recipes.map(
             recipe => this.makeGroupArticle(
@@ -143,14 +143,14 @@ export class MakingScreen extends Screen {
 
         if(context.type != ContextType.MAKING) return;
 
-        if(this.elements.makingRecipes?.checked) this.elements.recipes?.forEach(element => element.classList.remove("active"));
-        else if(this.elements.makingSwords?.checked) this.elements.recipes?.forEach(element => element.classList.add("active"));
+        if(this._elements.makingRecipes?.checked) this._elements.recipes?.forEach(element => element.classList.remove("active"));
+        else if(this._elements.makingSwords?.checked) this._elements.recipes?.forEach(element => element.classList.add("active"));
 
-        this.elements.repairRecipes?.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes));
-        this.elements.swordRecipes?.replaceChildren(...this.makeSwordPage(context.swordRecipes));
+        this._elements.repairRecipes?.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes));
+        this._elements.swordRecipes?.replaceChildren(...this.makeSwordPage(context.swordRecipes));
     }
 
-    animateLoading(speed: number, onfinish: () => void) {
+    public animateLoading(speed: number, onfinish: () => void) {
 
         const element_loadding = $<HTMLDivElement>("#maker-window-lodding");
         const element_hammer = $<HTMLDivElement>("#maker-window-lodding div");
@@ -163,7 +163,7 @@ export class MakingScreen extends Screen {
         };
     }
 
-    popupCreatedSwordMessage() {
+    public popupCreatedSwordMessage() {
         const popup = new Popup();
         popup.setTitle("검을 제작했습니다.", Color.SKY);
         popup.setSubTitle("보관함으로 검이 지급되었습니다.");

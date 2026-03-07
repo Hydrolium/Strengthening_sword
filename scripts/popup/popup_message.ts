@@ -5,44 +5,44 @@ import { Keyframes } from "../screen/screen.js";
 
 export class Popup {
 
-    private created_message_main: HTMLDivElement;
+    private _created_message_main: HTMLDivElement;
 
-    private created_icon?: HTMLImageElement;
+    private _created_icon?: HTMLImageElement;
 
-    private created_text_box: HTMLDivElement;
-    private created_title: HTMLParagraphElement;
+    private _created_text_box: HTMLDivElement;
+    private _created_title: HTMLParagraphElement;
 
-    private created_subtitle?: HTMLParagraphElement;
-    private created_paragraph?: HTMLDivElement;
-    private created_footer?: HTMLParagraphElement;
+    private _created_subtitle?: HTMLParagraphElement;
+    private _created_paragraph?: HTMLDivElement;
+    private _created_footer?: HTMLParagraphElement;
 
-    private created_button_box: HTMLDivElement;
+    private _created_button_box: HTMLDivElement;
 
     constructor() {
-        this.created_message_main = createElementWith<HTMLDivElement>("div", {classes: ["message_main"]});
+        this._created_message_main = createElementWith<HTMLDivElement>("div", {classes: ["message_main"]});
 
-        this.created_text_box = createElementWith<HTMLDivElement>("div", {classes: ["text"]});
-        this.created_title = createElementWith<HTMLParagraphElement>("p", {classes: ["title"]});
+        this._created_text_box = createElementWith<HTMLDivElement>("div", {classes: ["text"]});
+        this._created_title = createElementWith<HTMLParagraphElement>("p", {classes: ["title"]});
         
-        this.created_button_box = createElementWith<HTMLDivElement>("div", {classes: ["buttons"]});
+        this._created_button_box = createElementWith<HTMLDivElement>("div", {classes: ["buttons"]});
     }
 
-    build() {
-        if(this.created_icon) this.created_text_box.appendChild(this.created_icon);
-        this.created_text_box.appendChild(this.created_title);
-        if(this.created_subtitle) this.created_text_box.appendChild(this.created_subtitle);
-        if(this.created_paragraph) this.created_text_box.appendChild(this.created_paragraph);
-        if(this.created_footer) this.created_text_box.appendChild(this.created_footer);
+    public build() {
+        if(this._created_icon) this._created_text_box.appendChild(this._created_icon);
+        this._created_text_box.appendChild(this._created_title);
+        if(this._created_subtitle) this._created_text_box.appendChild(this._created_subtitle);
+        if(this._created_paragraph) this._created_text_box.appendChild(this._created_paragraph);
+        if(this._created_footer) this._created_text_box.appendChild(this._created_footer);
 
-        this.created_message_main.appendChild(this.created_text_box);
-        this.created_message_main.appendChild(this.created_button_box);
+        this._created_message_main.appendChild(this._created_text_box);
+        this._created_message_main.appendChild(this._created_button_box);
 
     }
 
-    show() {
+    public show() {
         const element_popupMessageBox = $("#popup-message-box");
 
-        element_popupMessageBox.replaceChildren(this.created_message_main);
+        element_popupMessageBox.replaceChildren(this._created_message_main);
 
         display(element_popupMessageBox);
         element_popupMessageBox.animate(
@@ -51,7 +51,7 @@ export class Popup {
         );
     }
 
-    close() {
+    public close() {
 
         const element_popupMessageBox = $("#popup-message-box");
         hide(element_popupMessageBox);
@@ -59,30 +59,30 @@ export class Popup {
         element_popupMessageBox.replaceChildren();
     }
 
-    setIcon(imgSrc: string) {
-        if(!this.created_icon) this.created_icon = createElementWith<HTMLImageElement>("img", {classes: ["popup_icon"]});
-        this.created_icon.src = imgSrc;
+    public setIcon(imgSrc: string) {
+        if(!this._created_icon) this._created_icon = createElementWith<HTMLImageElement>("img", {classes: ["popup_icon"]});
+        this._created_icon.src = imgSrc;
     }
 
-    setTitle(text: string, color: Color) {
-        this.created_title.textContent = text;
-        this.created_title.classList.add(color);
+    public setTitle(text: string, color: Color) {
+        this._created_title.textContent = text;
+        this._created_title.classList.add(color);
     }
 
-    setSubTitle(text: string) {
-        if(!this.created_subtitle) this.created_subtitle = createElementWith<HTMLParagraphElement>("p", {classes: ["subtitle"]});
+    public setSubTitle(text: string) {
+        if(!this._created_subtitle) this._created_subtitle = createElementWith<HTMLParagraphElement>("p", {classes: ["subtitle"]});
 
-        this.created_subtitle.textContent = text;
+        this._created_subtitle.textContent = text;
     }
 
-    addParagraphElement(element: HTMLElement) {
+    public addParagraphElement(element: HTMLElement) {
 
-        if(!this.created_paragraph) this.created_paragraph = createElementWith<HTMLDivElement>("div", {classes: ["paragraph"]});
+        if(!this._created_paragraph) this._created_paragraph = createElementWith<HTMLDivElement>("div", {classes: ["paragraph"]});
 
-        this.created_paragraph.appendChild(element);
+        this._created_paragraph.appendChild(element);
     }
 
-    addParagraphText(text: string) {
+    public addParagraphText(text: string) {
 
         this.addParagraphElement(
             createElementWith("p", {text: text})
@@ -90,31 +90,31 @@ export class Popup {
 
     }
 
-    addColoredParagraph(element: ColoredTextElement) {
+    public addColoredParagraph(element: ColoredTextElement) {
         const created_p = createElement("p");
         created_p.replaceChildren(...element.build());
 
         this.addParagraphElement(created_p);
     }
 
-    setFooter(text: string, color: Color) {
-        if(!this.created_footer) this.created_footer = createElementWith<HTMLParagraphElement>("p", {classes: ["footer"]});
+    public setFooter(text: string, color: Color) {
+        if(!this._created_footer) this._created_footer = createElementWith<HTMLParagraphElement>("p", {classes: ["footer"]});
 
-        this.created_footer.textContent = text;
-        this.created_footer.classList.add(color);
+        this._created_footer.textContent = text;
+        this._created_footer.classList.add(color);
     }
 
-    addButton(text: string, color: Color, buttonType: ButtonType, hoverEffect: HoverEffect, clickEvent: (popup: Popup) => void) {
+    public addButton(text: string, color: Color, buttonType: ButtonType, hoverEffect: HoverEffect, clickEvent: (popup: Popup) => void) {
 
         const created_button = createElementWith<HTMLAnchorElement>("a", {classes: [color, hoverEffect]});
         created_button.appendChild(createImageWithSrc(`images/ui/buttons/${buttonType}.png`, text));
         created_button.appendChild(createElementWith("span", {text: text}));
 
         created_button.addEventListener("click", () => clickEvent(this));
-        this.created_button_box.appendChild(created_button);
+        this._created_button_box.appendChild(created_button);
     }
 
-    addCloseButton() {
+    public addCloseButton() {
         this.addButton(
             "창 닫기", Color.RED, ButtonType.CLOSE, HoverEffect.ROTATE, () => this.close()
         );

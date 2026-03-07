@@ -1,4 +1,4 @@
-import { PieceItem, RecipeInfo, StatInfo, StorageInfo, Sword, SwordItem } from "./entity";
+import { PieceItem, Recipe, StatInfo, StorageInfo, Sword, SwordItem } from "./entity";
 
 export type GameContext = MoneyChangeContext | SystemMoneyGiftContext | SwordContext | FoundSwordsContext | InventoryContext | SWordUpgradeContext | SWordSellContext | SWordRestoreContext | BuyUsingMoneyContext | StatContext | MakingContext;
 
@@ -21,85 +21,85 @@ export enum ContextType {
 
 export interface MoneyChangeContext {
 
-    type: ContextType.MONEY_CHANGE;
+    readonly type: ContextType.MONEY_CHANGE;
 
-    changedMoney: number;
-    havingMoney: number
+    readonly changedMoney: number;
+    readonly havingMoney: number
 }
 
 export interface SystemMoneyGiftContext {
 
-    type: ContextType.SYSTEM_MONEY_GIFT,
-    money: number;
+    readonly type: ContextType.SYSTEM_MONEY_GIFT,
+    readonly money: number;
 }
 
 export interface SwordContext {
 
-    type: ContextType.SWORD;
+    readonly type: ContextType.SWORD;
 
-    index: number;
-    sword: Sword;
-    isMax: boolean;
+    readonly index: number;
+    readonly sword: Sword;
+    readonly isMax: boolean;
 }
 
 export interface FoundSwordsContext {
 
-    type: ContextType.FOUND_SWORDS;
+    readonly type: ContextType.FOUND_SWORDS;
 
-    swords: readonly Sword[];
-    founds: ReadonlySet<number>;
+    readonly swords: readonly Sword[];
+    readonly founds: ReadonlySet<number>;
 }
 
 export interface InventoryContext {
 
-    type: ContextType.INVENTORY;
+    readonly type: ContextType.INVENTORY;
 
-    swordStorage: StorageInfo<SwordItem>;
-    pieceStorage: StorageInfo<PieceItem>;
-    repairPapers: number;
+    readonly swordStorage: StorageInfo<SwordItem>;
+    readonly pieceStorage: StorageInfo<PieceItem>;
+    readonly repairPapers: number;
 }
 
 export interface SWordUpgradeContext {
-    type: ContextType.SWORD_UPGRADE,
+    readonly type: ContextType.SWORD_UPGRADE,
 
-    name: string,
-    cost: number
+    readonly name: string,
+    readonly cost: number
 }
 
 export interface SWordSellContext {
-    type: ContextType.SWORD_SELL,
+    readonly type: ContextType.SWORD_SELL,
 
-    name: string,
-    price: number
+    readonly name: string,
+    readonly price: number
 }
 
 export interface SWordRestoreContext {
-    type: ContextType.SWORD_RESTORE,
+    readonly type: ContextType.SWORD_RESTORE,
 
-    name: string,
-    cost: number
+    readonly name: string,
+    readonly cost: number
 }
 
 export interface BuyUsingMoneyContext {
-    type: ContextType.BUY_USING_MONEY,
+    readonly type: ContextType.BUY_USING_MONEY,
 
-    resultName: string,
-    count: number,
-    price: number
+    readonly resultName: string,
+    readonly count: number,
+    readonly price: number
 }
 
 export interface StatContext {
-    type: ContextType.STAT,
+    readonly type: ContextType.STAT,
 
-    statPoint: number,
-    stats: readonly StatInfo[]
+    readonly statPoint: number,
+    readonly stats: readonly StatInfo[]
 }
 
 export interface MakingContext {
-    type: ContextType.MAKING,
+    readonly type: ContextType.MAKING,
 
-    havingPieces: StorageInfo<PieceItem>
-    havingSwords: StorageInfo<SwordItem>,
-    repairPaperRecipes: readonly RecipeInfo[],
-    swordRecipes: readonly RecipeInfo[]
+    readonly havingPieces: StorageInfo<PieceItem>
+    readonly havingSwords: StorageInfo<SwordItem>,
+    readonly repairPaperRecipes: readonly Recipe[],
+    readonly  swordRecipes: readonly Recipe[]
 }

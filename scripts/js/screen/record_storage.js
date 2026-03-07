@@ -4,8 +4,8 @@ import { Refreshable } from "./screen.js";
 export class RecordStorage extends Refreshable {
     constructor() {
         super(...arguments);
-        this.records = [];
-        this.maxRecordableCount = 10;
+        this._records = [];
+        this._maxRecordableCount = 10;
         this.refresh = (event) => {
             switch (event === null || event === void 0 ? void 0 : event.type) {
                 case ContextType.SYSTEM_MONEY_GIFT:
@@ -32,12 +32,12 @@ export class RecordStorage extends Refreshable {
         };
     }
     add(record) {
-        this.records.push(record);
-        if (this.records.length > this.maxRecordableCount)
-            this.records = this.records.slice(1);
+        this._records.push(record);
+        if (this._records.length > this._maxRecordableCount)
+            this._records = this._records.slice(1);
     }
     render() {
-        const ret = this.records.map(rec => createElementWith("p", { text: rec }));
+        const ret = this._records.map(rec => createElementWith("p", { text: rec }));
         $("#records").replaceChildren(...ret);
     }
 }

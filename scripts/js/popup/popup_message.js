@@ -3,27 +3,27 @@ import { Color } from "../other/entity.js";
 import { Keyframes } from "../screen/screen.js";
 export class Popup {
     constructor() {
-        this.created_message_main = createElementWith("div", { classes: ["message_main"] });
-        this.created_text_box = createElementWith("div", { classes: ["text"] });
-        this.created_title = createElementWith("p", { classes: ["title"] });
-        this.created_button_box = createElementWith("div", { classes: ["buttons"] });
+        this._created_message_main = createElementWith("div", { classes: ["message_main"] });
+        this._created_text_box = createElementWith("div", { classes: ["text"] });
+        this._created_title = createElementWith("p", { classes: ["title"] });
+        this._created_button_box = createElementWith("div", { classes: ["buttons"] });
     }
     build() {
-        if (this.created_icon)
-            this.created_text_box.appendChild(this.created_icon);
-        this.created_text_box.appendChild(this.created_title);
-        if (this.created_subtitle)
-            this.created_text_box.appendChild(this.created_subtitle);
-        if (this.created_paragraph)
-            this.created_text_box.appendChild(this.created_paragraph);
-        if (this.created_footer)
-            this.created_text_box.appendChild(this.created_footer);
-        this.created_message_main.appendChild(this.created_text_box);
-        this.created_message_main.appendChild(this.created_button_box);
+        if (this._created_icon)
+            this._created_text_box.appendChild(this._created_icon);
+        this._created_text_box.appendChild(this._created_title);
+        if (this._created_subtitle)
+            this._created_text_box.appendChild(this._created_subtitle);
+        if (this._created_paragraph)
+            this._created_text_box.appendChild(this._created_paragraph);
+        if (this._created_footer)
+            this._created_text_box.appendChild(this._created_footer);
+        this._created_message_main.appendChild(this._created_text_box);
+        this._created_message_main.appendChild(this._created_button_box);
     }
     show() {
         const element_popupMessageBox = $("#popup-message-box");
-        element_popupMessageBox.replaceChildren(this.created_message_main);
+        element_popupMessageBox.replaceChildren(this._created_message_main);
         display(element_popupMessageBox);
         element_popupMessageBox.animate(Keyframes.popupKef, { duration: 300, fill: "both" });
     }
@@ -33,23 +33,23 @@ export class Popup {
         element_popupMessageBox.replaceChildren();
     }
     setIcon(imgSrc) {
-        if (!this.created_icon)
-            this.created_icon = createElementWith("img", { classes: ["popup_icon"] });
-        this.created_icon.src = imgSrc;
+        if (!this._created_icon)
+            this._created_icon = createElementWith("img", { classes: ["popup_icon"] });
+        this._created_icon.src = imgSrc;
     }
     setTitle(text, color) {
-        this.created_title.textContent = text;
-        this.created_title.classList.add(color);
+        this._created_title.textContent = text;
+        this._created_title.classList.add(color);
     }
     setSubTitle(text) {
-        if (!this.created_subtitle)
-            this.created_subtitle = createElementWith("p", { classes: ["subtitle"] });
-        this.created_subtitle.textContent = text;
+        if (!this._created_subtitle)
+            this._created_subtitle = createElementWith("p", { classes: ["subtitle"] });
+        this._created_subtitle.textContent = text;
     }
     addParagraphElement(element) {
-        if (!this.created_paragraph)
-            this.created_paragraph = createElementWith("div", { classes: ["paragraph"] });
-        this.created_paragraph.appendChild(element);
+        if (!this._created_paragraph)
+            this._created_paragraph = createElementWith("div", { classes: ["paragraph"] });
+        this._created_paragraph.appendChild(element);
     }
     addParagraphText(text) {
         this.addParagraphElement(createElementWith("p", { text: text }));
@@ -60,17 +60,17 @@ export class Popup {
         this.addParagraphElement(created_p);
     }
     setFooter(text, color) {
-        if (!this.created_footer)
-            this.created_footer = createElementWith("p", { classes: ["footer"] });
-        this.created_footer.textContent = text;
-        this.created_footer.classList.add(color);
+        if (!this._created_footer)
+            this._created_footer = createElementWith("p", { classes: ["footer"] });
+        this._created_footer.textContent = text;
+        this._created_footer.classList.add(color);
     }
     addButton(text, color, buttonType, hoverEffect, clickEvent) {
         const created_button = createElementWith("a", { classes: [color, hoverEffect] });
         created_button.appendChild(createImageWithSrc(`images/ui/buttons/${buttonType}.png`, text));
         created_button.appendChild(createElementWith("span", { text: text }));
         created_button.addEventListener("click", () => clickEvent(this));
-        this.created_button_box.appendChild(created_button);
+        this._created_button_box.appendChild(created_button);
     }
     addCloseButton() {
         this.addButton("창 닫기", Color.RED, ButtonType.CLOSE, HoverEffect.ROTATE, () => this.close());

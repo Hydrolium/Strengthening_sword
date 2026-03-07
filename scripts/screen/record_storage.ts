@@ -4,20 +4,20 @@ import { Refreshable } from "./screen.js";
 
 export class RecordStorage extends Refreshable {
     
-    private records: string[] = [];
-    private maxRecordableCount: number = 10;
+    private _records: string[] = [];
+    private readonly _maxRecordableCount: number = 10;
 
     private add(record: string) {
-        this.records.push(record);
-        if(this.records.length > this.maxRecordableCount) this.records = this.records.slice(1);
+        this._records.push(record);
+        if(this._records.length > this._maxRecordableCount) this._records = this._records.slice(1);
     }
 
     private render() {
-        const ret = this.records.map(rec => createElementWith("p", {text: rec}));
+        const ret = this._records.map(rec => createElementWith("p", {text: rec}));
         $("#records").replaceChildren(...ret);
     }
 
-    refresh = (event?: GameContext) => {
+    public refresh = (event?: GameContext) => {
 
         switch(event?.type) {
             case ContextType.SYSTEM_MONEY_GIFT :

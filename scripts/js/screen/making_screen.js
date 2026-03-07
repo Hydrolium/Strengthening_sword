@@ -8,18 +8,18 @@ import { Keyframes, Screen } from "./screen.js";
 export class MakingScreen extends Screen {
     constructor() {
         super(...arguments);
-        this.id = "making";
-        this.elements = {};
+        this._id = "making";
+        this._elements = {};
     }
     changeBody() {
         super.changeBody();
-        this.elements.recipes = document.querySelectorAll(".recipes");
-        this.elements.makingRecipes = $("#making-recipes");
-        this.elements.makingSwords = $("#making-swords");
-        this.elements.repairRecipes = $("#repair-recipes");
-        this.elements.swordRecipes = $("#sword-recipes");
-        this.elements.makingRecipes.onclick = () => this.render(Game.makingManager.makingContext);
-        this.elements.makingSwords.onclick = () => this.render(Game.makingManager.makingContext);
+        this._elements.recipes = document.querySelectorAll(".recipes");
+        this._elements.makingRecipes = $("#making-recipes");
+        this._elements.makingSwords = $("#making-swords");
+        this._elements.repairRecipes = $("#repair-recipes");
+        this._elements.swordRecipes = $("#sword-recipes");
+        this._elements.makingRecipes.onclick = () => this.render(Game.makingManager.makingContext);
+        this._elements.makingSwords.onclick = () => this.render(Game.makingManager.makingContext);
     }
     makeMaterialDiv(material, havingCount) {
         const created_div = createElementWith("div", { classes: ["item"] });
@@ -87,12 +87,12 @@ export class MakingScreen extends Screen {
         var _a, _b, _c, _d, _e, _f;
         if (context.type != ContextType.MAKING)
             return;
-        if ((_a = this.elements.makingRecipes) === null || _a === void 0 ? void 0 : _a.checked)
-            (_b = this.elements.recipes) === null || _b === void 0 ? void 0 : _b.forEach(element => element.classList.remove("active"));
-        else if ((_c = this.elements.makingSwords) === null || _c === void 0 ? void 0 : _c.checked)
-            (_d = this.elements.recipes) === null || _d === void 0 ? void 0 : _d.forEach(element => element.classList.add("active"));
-        (_e = this.elements.repairRecipes) === null || _e === void 0 ? void 0 : _e.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes));
-        (_f = this.elements.swordRecipes) === null || _f === void 0 ? void 0 : _f.replaceChildren(...this.makeSwordPage(context.swordRecipes));
+        if ((_a = this._elements.makingRecipes) === null || _a === void 0 ? void 0 : _a.checked)
+            (_b = this._elements.recipes) === null || _b === void 0 ? void 0 : _b.forEach(element => element.classList.remove("active"));
+        else if ((_c = this._elements.makingSwords) === null || _c === void 0 ? void 0 : _c.checked)
+            (_d = this._elements.recipes) === null || _d === void 0 ? void 0 : _d.forEach(element => element.classList.add("active"));
+        (_e = this._elements.repairRecipes) === null || _e === void 0 ? void 0 : _e.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes));
+        (_f = this._elements.swordRecipes) === null || _f === void 0 ? void 0 : _f.replaceChildren(...this.makeSwordPage(context.swordRecipes));
     }
     animateLoading(speed, onfinish) {
         const element_loadding = $("#maker-window-lodding");

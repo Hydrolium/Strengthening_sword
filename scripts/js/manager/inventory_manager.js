@@ -7,7 +7,7 @@ export class InventoryManager extends Observer {
         this.swordStorage = new Storage(this, SwordItem, () => Game.developerMod.infinityMaterial);
         this.pieceStorage = new Storage(this, PieceItem, () => Game.developerMod.infinityMaterial);
         this._money = 0;
-        this.repairPaper = 0;
+        this._repairPaperCount = 0;
     }
     get money() {
         return this._money;
@@ -25,7 +25,7 @@ export class InventoryManager extends Observer {
             type: ContextType.INVENTORY,
             swordStorage: this.swordStorage,
             pieceStorage: this.pieceStorage,
-            repairPapers: this.repairPaper
+            repairPapers: this._repairPaperCount
         };
     }
     hasMoney(money) {
@@ -47,16 +47,16 @@ export class InventoryManager extends Observer {
         return this.money;
     }
     hasRepairPaper(repair_paper) {
-        return this.repairPaper >= repair_paper;
+        return this._repairPaperCount >= repair_paper;
     }
     saveRepairPaper(repair_paper) {
-        this.repairPaper += repair_paper;
+        this._repairPaperCount += repair_paper;
     }
     takeRepairPaper(repair_paper) {
-        this.repairPaper -= repair_paper;
+        this._repairPaperCount -= repair_paper;
     }
     getRepairPaper() {
-        return this.repairPaper;
+        return this._repairPaperCount;
     }
     hasItems(items) {
         for (const item of items) {

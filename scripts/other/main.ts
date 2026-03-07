@@ -1,7 +1,7 @@
 import { DataManager } from "../manager/data_manager.js";
 import { InventoryManager } from "../manager/inventory_manager.js";
 import { MakingManager } from "../manager/making_manager.js";
-import { StatID, StatManager } from "../manager/stat_manager.js";
+import {  StatManager } from "../manager/stat_manager.js";
 import { SwordManager } from "../manager/sword_manager.js";
 import { DeveloperMod } from "../screen/developer_mod.js";
 import { InformationScreen } from "../screen/information_screen.js";
@@ -16,29 +16,29 @@ import { $, createImageWithSrc, display, hide } from "./element_controller.js";
 
 export class Game {
 
-    static readonly startMoney = 500000
+    public static readonly startMoney = 500000
 
-    static dataManager: DataManager;
+    public static dataManager: DataManager;
 
-    static swordManager: SwordManager;
-    static inventoryManager: InventoryManager;
-    static makingManager: MakingManager;
-    static statManager: StatManager;
+    public static swordManager: SwordManager;
+    public static inventoryManager: InventoryManager;
+    public static makingManager: MakingManager;
+    public static statManager: StatManager;
 
-    static mainScreen: MainScreen;
-    static informationScreen: InformationScreen;
-    static inventoryScreen: InventoryScreen;
-    static makingScreen: MakingScreen;
-    static statScreen: StatScreen;
+    public static mainScreen: MainScreen;
+    public static informationScreen: InformationScreen;
+    public static inventoryScreen: InventoryScreen;
+    public static makingScreen: MakingScreen;
+    public static statScreen: StatScreen;
 
-    static moneyDisplay: MoneyDisplay;
-    static recordStorage: RecordStorage;
+    public static moneyDisplay: MoneyDisplay;
+    public static recordStorage: RecordStorage;
 
-    static developerMod: DeveloperMod;
+    public static developerMod: DeveloperMod;
 
-    static currentScreenId: string;
+    public static currentScreenId: string;
 
-    static init(start=0) {
+    public static init(start=0) {
         hide($("#popup-message-box"));
         Game.mainScreen.show();
         Game.swordManager?.jumpTo(start);

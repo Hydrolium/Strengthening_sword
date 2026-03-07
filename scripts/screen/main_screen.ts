@@ -9,9 +9,9 @@ import { ColoredTextElement } from "../other/colored_text.js";
 
 export class MainScreen extends Screen {
 
-    protected id = "game-interface";
+    protected readonly _id = "game-interface";
 
-    private elements : {
+    private readonly _elements : {
         swordImage?: HTMLImageElement,
         swordNumber?: HTMLSpanElement,
         swordName?: HTMLSpanElement,
@@ -23,66 +23,66 @@ export class MainScreen extends Screen {
         saveButton?: HTMLAnchorElement
     } = {};
 
-    override changeBody() {
+    public override changeBody() {
         super.changeBody();
 
-        this.elements.swordImage = $<HTMLImageElement>("#sword-image");
+        this._elements.swordImage = $<HTMLImageElement>("#sword-image");
 
-        this.elements.swordNumber = $<HTMLSpanElement>("#sword-number");
-        this.elements.swordName = $<HTMLSpanElement>("#sword-name");
-        this.elements.swordProb = $<HTMLSpanElement>("#sword-prob");
-        this.elements.swordCost = $<HTMLSpanElement>("#sword-cost");
-        this.elements.swordPrice = $<HTMLSpanElement>("#sword-price");
+        this._elements.swordNumber = $<HTMLSpanElement>("#sword-number");
+        this._elements.swordName = $<HTMLSpanElement>("#sword-name");
+        this._elements.swordProb = $<HTMLSpanElement>("#sword-prob");
+        this._elements.swordCost = $<HTMLSpanElement>("#sword-cost");
+        this._elements.swordPrice = $<HTMLSpanElement>("#sword-price");
 
-        this.elements.sellButton = $<HTMLAnchorElement>("#sell-button");
-        this.elements.upgradeButton = $<HTMLAnchorElement>("#upgrade-button");
-        this.elements.saveButton = $<HTMLAnchorElement>("#save-button");
+        this._elements.sellButton = $<HTMLAnchorElement>("#sell-button");
+        this._elements.upgradeButton = $<HTMLAnchorElement>("#upgrade-button");
+        this._elements.saveButton = $<HTMLAnchorElement>("#save-button");
 
-        this.elements.sellButton.onclick = () => onClickSellButton();
-        this.elements.upgradeButton.onclick = () => onClickUpgradeButton();
-        this.elements.saveButton.onclick = () => onClickSaveButton();
+        this._elements.sellButton.onclick = () => onClickSellButton();
+        this._elements.upgradeButton.onclick = () => onClickUpgradeButton();
+        this._elements.saveButton.onclick = () => onClickSaveButton();
     }
 
     protected render(context?: GameContext) {
 
         if(context?.type != ContextType.SWORD) return;
 
-        this.elements.swordImage!.src = context.sword.imgSrc;
+        this._elements.swordImage!.src = context.sword.imgSrc;
 
-        write(this.elements.swordNumber, context.index);
+        write(this._elements.swordNumber, context.index);
 
-        if(context.isMax) this.elements.swordNumber?.classList.add("hightlight");
+        if(context.isMax) this._elements.swordNumber?.classList.add("hightlight");
 
-        write(this.elements.swordName, context.sword.name);
+        write(this._elements.swordName, context.sword.name);
 
-        this.elements.swordProb?.setAttribute("enabled", `${!context.isMax}`);
-        this.elements.swordCost?.setAttribute("enabled", `${!context.isMax}`);
+        this._elements.swordProb?.setAttribute("enabled", `${!context.isMax}`);
+        this._elements.swordCost?.setAttribute("enabled", `${!context.isMax}`);
 
         if(!context.isMax) {
 
             const prob = context.sword.prob;
 
-            write(this.elements.swordProb, Math.round(prob*100));
-            write(this.elements.swordCost, `${context.sword.cost}`);
+            write(this._elements.swordProb, Math.round(prob*100));
+            write(this._elements.swordCost, `${context.sword.cost}`);
         } else {
-            write(this.elements.swordProb, "");
-            write(this.elements.swordCost, "");
+            write(this._elements.swordProb, "");
+            write(this._elements.swordCost, "");
         }
 
         if(context.sword.price > 0) {
-            write(this.elements.swordPrice, `${context.sword.price}`);
-            visible(this.elements.sellButton);
-            visible(this.elements.swordPrice);
+            write(this._elements.swordPrice, `${context.sword.price}`);
+            visible(this._elements.sellButton);
+            visible(this._elements.swordPrice);
         } else {
-            invisible(this.elements.swordPrice);
-            invisible(this.elements.sellButton);
+            invisible(this._elements.swordPrice);
+            invisible(this._elements.sellButton);
         }
 
-        if(context.sword.canSave) visible(this.elements.saveButton);
-        else invisible(this.elements.saveButton);
+        if(context.sword.canSave) visible(this._elements.saveButton);
+        else invisible(this._elements.saveButton);
     }
 
-    popupFallMessage(loss: number, pieces: readonly PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {
+    public popupFallMessage(loss: number, pieces: readonly PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {
 
 
         const popup = new Popup();
@@ -131,7 +131,7 @@ export class MainScreen extends Screen {
 
     }
 
-    popupMaxUpgradeMessage() {
+    public popupMaxUpgradeMessage() {
         const popup = new Popup();
         popup.setTitle("축하합니다!", Color.GOLD);
         popup.setSubTitle("최대 강화에 도달했습니다.");
@@ -140,7 +140,7 @@ export class MainScreen extends Screen {
         popup.show();
     }
 
-    popupMoneyLackMessage() {
+    public popupMoneyLackMessage() {
         const popup = new Popup();
         popup.setTitle("돈이 부족합니다.", Color.RED);
         popup.setSubTitle("다음을 통해 자금을 조달하세요.");
@@ -152,7 +152,7 @@ export class MainScreen extends Screen {
         popup.show();
     }
 
-    popupInvalidationMessage(pieces: readonly PieceItem[]) {
+    public popupInvalidationMessage(pieces: readonly PieceItem[]) {
 
         const popup = new Popup();
         popup.setTitle("검이 파괴되었지만 복구되었습니다.", Color.BLUE);
@@ -182,7 +182,7 @@ export class MainScreen extends Screen {
         popup.show();
     }
 
-    popupGodHandMessage(new_sword_index: number) {
+    public popupGodHandMessage(new_sword_index: number) {
         const popup = new Popup();
         popup.setTitle("신의 손 발동!", Color.GREEN);
         popup.setSubTitle("검이 2단계 상승했습니다.");
@@ -192,7 +192,7 @@ export class MainScreen extends Screen {
         popup.show();
     }
 
-    popupGameEndMessage() {
+    public popupGameEndMessage() {
         const popup = new Popup();
         popup.setTitle("검을 최종 단계까지 업그레이드 했습니다.", Color.GOLD);
         popup.setSubTitle("충만한 검의 기운이 당신과 함께합니다!");

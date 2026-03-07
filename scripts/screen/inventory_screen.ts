@@ -8,18 +8,18 @@ import { Screen } from "./screen.js";
 
 export class InventoryScreen extends Screen {
 
-    protected id = "inventory";
+    protected readonly _id = "inventory";
 
-    private elements: {
+    private readonly _elements: {
         inventoryItems?: HTMLDivElement,
         windowMain?: HTMLElement
     } = {}
 
-    override changeBody() {
+    public override changeBody() {
         super.changeBody();
 
-        this.elements.inventoryItems = $("#inventory-items");
-        this.elements.windowMain = $(".inventory_window main");
+        this._elements.inventoryItems = $("#inventory-items");
+        this._elements.windowMain = $(".inventory_window main");
     }
 
     private makeSwordHoverMenuDiv(sword: SwordItem): HTMLDivElement {
@@ -116,17 +116,17 @@ export class InventoryScreen extends Screen {
         if(context.swordStorage.size != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.getAll())));
         
         if(context.pieceStorage.size == 0 && context.swordStorage.size == 0) {
-            this.elements.windowMain?.classList.add("empty_inventory");
+            this._elements.windowMain?.classList.add("empty_inventory");
             
             if(context.repairPapers <= 0) inner.push(createElementWith("p", {classes: ["no_item"], text: "보관된 아이템이 없습니다."}));
-        } else this.elements.windowMain?.classList.remove("empty_inventory");
+        } else this._elements.windowMain?.classList.remove("empty_inventory");
 
-        this.elements.inventoryItems?.replaceChildren(...inner);
+        this._elements.inventoryItems?.replaceChildren(...inner);
 
 
     }
 
-    popupSwordItemBreakMessage(sword: Sword, breakFunc: () => void) {
+    public popupSwordItemBreakMessage(sword: Sword, breakFunc: () => void) {
         const popup = new Popup();
         popup.setTitle("정말로 검을 파괴하시겠습니까?", Color.BROWN);
 
@@ -165,7 +165,7 @@ export class InventoryScreen extends Screen {
         popup.show();
     }
 
-    popupBreakMessage(pieces: readonly PieceItem[]) {
+    public popupBreakMessage(pieces: readonly PieceItem[]) {
         
         const popup = new Popup();
         popup.setTitle("검을 파괴했습니다.", Color.BLUE);
@@ -195,7 +195,7 @@ export class InventoryScreen extends Screen {
         popup.show();
     }
 
-    popupSwordItemSellMessage(sword: Sword, sellFunc: (popup: Popup) => void) {
+    public popupSwordItemSellMessage(sword: Sword, sellFunc: (popup: Popup) => void) {
         const popup = new Popup();
         popup.setTitle("정말로 검을 판매하시겠습니까?", Color.BROWN);
 
@@ -212,7 +212,7 @@ export class InventoryScreen extends Screen {
         popup.show();
     }
 
-    popupWherePieceDroppedMessage(pieceItem: PieceItem, swords: ReadonlyArray<SwordInfoByPiece>, founds: ReadonlySet<number>) {
+    public popupWherePieceDroppedMessage(pieceItem: PieceItem, swords: ReadonlyArray<SwordInfoByPiece>, founds: ReadonlySet<number>) {
         
         const popup = new Popup();
         popup.setIcon(pieceItem.imgSrc)

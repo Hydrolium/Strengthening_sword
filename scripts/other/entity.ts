@@ -4,13 +4,13 @@ import { GameContext } from "./context.js";
 
 export class Observer {
 
-    private observers: Refreshable[] = [];
+    private readonly observers: Refreshable[] = [];
 
-    subscribe(Refreshable: Refreshable) {
+    public subscribe(Refreshable: Refreshable) {
         this.observers.push(Refreshable);
     }
     
-    notify(context?: GameContext) {
+    public notify(context?: GameContext) {
         this.observers.forEach(Refreshable => Refreshable.refresh(context));
     }
 }
@@ -28,7 +28,7 @@ export class UnknownItem extends Item {
         super("unknown", "발견 안됨", "images/items/unknown.png", 1);
     }
 
-    static get instance(): UnknownItem {
+    public static get instance(): UnknownItem {
         if(this._instance) return this._instance;
         this._instance = new UnknownItem();
         return this._instance;
@@ -37,7 +37,7 @@ export class UnknownItem extends Item {
 
 export interface StorageInfo<T extends Item> {
 
-    size: number;
+    readonly size: number;
 
     getAll(): readonly T[];
     getCount(id: string): number;
@@ -52,31 +52,31 @@ export class Storage<T extends Item> implements StorageInfo<T> {
     constructor(
         private owner: InventoryManager,
         private stockClass: ItemClass<T>,
-        private infinityCheck: () => boolean) {}
+        private infinityCheck: () => boolean) { }
 
-    get size(): number {
+    public get size(): number {
         return this._items.size;
     }
 
-    getAll(): readonly T[] {
+    public getAll(): readonly T[] {
         return Array.from(this._items.values());
     }
 
-    getCount(id: string): number {
+    public getCount(id: string): number {
         return (this.infinityCheck()) ? Infinity : this._items.get(id)?.count ?? 0;
     }
 
-    hasEnough(id: string, count: number): boolean {
+    public hasEnough(id: string, count: number): boolean {
         return this.getCount(id) >= count;
     }
 
-    sorted(compareFn?: (a: T, b: T) => number): readonly T[] {
+    public sorted(compareFn?: (a: T, b: T) => number): readonly T[] {
 
         return Array.from(this._items.values())
             .sort(compareFn);
     }
 
-    add(item: T) {
+    public add(item: T) {
         if(item.count <= 0) return;
 
         const exisiting = this._items.get(item.id);
@@ -89,7 +89,7 @@ export class Storage<T extends Item> implements StorageInfo<T> {
         );
     }
 
-    remove(id: string, count: number) {
+    public remove(id: string, count: number) {
         if(count <= 0) return;
 
         const exisiting = this._items.get(id);
@@ -118,7 +118,7 @@ export class Sword {
         public readonly canSave: boolean,
         public readonly pieces: ReadonlyArray<Piece>) {}
 
-    toItem(): SwordItem {
+    public toItem(): SwordItem {
         return new SwordItem(this.id, this.name, this.imgSrc, 1);
     }
 }
@@ -132,7 +132,7 @@ export class Piece {
         public readonly prob: number,
         public readonly maxDrop: number = 1) {}
 
-    drop(): PieceItem {
+    public drop(): PieceItem {
         if(Math.random() < this.prob) return new PieceItem(this.id, this.name, this.imgSrc, Math.floor(Math.random() * this.maxDrop +1));
         return new PieceItem(this.id, this.name, this.imgSrc, 0);
     }
@@ -166,7 +166,7 @@ export enum StatTestResult {
     SUCCESS_AND_ALL_MAX
 }
 
-export class RecipeInfo {
+export class Recipe {
     constructor(public readonly result: SwordItem | RepairPaperItem, public readonly materials: readonly Item[]) {}
 }
 
@@ -229,25 +229,25 @@ export abstract class Stat implements StatInfo {
             this.maxStatLevel = values.length;
         }
 
-    getCurrentLevel(): number {
+    public getCurrentLevel(): number {
         return this.current;
     }
 
-    getCurrentValue(): number {
+    public getCurrentValue(): number {
         return (this.current == 0) ? 0 : this.values[this.current-1];
     }
 
-    getMaxLevel(): number {
+    public getMaxLevel(): number {
         return this.maxStatLevel;
     }
 
-    isMaxLevel(): boolean {
+    public isMaxLevel(): boolean {
         return this.current >= this.maxStatLevel;
     }
 
-    levelUp() {
+    public levelUp() {
         this.current++;
     }
 
-    abstract calculate(initialValue?: number): number;
+    public abstract calculate(initialValue?: number): number;
 }

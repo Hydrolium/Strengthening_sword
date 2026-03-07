@@ -1,8 +1,7 @@
 import { StatID } from "../manager/stat_manager.js";
-import { SwordManager } from "../manager/sword_manager.js";
 import { ContextType } from "./context.js";
 import { $, hide } from "./element_controller.js";
-import { Item, MoneyItem, PieceItem, RecipeInfo, StatTestResult, SwordItem, SwordTestResult } from "./entity.js";
+import { PieceItem, Recipe, StatTestResult, SwordItem, SwordTestResult } from "./entity.js";
 import { Game } from "./main.js";
 
 export const onClickCloseButton = (id: string) => hide($("#" + id));
@@ -136,7 +135,7 @@ export function onStatUp(statIdStr: string) {
     }
 }
 
-export function onClickMakingButton(recipe: RecipeInfo) {
+export function onClickMakingButton(recipe: Recipe) {
     if(isClicking) return;
     isClicking = true;
     setTimeout(() => {

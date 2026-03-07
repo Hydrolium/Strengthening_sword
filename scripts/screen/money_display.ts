@@ -4,7 +4,7 @@ import { Keyframes, Refreshable } from "./screen.js";
 
 export class MoneyDisplay extends Refreshable {
 
-    animateChangingMoney(money: number) {
+    private animateChangingMoney(money: number) {
 
         const element_moneyChange = $("#money-change")
 
@@ -14,7 +14,7 @@ export class MoneyDisplay extends Refreshable {
 
     }
 
-    refresh = (event?: GameContext) => {
+    public refresh = (event?: GameContext) => {
 
         if(event?.type != ContextType.MONEY_CHANGE) return;
 

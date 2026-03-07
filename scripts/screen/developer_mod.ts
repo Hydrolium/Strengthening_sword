@@ -5,25 +5,25 @@ import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 
 export class DeveloperMod {
-    private touch = 0;
+    private _touch = 0;
 
-    infinityGold = false;
-    infinityMaterial = false;
-    alwaysSuccess = false;
+    public infinityGold = false;
+    public infinityMaterial = false;
+    public alwaysSuccess = false;
 
     constructor() {
         $("#developer-mod-button").addEventListener("click", () => {
-            if(this.touch >= 2) {
-                this.touch = 0;
+            if(this._touch >= 2) {
+                this._touch = 0;
                 this.popupDeveloperModMessage();
             } else {
-                this.touch++;
-                setTimeout(() => this.touch=0, 500)
+                this._touch++;
+                setTimeout(() => this._touch=0, 500)
             }
             });
     }
 
-    makeCheckBox(label: string, checked: boolean, changeEvent: (checked: boolean) => void): HTMLParagraphElement {
+    private makeCheckBox(label: string, checked: boolean, changeEvent: (checked: boolean) => void): HTMLParagraphElement {
         const created_cover = createElement<HTMLParagraphElement>("p");
 
         const created_label = createElement<HTMLLabelElement>("label");
@@ -42,7 +42,7 @@ export class DeveloperMod {
         return created_cover;
     }
 
-    popupDeveloperModMessage() {
+    private popupDeveloperModMessage() {
         const popup = new Popup();
         popup.setTitle("개발자 모드", Color.DARK_BLUE);
 

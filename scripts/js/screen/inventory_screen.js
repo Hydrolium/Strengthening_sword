@@ -8,13 +8,13 @@ import { Screen } from "./screen.js";
 export class InventoryScreen extends Screen {
     constructor() {
         super(...arguments);
-        this.id = "inventory";
-        this.elements = {};
+        this._id = "inventory";
+        this._elements = {};
     }
     changeBody() {
         super.changeBody();
-        this.elements.inventoryItems = $("#inventory-items");
-        this.elements.windowMain = $(".inventory_window main");
+        this._elements.inventoryItems = $("#inventory-items");
+        this._elements.windowMain = $(".inventory_window main");
     }
     makeSwordHoverMenuDiv(sword) {
         const created_div = createElementWith("div", { classes: ["hover_menu", "hover_menu_3"] });
@@ -82,13 +82,13 @@ export class InventoryScreen extends Screen {
         if (context.swordStorage.size != 0)
             inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.getAll())));
         if (context.pieceStorage.size == 0 && context.swordStorage.size == 0) {
-            (_a = this.elements.windowMain) === null || _a === void 0 ? void 0 : _a.classList.add("empty_inventory");
+            (_a = this._elements.windowMain) === null || _a === void 0 ? void 0 : _a.classList.add("empty_inventory");
             if (context.repairPapers <= 0)
                 inner.push(createElementWith("p", { classes: ["no_item"], text: "보관된 아이템이 없습니다." }));
         }
         else
-            (_b = this.elements.windowMain) === null || _b === void 0 ? void 0 : _b.classList.remove("empty_inventory");
-        (_c = this.elements.inventoryItems) === null || _c === void 0 ? void 0 : _c.replaceChildren(...inner);
+            (_b = this._elements.windowMain) === null || _b === void 0 ? void 0 : _b.classList.remove("empty_inventory");
+        (_c = this._elements.inventoryItems) === null || _c === void 0 ? void 0 : _c.replaceChildren(...inner);
     }
     popupSwordItemBreakMessage(sword, breakFunc) {
         const popup = new Popup();

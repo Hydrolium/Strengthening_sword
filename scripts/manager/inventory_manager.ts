@@ -9,7 +9,7 @@ export class InventoryManager extends Observer {
 
     private _money: number = 0;
 
-    private repairPaper: number = 0;
+    private _repairPaperCount: number = 0;
 
     private get money(): number {
         return this._money;
@@ -26,48 +26,48 @@ export class InventoryManager extends Observer {
         this._money = m;
     }
 
-    get inventoryContext(): InventoryContext {
+    public get inventoryContext(): InventoryContext {
         return {
             type: ContextType.INVENTORY,
             swordStorage: this.swordStorage,
             pieceStorage: this.pieceStorage,
-            repairPapers: this.repairPaper
+            repairPapers: this._repairPaperCount
         };
     }
 
-    hasMoney(money: number): boolean {
+    public hasMoney(money: number): boolean {
         return this.money >= money;
     }
-    saveMoney(money: number, context: GameContext) {
+    public saveMoney(money: number, context: GameContext) {
         this.money += money;
         this.notify(context);
     }
-    takeMoney(money: number, context: GameContext) {
+    public takeMoney(money: number, context: GameContext) {
         this.money -= money;
         this.notify(context);
     }
-    setMoney(money: number, context: GameContext) {
+    public setMoney(money: number, context: GameContext) {
         this.money = money;
         this.notify(context);
     }
-    getMoney(): number {
+    public getMoney(): number {
         return this.money;
     }
 
-    hasRepairPaper(repair_paper: number): boolean {
-        return this.repairPaper >= repair_paper;
+    public hasRepairPaper(repair_paper: number): boolean {
+        return this._repairPaperCount >= repair_paper;
     }
-    saveRepairPaper(repair_paper: number) {
-        this.repairPaper += repair_paper;
+    public saveRepairPaper(repair_paper: number) {
+        this._repairPaperCount += repair_paper;
     }
-    takeRepairPaper(repair_paper: number) {
-        this.repairPaper -= repair_paper;
+    public takeRepairPaper(repair_paper: number) {
+        this._repairPaperCount -= repair_paper;
     }
-    getRepairPaper(): number {
-        return this.repairPaper;
+    public getRepairPaper(): number {
+        return this._repairPaperCount;
     }
 
-    hasItems(items: readonly Item[]): boolean {
+    public hasItems(items: readonly Item[]): boolean {
         for(const item of items) {
             if(
                 item instanceof MoneyItem
@@ -89,19 +89,19 @@ export class InventoryManager extends Observer {
         return true;
     }
 
-    take(item: SwordItem | PieceItem | RepairPaperItem) {
+    public take(item: SwordItem | PieceItem | RepairPaperItem) {
         if (item instanceof SwordItem) this.swordStorage.remove(item.id, item.count);
         else if (item instanceof PieceItem) this.pieceStorage.remove(item.id, item.count);
         else if (item instanceof RepairPaperItem) this.saveRepairPaper(item.count);
     }
 
-    save(item: SwordItem | PieceItem | RepairPaperItem) {
+    public save(item: SwordItem | PieceItem | RepairPaperItem) {
         if (item instanceof SwordItem) this.swordStorage.add(item);
         else if (item instanceof PieceItem) this.pieceStorage.add(item);
         else if (item instanceof RepairPaperItem) this.saveRepairPaper(item.count);
     }
 
-    sellSword(id: string) {
+    public sellSword(id: string) {
 
         if(this.swordStorage.hasEnough(id, 1)) {
             
@@ -117,7 +117,7 @@ export class InventoryManager extends Observer {
         }
     }
 
-    swapSword(id: string) {
+    public swapSword(id: string) {
         if(this.swordStorage.hasEnough(id, 1)) {
 
             const sword = Game.swordManager.getCalculatedCurrentSword()
@@ -133,7 +133,7 @@ export class InventoryManager extends Observer {
         }
     }
 
-    breakSword(id: string): readonly PieceItem[] {
+    public breakSword(id: string): readonly PieceItem[] {
         if(this.swordStorage.hasEnough(id, 1)) {
 
             const pieces = Game.swordManager.getCalculatedSwordWithId(id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
@@ -147,11 +147,11 @@ export class InventoryManager extends Observer {
         return [];
     }
 
-    getPieces(): StorageInfo<PieceItem> {
+    public getPieces(): StorageInfo<PieceItem> {
         return this.pieceStorage;
     }
 
-    getSwords(): StorageInfo<SwordItem> {
+    public getSwords(): StorageInfo<SwordItem> {
         return this.swordStorage;
     }
 }

@@ -5,18 +5,18 @@ import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 export class DeveloperMod {
     constructor() {
-        this.touch = 0;
+        this._touch = 0;
         this.infinityGold = false;
         this.infinityMaterial = false;
         this.alwaysSuccess = false;
         $("#developer-mod-button").addEventListener("click", () => {
-            if (this.touch >= 2) {
-                this.touch = 0;
+            if (this._touch >= 2) {
+                this._touch = 0;
                 this.popupDeveloperModMessage();
             }
             else {
-                this.touch++;
-                setTimeout(() => this.touch = 0, 500);
+                this._touch++;
+                setTimeout(() => this._touch = 0, 500);
             }
         });
     }

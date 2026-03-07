@@ -2,32 +2,32 @@ import { ContextType, StatContext } from '../other/context.js';
 import { Observer, StatTestResult, Stat, StatClass } from '../other/entity.js';
 
 export class LuckyBracelet extends Stat {
-    calculate(initialProb: number): number {
+    public calculate(initialProb: number): number {
         return Math.min(initialProb + this.getCurrentValue()/100, 1);
     }
 }
 export class GodHand extends Stat {
-    calculate(): number {
+    public calculate(): number {
         return this.getCurrentValue()/100;
     }
 }
 export class BigMerchant extends Stat {
-    calculate(initialPrice: number): number {
+    public calculate(initialPrice: number): number {
         return initialPrice*(100 + this.getCurrentValue())/100;
     }
 }
 export class Smith extends Stat {
-    calculate(initialCost: number): number {
+    public calculate(initialCost: number): number {
         return initialCost*(100 - this.getCurrentValue())/100;
     }
 }
 export class InvalidatedSphere extends Stat {
-    calculate(): number {
+    public calculate(): number {
         return this.getCurrentValue();
     }
 }
 export class MagicHat extends Stat {
-    calculate(initialMaxDrop: number): number {
+    public calculate(initialMaxDrop: number): number {
         return initialMaxDrop + this.getCurrentValue();
     }
 }
@@ -56,51 +56,51 @@ export function getStatClass(statID: StatID): StatClass {
 
 export class StatManager extends Observer {
     
-    private statPoint = 0;
-    private stats: Readonly<Record<StatID, Stat>> = {} as Record<StatID, Stat>;
+    private _statPoint = 0;
+    private _stats: Readonly<Record<StatID, Stat>> = {} as Record<StatID, Stat>;
 
     constructor(stats: Readonly<Record<StatID, Stat>> = {} as Record<StatID, Stat>) {
         super();
-        this.stats = stats;
+        this._stats = stats;
     }
 
-    get statContext(): StatContext {
+    public get statContext(): StatContext {
         return {
             type: ContextType.STAT,
-            statPoint: this.statPoint,
-            stats: Object.values(this.stats)
+            statPoint: this._statPoint,
+            stats: Object.values(this._stats)
         };
     }
 
-    calculate(statId: StatID, initialValue?: number): number {
-        return this.stats[statId].calculate(initialValue);
+    public calculate(statId: StatID, initialValue?: number): number {
+        return this._stats[statId].calculate(initialValue);
     }
 
-    addStatPoint() {
-        this.statPoint++;
+    public addStatPoint() {
+        this._statPoint++;
 
         this.notify(this.statContext);
     }
 
-    upgradeStat(id: StatID) {
-        const stat = this.stats[id];
+    public upgradeStat(id: StatID) {
+        const stat = this._stats[id];
         if(stat.isMaxLevel()) throw new Error(`${stat.id} is already full-upgrade.`);
-        if(this.statPoint <= 0) throw new Error(`There are no stat points.`);
+        if(this._statPoint <= 0) throw new Error(`There are no stat points.`);
 
-        this.statPoint--;
+        this._statPoint--;
         stat.levelUp();
 
         this.notify(this.statContext);
     }
 
-    tryUpgrade(statId: StatID): StatTestResult {
+    public tryUpgrade(statId: StatID): StatTestResult {
         
-        if(this.stats[statId].isMaxLevel()) return StatTestResult.REJECTED_BY_MAX_UPGRADE;
-        if(this.statPoint <= 0) return StatTestResult.REJECTED_BY_POINT_LACK;
+        if(this._stats[statId].isMaxLevel()) return StatTestResult.REJECTED_BY_MAX_UPGRADE;
+        if(this._statPoint <= 0) return StatTestResult.REJECTED_BY_POINT_LACK;
 
         this.upgradeStat(statId);
 
-        if(Object.values(this.stats).every(s => s.isMaxLevel())) {
+        if(Object.values(this._stats).every(s => s.isMaxLevel())) {
             return StatTestResult.SUCCESS_AND_ALL_MAX;
         }
 

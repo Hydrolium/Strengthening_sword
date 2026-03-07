@@ -1,14 +1,14 @@
-import { Observer, Item, PieceItem, RecipeInfo, MoneyItem, SwordItem, RepairPaperItem } from '../other/entity.js';
+import { Observer, Item, PieceItem, Recipe, MoneyItem, SwordItem, RepairPaperItem } from '../other/entity.js';
 import { Game } from '../other/main.js';
 import { ContextType } from '../other/context.js';
 export class MakingManager extends Observer {
     constructor(swordRecipes) {
         super();
         this.repairPaperRecipes = [
-            new RecipeInfo(new RepairPaperItem(1), [new MoneyItem(300)]),
-            new RecipeInfo(new RepairPaperItem(5), [new MoneyItem(1500)]),
-            new RecipeInfo(new RepairPaperItem(10), [new MoneyItem(3000)]),
-            new RecipeInfo(new RepairPaperItem(15), [new MoneyItem(4500)]),
+            new Recipe(new RepairPaperItem(1), [new MoneyItem(300)]),
+            new Recipe(new RepairPaperItem(5), [new MoneyItem(1500)]),
+            new Recipe(new RepairPaperItem(10), [new MoneyItem(3000)]),
+            new Recipe(new RepairPaperItem(15), [new MoneyItem(4500)]),
         ];
         this.swordRecipes = [];
         if (swordRecipes)

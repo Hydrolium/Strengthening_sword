@@ -7,18 +7,18 @@ import { Screen } from "./screen.js";
 
 export class StatScreen extends Screen {
 
-    protected id = "game-stat";
+    protected readonly _id = "game-stat";
 
-    private elements: {
+    private readonly _elements: {
         statBox?: HTMLDivElement,
         statPointCount?: HTMLSpanElement
     } = {};
     
-    override changeBody(): void {
+    public override changeBody(): void {
         super.changeBody();
 
-        this.elements.statBox = $<HTMLDivElement>("#stat_box");
-        this.elements.statPointCount = $<HTMLSpanElement>("#stat-point-count");
+        this._elements.statBox = $<HTMLDivElement>("#stat_box");
+        this._elements.statPointCount = $<HTMLSpanElement>("#stat-point-count");
     }
 
     private makeIconDiv(src: string, onclick: () => void): HTMLDivElement {
@@ -32,7 +32,7 @@ export class StatScreen extends Screen {
         return created_iconBox;
     };
 
-    private  makeLevelDiv(stat: StatInfo): HTMLDivElement {
+    private makeLevelDiv(stat: StatInfo): HTMLDivElement {
 
         const created_levelBox = createElementWith<HTMLDivElement>("div", {classes: ["level"]});
         const created_ul = createElement("ul");
@@ -92,11 +92,11 @@ export class StatScreen extends Screen {
 
         if(context.type != ContextType.STAT) return;
 
-        this.elements.statBox?.replaceChildren(...context.stats.map(stat => this.makeStatSection(stat)));
-        write(this.elements.statPointCount, context.statPoint);
+        this._elements.statBox?.replaceChildren(...context.stats.map(stat => this.makeStatSection(stat)));
+        write(this._elements.statPointCount, context.statPoint);
     }
 
-    popupMaxStatMessage() {
+    public popupMaxStatMessage() {
         const popup = new Popup();
         popup.setTitle("이미 최대로 강화된 스탯입니다!", Color.PURPLE);
         popup.setSubTitle("다른 스탯을 강화해 보세요.");
@@ -105,7 +105,7 @@ export class StatScreen extends Screen {
         popup.show();
     }
     
-    popupStatPointLackMessage() {
+    public popupStatPointLackMessage() {
         const popup = new Popup();
         popup.setTitle("스탯 포인트가 부족합니다!", Color.RED);
         popup.setSubTitle("새로운 검을 발견해 스탯 포인트를 얻어보세요.");
@@ -114,7 +114,7 @@ export class StatScreen extends Screen {
         popup.show();
     }
 
-    popupGameAllStatMessage() {
+    public popupGameAllStatMessage() {
         const popup = new Popup();
         popup.setTitle("모든 스탯을 끝까지 업그레이드 했습니다", Color.GOLD);
         popup.setSubTitle("고대 룬의 마법이 당신과 함께합니다!");

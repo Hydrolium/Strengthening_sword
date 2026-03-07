@@ -51,41 +51,41 @@ export function getStatClass(statID) {
 export class StatManager extends Observer {
     constructor(stats = {}) {
         super();
-        this.statPoint = 0;
-        this.stats = {};
-        this.stats = stats;
+        this._statPoint = 0;
+        this._stats = {};
+        this._stats = stats;
     }
     get statContext() {
         return {
             type: ContextType.STAT,
-            statPoint: this.statPoint,
-            stats: Object.values(this.stats)
+            statPoint: this._statPoint,
+            stats: Object.values(this._stats)
         };
     }
     calculate(statId, initialValue) {
-        return this.stats[statId].calculate(initialValue);
+        return this._stats[statId].calculate(initialValue);
     }
     addStatPoint() {
-        this.statPoint++;
+        this._statPoint++;
         this.notify(this.statContext);
     }
     upgradeStat(id) {
-        const stat = this.stats[id];
+        const stat = this._stats[id];
         if (stat.isMaxLevel())
             throw new Error(`${stat.id} is already full-upgrade.`);
-        if (this.statPoint <= 0)
+        if (this._statPoint <= 0)
             throw new Error(`There are no stat points.`);
-        this.statPoint--;
+        this._statPoint--;
         stat.levelUp();
         this.notify(this.statContext);
     }
     tryUpgrade(statId) {
-        if (this.stats[statId].isMaxLevel())
+        if (this._stats[statId].isMaxLevel())
             return StatTestResult.REJECTED_BY_MAX_UPGRADE;
-        if (this.statPoint <= 0)
+        if (this._statPoint <= 0)
             return StatTestResult.REJECTED_BY_POINT_LACK;
         this.upgradeStat(statId);
-        if (Object.values(this.stats).every(s => s.isMaxLevel())) {
+        if (Object.values(this._stats).every(s => s.isMaxLevel())) {
             return StatTestResult.SUCCESS_AND_ALL_MAX;
         }
         return StatTestResult.SUCCESS;

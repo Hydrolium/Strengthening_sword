@@ -13,14 +13,14 @@ export class Screen extends Refreshable {
     constructor() {
         super(...arguments);
         this.refresh = (context) => {
-            if (Game.currentScreenId == this.id)
+            if (Game.currentScreenId == this._id)
                 this.render(context);
         };
     }
     changeBody() {
         var _a;
-        Game.currentScreenId = this.id;
-        const element_template = $("#" + this.id);
+        Game.currentScreenId = this._id;
+        const element_template = $("#" + this._id);
         (_a = document.querySelector("#main-body")) === null || _a === void 0 ? void 0 : _a.replaceChildren(document.importNode(element_template.content, true));
     }
     show(context) {
