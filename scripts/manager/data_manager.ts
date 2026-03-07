@@ -54,11 +54,11 @@ export class DataManager {
         try {
 
             const [pathRes, swordRes, recipeRes, statRes, koreanRes] = await Promise.all([
-                fetch('./data/path.json'),
-                fetch('./data/sword.json'),
-                fetch('./data/recipes.json'),
-                fetch('./data/stat.json'),
-                fetch('./data/korean.json')
+                fetch('data/path.json'),
+                fetch('data/sword.json'),
+                fetch('data/recipes.json'),
+                fetch('data/stat.json'),
+                fetch('data/korean.json')
             ]);
 
             if(!pathRes.ok || !swordRes.ok || !recipeRes.ok || !statRes.ok || !koreanRes.ok) {
