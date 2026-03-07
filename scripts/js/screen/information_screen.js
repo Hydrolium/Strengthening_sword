@@ -1,8 +1,9 @@
 import { onClickSwordInfoButton } from "../other/click_events.js";
+import { ColoredTextElement } from "../other/colored_text.js";
 import { ContextType } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
 import { Color, SwordItem, UnknownItem } from "../other/entity.js";
-import { ColoredTextElement, Popup } from "../popup/popup_message.js";
+import { Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
 export class InformationScreen extends Screen {
     constructor() {

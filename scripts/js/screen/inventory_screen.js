@@ -1,8 +1,9 @@
 import { onClickSwordBreakButton, onClickSwordItemSellButton, onClickSwordSwapButton, onClickWherePieceDroppedButton } from "../other/click_events.js";
+import { ColoredTextElement } from "../other/colored_text.js";
 import { ContextType } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc } from "../other/element_controller.js";
 import { Color, PieceItem, RepairPaperItem, SwordItem, UnknownItem } from "../other/entity.js";
-import { ButtonType, ColoredTextElement, HoverEffect, Popup } from "../popup/popup_message.js";
+import { ButtonType, HoverEffect, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
 export class InventoryScreen extends Screen {
     constructor() {

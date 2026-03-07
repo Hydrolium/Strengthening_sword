@@ -1,18 +1,6 @@
 import { $, createElement, createElementWith, createImageWithSrc, display, hide } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
 import { Keyframes } from "../screen/screen.js";
-export class ColoredTextElement {
-    constructor() {
-        this.elements = [];
-    }
-    add(text, color) {
-        this.elements.push(createElementWith("span", { classes: ["colored_text", color], text: text }));
-        return this;
-    }
-    build() {
-        return this.elements;
-    }
-}
 export class Popup {
     constructor() {
         this.created_message_main = createElementWith("div", { classes: ["message_main"] });

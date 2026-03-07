@@ -1,21 +1,7 @@
+import { ColoredTextElement } from "../other/colored_text.js";
 import { $, createElement, createElementWith, createImageWithSrc, display, hide } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
-import { Game } from "../other/main.js";
 import { Keyframes } from "../screen/screen.js";
-
-
-export class ColoredTextElement {
-    private elements: HTMLElement[] = [];
-
-    add(text: any, color: Color): ColoredTextElement {
-        this.elements.push(createElementWith("span", {classes: ["colored_text", color], text: text}));
-        return this;
-    }
-
-    build(): readonly HTMLElement[] {
-        return this.elements;
-    }
-}
 
 export class Popup {
 

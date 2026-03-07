@@ -2,9 +2,10 @@ import { onClickInitButton, onClickRepairButton, onClickSaveButton, onClickSellB
 import { ContextType } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, invisible, visible } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
-import { ButtonType, ColoredTextElement, HoverEffect, Popup } from "../popup/popup_message.js";
+import { ButtonType, HoverEffect, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
 import { write } from "../other/element_controller.js";
+import { ColoredTextElement } from "../other/colored_text.js";
 export class MainScreen extends Screen {
     constructor() {
         super(...arguments);
