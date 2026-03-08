@@ -8,7 +8,6 @@ import { StatID, StatManager } from './stat_manager.js';
 
 export class SwordManager extends Observer {
 
-
     private _currentSwordIndex: number = 0;
 
     public get currentSwordIndex() {
