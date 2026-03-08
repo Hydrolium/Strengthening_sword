@@ -1,5 +1,3 @@
-import { eventHandlerFunc } from "../event/listener/event_handler";
-
 export function $<T extends HTMLElement>(tag: string): T {
     return document.querySelector(tag) as T;
 }

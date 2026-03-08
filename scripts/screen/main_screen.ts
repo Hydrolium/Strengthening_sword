@@ -44,12 +44,15 @@ export class MainScreen extends Screen {
         this._elements.upgradeButton = $<HTMLAnchorElement>("#upgrade-button");
         this._elements.saveButton = $<HTMLAnchorElement>("#save-button");
 
+        setOnClick(this._elements.sellButton, this._actions?.onSell);
+        setOnClick(this._elements.upgradeButton, this._actions?.onUpgrade);
+        setOnClick(this._elements.saveButton, this._actions?.onSave);
+
     }
 
     protected render(context?: ScreenRenderingContext) {
 
         if(context?.type != ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT) return;
-
 
         this._elements.swordImage!.src = context.sword.imgSrc;
 
@@ -75,8 +78,8 @@ export class MainScreen extends Screen {
 
         if(context.sword.price > 0) {
             write(this._elements.swordPrice, `${context.sword.price}`);
-            visible(this._elements.sellButton);
             visible(this._elements.swordPrice);
+            visible(this._elements.sellButton);
         } else {
             invisible(this._elements.swordPrice);
             invisible(this._elements.sellButton);
@@ -84,11 +87,6 @@ export class MainScreen extends Screen {
 
         if(context.sword.canSave) visible(this._elements.saveButton);
         else invisible(this._elements.saveButton);
-
-        setOnClick(this._elements.sellButton, this._actions?.onSell);
-        setOnClick(this._elements.upgradeButton, this._actions?.onUpgrade);
-        setOnClick(this._elements.saveButton, this._actions?.onSave);
-
     }
 
     public popupFallMessage(sword: Sword, loss: number, pieces: readonly PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {

@@ -181,6 +181,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
 
     public onInit = (popup: Popup) => {
         this.updateSword(this._swordDB.getSwordByIndex(0));
+        
         popup.close();
     }
     
