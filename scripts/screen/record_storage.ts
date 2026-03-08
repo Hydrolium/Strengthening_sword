@@ -1,4 +1,5 @@
-import { ContextType, GameContext } from "../other/context.js";
+import { ScreenContext } from "../context/rendering/screen_context.js";
+import { MoneyChangeReason, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
 import { $, createElementWith } from "../other/element_controller.js";
 import { Refreshable } from "./screen.js";
 
@@ -17,32 +18,34 @@ export class RecordStorage extends Refreshable {
         $("#records").replaceChildren(...ret);
     }
 
-    public refresh = (event?: GameContext) => {
+    public refresh = (context?: ScreenContext) => {
 
-        switch(event?.type) {
-            case ContextType.SYSTEM_MONEY_GIFT :
-                this.add(`기본금 지급 +${event.money}`);
+        if(context?.type != ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT) return
+
+        switch(context?.reason) {
+            case MoneyChangeReason.SYSTEM_MONEY_GIFT :
+                this.add(`기본금 지급 +${context.money}`);
                 this.render();
                 break;
 
-            case ContextType.SWORD_UPGRADE:
+            case MoneyChangeReason.SWORD_UPGRADE:
 
-                this.add(`${event.name} 강화 -${event.cost}`);
+                this.add(`${context.name} 강화 -${context.cost}`);
                 this.render();
                 break;
 
-            case ContextType.SWORD_SELL:
-                this.add(`${event.name} 판매 +${event.price}`);
+            case MoneyChangeReason.SWORD_SELL:
+                this.add(`${context.name} 판매 +${context.price}`);
                 this.render();
                 break;
 
-            case ContextType.SWORD_RESTORE:
-                this.add(`${event.name} 복구 +${event.cost}`);
+            case MoneyChangeReason.SWORD_RESTORE:
+                this.add(`${context.name} 복구 +${context.cost}`);
                 this.render();
                 break;
                 
-            case ContextType.BUY_USING_MONEY:
-                this.add(`${event.resultName} x ${event.count} 구매 -${event.price}`);
+            case MoneyChangeReason.BUY_USING_MONEY:
+                this.add(`${context.resultName} x ${context.count} 구매 -${context.price}`);
                 this.render();
                 break;
         }

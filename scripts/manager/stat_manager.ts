@@ -1,5 +1,7 @@
-import { ContextType, StatContext } from '../other/context.js';
-import { Observer, StatTestResult, Stat, StatClass } from '../other/entity.js';
+import { ScreenRenderingContextType } from '../context/rendering/screen_rendering_context.js';
+import { StatUpdateContext, StatUpdateContextType } from '../context/updating/stat_update_context.js';
+import { Observer, Stat, StatClass, StatInfo } from '../other/entity.js';
+import { StatTestResult } from '../other/test_result.js';
 
 export class LuckyBracelet extends Stat {
     public calculate(initialProb: number): number {
@@ -64,33 +66,47 @@ export class StatManager extends Observer {
         this._stats = stats;
     }
 
-    public get statContext(): StatContext {
-        return {
-            type: ContextType.STAT,
-            statPoint: this._statPoint,
-            stats: Object.values(this._stats)
-        };
+    public get stats(): readonly StatInfo[] {
+        return Object.values(this._stats);
     }
 
+    public get statPoint(): number {
+        return this._statPoint;
+    }
+
+    public update(statUpdateContext: StatUpdateContext) {
+        switch(statUpdateContext.type) {
+        case StatUpdateContextType.GETTING_STAT_POINT:
+            this._statPoint++;
+            this.notify({
+                type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT,
+                statPoint: this._statPoint,
+                stats: Object.values(this._stats)
+            });
+            break;
+        case StatUpdateContextType.STAT_UPGRADE:
+
+            const stat = this._stats[statUpdateContext.id];
+
+            if(stat.isMaxLevel()) throw new Error(`${stat.id} is already full-upgrade.`);
+            if(this._statPoint <= 0) throw new Error(`There are no stat points.`);
+
+            this._statPoint--;
+            stat.levelUp();
+
+            this.notify({
+                type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT,
+                statPoint: this.statPoint,
+                stats: this.stats
+            });
+
+            break;
+        }
+    }
+
+        
     public calculate(statId: StatID, initialValue?: number): number {
         return this._stats[statId].calculate(initialValue);
-    }
-
-    public addStatPoint() {
-        this._statPoint++;
-
-        this.notify(this.statContext);
-    }
-
-    public upgradeStat(id: StatID) {
-        const stat = this._stats[id];
-        if(stat.isMaxLevel()) throw new Error(`${stat.id} is already full-upgrade.`);
-        if(this._statPoint <= 0) throw new Error(`There are no stat points.`);
-
-        this._statPoint--;
-        stat.levelUp();
-
-        this.notify(this.statContext);
     }
 
     public tryUpgrade(statId: StatID): StatTestResult {
@@ -98,11 +114,7 @@ export class StatManager extends Observer {
         if(this._stats[statId].isMaxLevel()) return StatTestResult.REJECTED_BY_MAX_UPGRADE;
         if(this._statPoint <= 0) return StatTestResult.REJECTED_BY_POINT_LACK;
 
-        this.upgradeStat(statId);
-
-        if(Object.values(this._stats).every(s => s.isMaxLevel())) {
-            return StatTestResult.SUCCESS_AND_ALL_MAX;
-        }
+        if(Object.values(this._stats).every(s => s.isMaxLevel())) return StatTestResult.SUCCESS_AND_ALL_MAX;
 
         return StatTestResult.SUCCESS;
         

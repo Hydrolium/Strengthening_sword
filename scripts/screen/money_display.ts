@@ -1,4 +1,5 @@
-import { ContextType, GameContext } from "../other/context.js";
+import { ScreenContext } from "../context/rendering/screen_context.js";
+import { ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
 import { $ } from "../other/element_controller.js";
 import { Keyframes, Refreshable } from "./screen.js";
 
@@ -14,14 +15,14 @@ export class MoneyDisplay extends Refreshable {
 
     }
 
-    public refresh = (event?: GameContext) => {
+    public refresh = (context?: ScreenContext) => {
 
-        if(event?.type != ContextType.MONEY_CHANGE) return;
+        if(context?.type != ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT) return;
 
-        if(event.changedMoney == 0) return;
+        if(context.deltaMoney == 0) return;
 
-        this.animateChangingMoney(event.changedMoney);
-        $("#money-number").textContent = `${event.havingMoney}`;
+        this.animateChangingMoney(context.deltaMoney);
+        $("#money-number").textContent = `${context.havingMoney}`;
         
     }
 

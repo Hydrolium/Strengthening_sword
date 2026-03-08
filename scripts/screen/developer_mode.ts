@@ -1,10 +1,8 @@
-import { ContextType } from "../other/context.js";
 import { $, createElement } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
-import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 
-export class DeveloperMod {
+export class DeveloperMode {
     private _touch = 0;
 
     public infinityGold = false;
@@ -15,12 +13,12 @@ export class DeveloperMod {
         $("#developer-mod-button").addEventListener("click", () => {
             if(this._touch >= 2) {
                 this._touch = 0;
-                this.popupDeveloperModMessage();
+                this.popupDeveloperModeMessage();
             } else {
                 this._touch++;
                 setTimeout(() => this._touch=0, 500)
             }
-            });
+        });
     }
 
     private makeCheckBox(label: string, checked: boolean, changeEvent: (checked: boolean) => void): HTMLParagraphElement {
@@ -42,7 +40,7 @@ export class DeveloperMod {
         return created_cover;
     }
 
-    private popupDeveloperModMessage() {
+    private popupDeveloperModeMessage() {
         const popup = new Popup();
         popup.setTitle("개발자 모드", Color.DARK_BLUE);
 
@@ -51,16 +49,6 @@ export class DeveloperMod {
             this.makeCheckBox("골드 무한", this.infinityGold,
                 checked => {
                     this.infinityGold = checked;
-                    if(checked) Game.inventoryManager.setMoney(Infinity, {
-                        type: ContextType.SYSTEM_MONEY_GIFT,
-                        money: Infinity
-                    });
-                    else {
-                        Game.inventoryManager.setMoney(Game.startMoney, {
-                            type: ContextType.SYSTEM_MONEY_GIFT,
-                            money: Game.startMoney
-                        });
-                    }
                 }
             )
         );

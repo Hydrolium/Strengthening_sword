@@ -1,23 +1,28 @@
-import { onClickSwordBreakButton, onClickSwordItemSellButton, onClickSwordSwapButton, onClickWherePieceDroppedButton } from "../other/click_events.js";
 import { ColoredTextElement } from "../other/colored_text.js";
-import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc } from "../other/element_controller.js";
 import { Color, Item, PieceItem, RepairPaperItem, Sword, SwordInfoByPiece, SwordItem, UnknownItem } from "../other/entity.js";
 import { ButtonType, HoverEffect, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
+import { ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
+import { InventoryScreenActions } from "../event/inventory_screen_event_controller.js";
 
 export class InventoryScreen extends Screen {
 
-    protected readonly _id = "inventory";
+    protected readonly _id = ScreenShowingContextType.INVENTORY_SCREEN_SHOWING_CONTEXT;
 
     private readonly _elements: {
         inventoryItems?: HTMLDivElement,
         windowMain?: HTMLElement
     } = {}
 
-    public override changeBody() {
-        super.changeBody();
+    private _actions?: InventoryScreenActions;
 
+    public setActions(actions: InventoryScreenActions) {
+        this._actions = actions;
+    }
+
+    protected init() {
         this._elements.inventoryItems = $("#inventory-items");
         this._elements.windowMain = $(".inventory_window main");
     }
@@ -29,9 +34,9 @@ export class InventoryScreen extends Screen {
         const created_moveButton = createElementWith("span", {text : "꺼내기"});
         const created_breakButton = createElementWith("span", {text : "파괴하기"});
 
-        created_sellButton.addEventListener("click", () => onClickSwordItemSellButton(sword.id));
-        created_moveButton.addEventListener("click", () => onClickSwordSwapButton(sword.id));
-        created_breakButton.addEventListener("click", () => onClickSwordBreakButton(sword.id));
+        created_sellButton.addEventListener("click", () => this._actions?.onSwordItemSell(sword));
+        created_moveButton.addEventListener("click", () => this._actions?.onSwordSwap(sword));
+        created_breakButton.addEventListener("click", () => this._actions?.onSwordItemBreak(sword));
 
         created_div.appendChild(created_sellButton);
         created_div.appendChild(created_moveButton);
@@ -45,7 +50,7 @@ export class InventoryScreen extends Screen {
 
         const created_whereButton = createElementWith("span", {text : "획득처"});
 
-        created_whereButton.addEventListener("click", () => onClickWherePieceDroppedButton(piece));
+        created_whereButton.addEventListener("click", () => this._actions?.onSwordsByPieceSearch(piece));
 
         created_div.appendChild(created_whereButton);
 
@@ -103,9 +108,9 @@ export class InventoryScreen extends Screen {
         return created_swordGroup;
     }   
 
-    protected render(context?: GameContext) {
+    protected render(context?: ScreenRenderingContext) {
 
-        if(context?.type != ContextType.INVENTORY) return;
+        if(context?.type != ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT) return;
 
         const inner = [];   
 

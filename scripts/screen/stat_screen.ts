@@ -1,5 +1,6 @@
-import { onStatUp } from "../other/click_events.js";
-import { ContextType, GameContext } from "../other/context.js";
+import { ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
+import { StatScreenActions } from "../event/stat_screen_event_controller.js";
 import { $, createElement, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
 import { Color, StatInfo } from "../other/entity.js";
 import { Popup } from "../popup/popup_message.js";
@@ -7,16 +8,20 @@ import { Screen } from "./screen.js";
 
 export class StatScreen extends Screen {
 
-    protected readonly _id = "game-stat";
+    protected readonly _id = ScreenShowingContextType.STAT_SCREEN_SHOWING_CONTEXT;
 
     private readonly _elements: {
         statBox?: HTMLDivElement,
         statPointCount?: HTMLSpanElement
     } = {};
-    
-    public override changeBody(): void {
-        super.changeBody();
 
+    private _actions?: StatScreenActions;
+
+    public setActions(actions: StatScreenActions) {
+        this._actions = actions;
+    }
+
+    protected init() {
         this._elements.statBox = $<HTMLDivElement>("#stat_box");
         this._elements.statPointCount = $<HTMLSpanElement>("#stat-point-count");
     }
@@ -77,7 +82,7 @@ export class StatScreen extends Screen {
         created_section.appendChild(
             this.makeIconDiv(
                 stat.imgSrc,
-                () => onStatUp(stat.id)
+                () => this._actions?.onStatUp(stat.id)
             )
         );
 
@@ -88,9 +93,9 @@ export class StatScreen extends Screen {
         return created_section;
     };
 
-    protected render(context: GameContext) {
+    protected render(context: ScreenRenderingContext) {
 
-        if(context.type != ContextType.STAT) return;
+        if(context.type != ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT) return;
 
         this._elements.statBox?.replaceChildren(...context.stats.map(stat => this.makeStatSection(stat)));
         write(this._elements.statPointCount, context.statPoint);

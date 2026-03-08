@@ -1,15 +1,16 @@
-import { onClickInitButton, onClickRepairButton, onClickSaveButton, onClickSellButton, onClickUpgradeButton } from "../other/click_events.js";
-import { ContextType, GameContext } from "../other/context.js";
-import { $, createElementWith, createImageWithSrc, display, hide, invisible, visible } from "../other/element_controller.js";
-import { Color, PieceItem } from "../other/entity.js";
+import { $, createElementWith, createImageWithSrc, invisible, setOnClick, visible } from "../other/element_controller.js";
+import { Color, PieceItem, Sword } from "../other/entity.js";
 import { ButtonType, HoverEffect, Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
 import { write } from "../other/element_controller.js";
 import { ColoredTextElement } from "../other/colored_text.js";
+import { ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
+import { MainScreenActions } from "../event/main_screen_event_controller.js";
 
 export class MainScreen extends Screen {
 
-    protected readonly _id = "game-interface";
+    protected readonly _id = ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT;
 
     private readonly _elements : {
         swordImage?: HTMLImageElement,
@@ -23,8 +24,13 @@ export class MainScreen extends Screen {
         saveButton?: HTMLAnchorElement
     } = {};
 
-    public override changeBody() {
-        super.changeBody();
+    private _actions?: MainScreenActions;
+
+    public setActions(actions: MainScreenActions) {
+        this._actions = actions;
+    }
+
+    protected init() {
 
         this._elements.swordImage = $<HTMLImageElement>("#sword-image");
 
@@ -38,18 +44,16 @@ export class MainScreen extends Screen {
         this._elements.upgradeButton = $<HTMLAnchorElement>("#upgrade-button");
         this._elements.saveButton = $<HTMLAnchorElement>("#save-button");
 
-        this._elements.sellButton.onclick = () => onClickSellButton();
-        this._elements.upgradeButton.onclick = () => onClickUpgradeButton();
-        this._elements.saveButton.onclick = () => onClickSaveButton();
     }
 
-    protected render(context?: GameContext) {
+    protected render(context?: ScreenRenderingContext) {
 
-        if(context?.type != ContextType.SWORD) return;
+        if(context?.type != ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT) return;
+
 
         this._elements.swordImage!.src = context.sword.imgSrc;
 
-        write(this._elements.swordNumber, context.index);
+        write(this._elements.swordNumber, context.sword.index);
 
         if(context.isMax) this._elements.swordNumber?.classList.add("hightlight");
 
@@ -80,10 +84,14 @@ export class MainScreen extends Screen {
 
         if(context.sword.canSave) visible(this._elements.saveButton);
         else invisible(this._elements.saveButton);
+
+        setOnClick(this._elements.sellButton, this._actions?.onSell);
+        setOnClick(this._elements.upgradeButton, this._actions?.onUpgrade);
+        setOnClick(this._elements.saveButton, this._actions?.onSave);
+
     }
 
-    public popupFallMessage(loss: number, pieces: readonly PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {
-
+    public popupFallMessage(sword: Sword, loss: number, pieces: readonly PieceItem[], havingRepairPaper: number, requiredRepairPaper: number) {
 
         const popup = new Popup();
         popup.setTitle("파괴되었습니다", Color.RED);
@@ -110,7 +118,7 @@ export class MainScreen extends Screen {
         
         if(havingRepairPaper >= requiredRepairPaper) {
             popup.addButton(
-                "복구하기", Color.GREEN, ButtonType.REPAIR, HoverEffect.INCREASE, () => onClickRepairButton()
+                "복구하기", Color.GREEN, ButtonType.REPAIR, HoverEffect.INCREASE, () => this._actions?.onRepair(sword, popup)
             );
             popup.setFooter(
                 `복구권 ${requiredRepairPaper}개로 복구할 수 있습니다. (${havingRepairPaper}/${requiredRepairPaper})`, Color.SKY
@@ -122,7 +130,7 @@ export class MainScreen extends Screen {
         }
 
         popup.addButton(
-            "다시하기", Color.DARK_BLUE, ButtonType.REGAME, HoverEffect.TURNING, () => onClickInitButton()
+            "다시하기", Color.DARK_BLUE, ButtonType.REGAME, HoverEffect.TURNING, () => this._actions?.onInit(popup)
         );
 
         popup.build();

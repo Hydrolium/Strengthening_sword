@@ -1,157 +1,246 @@
-import { ContextType, GameContext, InventoryContext } from '../other/context.js';
+import { MoneyChangeReason, ScreenRenderingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenShowingContextType } from '../context/rendering/screen_showing_context.js';
+import { InventoryUpdateContext, InventoryUpdateContextType } from '../context/updating/inventory_update_context.js';
 import { Observer, Storage, Item, SwordItem, PieceItem, MoneyItem, RepairPaperItem, StorageInfo } from '../other/entity.js';
-import { Game } from '../other/main.js';
 
 export class InventoryManager extends Observer {
 
-    private swordStorage: Storage<SwordItem> = new Storage<SwordItem>(this, SwordItem, () => Game.developerMod.infinityMaterial);
-    private pieceStorage: Storage<PieceItem> = new Storage<PieceItem>(this, PieceItem, () => Game.developerMod.infinityMaterial);
+    private _swordStorage: Storage<SwordItem> = new Storage<SwordItem>(SwordItem);
+    private _pieceStorage: Storage<PieceItem> = new Storage<PieceItem>(PieceItem);
 
     private _money: number = 0;
 
     private _repairPaperCount: number = 0;
 
-    private get money(): number {
-        return this._money;
-    }
+    public update(context: InventoryUpdateContext) {
 
-    private set money(m: number) {
+        switch(context.type) {
+        case InventoryUpdateContextType.SWORD_UPGRADE:
+            this.takeMoney(context.cost);
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: -context.cost,
+                havingMoney: this.getMoney()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.SWORD_UPGRADE,
+                cost: context.cost,
+                name: context.name
+            });
+            break;
+        case InventoryUpdateContextType.SWORD_RESTORE:
+            this.saveMoney(context.cost);
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: context.cost,
+                havingMoney: this.getMoney()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.SWORD_RESTORE,
+                cost: context.cost,
+                name: context.name
+            });
+            break;
+        case InventoryUpdateContextType.SWORD_BREAK:
+            context.pieces.forEach(piece => this.save(piece));
+            this.takeMoney(context.cost);
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: -context.cost,
+                havingMoney: this.getMoney()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: this.getPieces(),
+                repairPapers: this.getRepairPaper(),
+                swordStorage: this.getSwords()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.SWORD_UPGRADE,
+                cost: context.cost,
+                name: context.name
+            });
+            break;
+        case InventoryUpdateContextType.SWORD_SELL:
+            this.saveMoney(context.price);
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: context.price,
+                havingMoney: this.getMoney()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.SWORD_SELL,
+                price: context.price,
+                name: context.name
+            });
+            break;
+        case InventoryUpdateContextType.ITEM_SAVE:
+            this.save(context.item);
+            this.notify({
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: this.getPieces(),
+                repairPapers: this.getRepairPaper(),
+                swordStorage: this.getSwords()
+            });
+            break;
+        case InventoryUpdateContextType.ITEM_TAKE:
+            this.take(context.item);
+            this.notify({
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: this.getPieces(),
+                repairPapers: this.getRepairPaper(),
+                swordStorage: this.getSwords()
+            });
+            break;
+        case InventoryUpdateContextType.BUY_USING_MONEY:
+            this.takeMoney(context.price);
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: -context.price,
+                havingMoney: this.getMoney()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.BUY_USING_MONEY,
+                price: context.price,
+                count: context.count,
+                resultName: context.resultName
+            });
+            break;
+        case InventoryUpdateContextType.SWORD_ITEM_SELL:
+            this._money += context.price;
+            this._swordStorage.remove(context.id, 1);
+            this.notify({
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: this.getPieces(),
+                repairPapers: this.getRepairPaper(),
+                swordStorage: this.getSwords()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: context.price,
+                havingMoney: this.getMoney()
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.SWORD_SELL,
+                price: context.price,
+                name: context.name
+            });
+            break;
+        case InventoryUpdateContextType.SWORD_ITEM_BREAK:
+            this.take(context.swordItem);
+            context.pieceItems.forEach(pieceitem => this.save(pieceitem));
+            this.notify({
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: this.getPieces(),
+                repairPapers: this.getRepairPaper(),
+                swordStorage: this.getSwords()
+            });
+            break;
+        case InventoryUpdateContextType.SWORD_ITEM_SWAP:
+            if(context.sword.canSave) this.save(context.sword.toItem());
+            this.take(context.swordItem);
 
-        this.notify({
-            type: ContextType.MONEY_CHANGE,
-            changedMoney: m - this._money,
-            havingMoney: m
-        });
-
-        this._money = m;
-    }
-
-    public get inventoryContext(): InventoryContext {
-        return {
-            type: ContextType.INVENTORY,
-            swordStorage: this.swordStorage,
-            pieceStorage: this.pieceStorage,
-            repairPapers: this._repairPaperCount
-        };
+            this.notify({
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: this.getPieces(),
+                repairPapers: this.getRepairPaper(),
+                swordStorage: this.getSwords()
+            });
+            break;
+        case InventoryUpdateContextType.SYSTEM_MONEY_GIFT:
+            this.setMoney(context.money);
+            this.notify({
+                type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT,
+                deltaMoney: context.money,
+                havingMoney: context.money
+            });
+            this.notify({
+                type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT,
+                reason: MoneyChangeReason.SYSTEM_MONEY_GIFT,
+                money: context.money
+            });
+            break;
+        }
     }
 
     public hasMoney(money: number): boolean {
-        return this.money >= money;
-    }
-    public saveMoney(money: number, context: GameContext) {
-        this.money += money;
-        this.notify(context);
-    }
-    public takeMoney(money: number, context: GameContext) {
-        this.money -= money;
-        this.notify(context);
-    }
-    public setMoney(money: number, context: GameContext) {
-        this.money = money;
-        this.notify(context);
+        return this._money >= money;
     }
     public getMoney(): number {
-        return this.money;
+        return this._money;
     }
+    private setMoney(money: number) {
+        this._money = money;
+    }
+    private saveMoney(money: number) {
+        this._money += money;
+    }
+    private takeMoney(money: number) {
+        this._money -= money;
+    }
+ 
 
     public hasRepairPaper(repair_paper: number): boolean {
         return this._repairPaperCount >= repair_paper;
     }
-    public saveRepairPaper(repair_paper: number) {
-        this._repairPaperCount += repair_paper;
-    }
-    public takeRepairPaper(repair_paper: number) {
-        this._repairPaperCount -= repair_paper;
-    }
     public getRepairPaper(): number {
         return this._repairPaperCount;
     }
+    private saveRepairPaper(repair_paper: number) {
+        this._repairPaperCount += repair_paper;
+    }
+    private takeRepairPaper(repair_paper: number) {
+        this._repairPaperCount -= repair_paper;
+    }
 
-    public hasItems(items: readonly Item[]): boolean {
-        for(const item of items) {
-            if(
-                item instanceof MoneyItem
-                && !this.hasMoney(item.count)
-            ) return false;
-            else if (
-                item instanceof SwordItem
-                && !this.swordStorage.hasEnough(item.id, item.count)
-            ) return false;
-            else if (
-                item instanceof PieceItem
-                && !this.pieceStorage.hasEnough(item.id, item.count)
-            ) return false;
-            else if (
-                item instanceof RepairPaperItem
-                && !this.hasRepairPaper(item.count)
-            ) return false;
-        }
+    public hasItem(item: Item): boolean {
+        if(
+            item instanceof MoneyItem
+            && !this.hasMoney(item.count)
+        ) return false;
+        else if (
+            item instanceof SwordItem
+            && !this._swordStorage.hasEnough(item.id, item.count)
+        ) return false;
+        else if (
+            item instanceof PieceItem
+            && !this._pieceStorage.hasEnough(item.id, item.count)
+        ) return false;
+        else if (
+            item instanceof RepairPaperItem
+            && !this.hasRepairPaper(item.count)
+        ) return false;
+
         return true;
     }
 
-    public take(item: SwordItem | PieceItem | RepairPaperItem) {
-        if (item instanceof SwordItem) this.swordStorage.remove(item.id, item.count);
-        else if (item instanceof PieceItem) this.pieceStorage.remove(item.id, item.count);
+    public hasItems(items: readonly Item[]): boolean {
+        return items.every(item => this.hasItem(item));
+    }
+
+    private take(item: SwordItem | PieceItem | RepairPaperItem) {
+        if (item instanceof SwordItem) this._swordStorage.remove(item.id, item.count);
+        else if (item instanceof PieceItem) this._pieceStorage.remove(item.id, item.count);
+        else if (item instanceof RepairPaperItem) this.takeRepairPaper(item.count);
+    }
+
+    private save(item: SwordItem | PieceItem | RepairPaperItem) {
+        if (item instanceof SwordItem) this._swordStorage.add(item);
+        else if (item instanceof PieceItem) this._pieceStorage.add(item);
         else if (item instanceof RepairPaperItem) this.saveRepairPaper(item.count);
-    }
-
-    public save(item: SwordItem | PieceItem | RepairPaperItem) {
-        if (item instanceof SwordItem) this.swordStorage.add(item);
-        else if (item instanceof PieceItem) this.pieceStorage.add(item);
-        else if (item instanceof RepairPaperItem) this.saveRepairPaper(item.count);
-    }
-
-    public sellSword(id: string) {
-
-        if(this.swordStorage.hasEnough(id, 1)) {
-            
-            const sword = Game.swordManager.getCalculatedSwordWithId(id);
-
-            this.saveMoney(sword.price, {
-                type: ContextType.SWORD_SELL,
-                name: sword.name,
-                price: sword.price
-            })
-
-            this.swordStorage.remove(id, 1);
-        }
-    }
-
-    public swapSword(id: string) {
-        if(this.swordStorage.hasEnough(id, 1)) {
-
-            const sword = Game.swordManager.getCalculatedCurrentSword()
-            if(sword.canSave) {
-                this.save(sword.toItem());
-            }
-
-            this.swordStorage.remove(id, 1);
-            
-            Game.swordManager.jumpTo(Game.swordManager.getIndex(id));
-            Game.mainScreen.show(Game.swordManager.swordContext);
-
-        }
-    }
-
-    public breakSword(id: string): readonly PieceItem[] {
-        if(this.swordStorage.hasEnough(id, 1)) {
-
-            const pieces = Game.swordManager.getCalculatedSwordWithId(id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
-
-            this.swordStorage.remove(id, 1);
-            pieces.forEach(piece => this.save(piece));
-
-            return pieces;
-        }
-
-        return [];
     }
 
     public getPieces(): StorageInfo<PieceItem> {
-        return this.pieceStorage;
+        return this._pieceStorage;
     }
 
     public getSwords(): StorageInfo<SwordItem> {
-        return this.swordStorage;
+        return this._swordStorage;
     }
 }

@@ -1,5 +1,5 @@
 import { ColoredTextElement } from "../other/colored_text.js";
-import { $, createElement, createElementWith, createImageWithSrc, display, hide } from "../other/element_controller.js";
+import { $, createElement, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
 import { Keyframes } from "../screen/screen.js";
 
@@ -104,13 +104,13 @@ export class Popup {
         this._created_footer.classList.add(color);
     }
 
-    public addButton(text: string, color: Color, buttonType: ButtonType, hoverEffect: HoverEffect, clickEvent: (popup: Popup) => void) {
+    public addButton(text: string, color: Color, buttonType: ButtonType, hoverEffect: HoverEffect, clickEvent?: (popup: Popup) => void) {
 
         const created_button = createElementWith<HTMLAnchorElement>("a", {classes: [color, hoverEffect]});
         created_button.appendChild(createImageWithSrc(`images/ui/buttons/${buttonType}.png`, text));
         created_button.appendChild(createElementWith("span", {text: text}));
 
-        created_button.addEventListener("click", () => clickEvent(this));
+        clickEvent && created_button.addEventListener("click", () => clickEvent(this));
         this._created_button_box.appendChild(created_button);
     }
 

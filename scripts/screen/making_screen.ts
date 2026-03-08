@@ -1,8 +1,9 @@
-import { onClickMakingButton } from "../other/click_events.js";
-import { ContextType, GameContext } from "../other/context.js";
-import { $, createElementWith, createImageWithSrc, display, hide } from "../other/element_controller.js";
+import { ScreenContext } from "../context/rendering/screen_context.js";
+import { MakingScreenRenderingContext, ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
+import { MakingScreenActions } from "../event/making_screen_event_controller.js";
+import { $, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../other/element_controller.js";
 import { Color, Item, MoneyItem, PieceItem, Recipe, RepairPaperItem, Storage, SwordItem, UnknownItem } from "../other/entity.js";
-import { Game } from "../other/main.js";
 import { Popup } from "../popup/popup_message.js";
 import { Keyframes, Screen } from "./screen.js";
 
@@ -10,7 +11,7 @@ type ButtonColor = "blue" | "purple";
 
 export class MakingScreen extends Screen {
 
-    protected readonly _id = "making";
+    protected readonly _id = ScreenShowingContextType.MAKING_SCREEN_SHOWING_CONTEXT;
 
     private readonly _elements: {
         recipes?: NodeListOf<HTMLElement>,
@@ -20,21 +21,20 @@ export class MakingScreen extends Screen {
         swordRecipes?: HTMLElement
     } = {};
 
-    public override changeBody(): void {
-        super.changeBody();
+    private _actions?: MakingScreenActions;
 
+    public setActions(actions: MakingScreenActions) {
+        this._actions = actions;
+    }
+
+
+    protected init(): void {
         this._elements.recipes = document.querySelectorAll(".recipes");
         
         this._elements.makingRecipes = $<HTMLInputElement>("#making-recipes");
         this._elements.makingSwords = $<HTMLInputElement>("#making-swords");
         this._elements.repairRecipes = $("#repair-recipes");
         this._elements.swordRecipes = $("#sword-recipes");
-
-        
-
-        this._elements.makingRecipes.onclick = () => this.render(Game.makingManager.makingContext);
-
-        this._elements.makingSwords.onclick = () => this.render(Game.makingManager.makingContext);
     }
 
     private makeMaterialDiv(material: Item, havingCount: number): HTMLDivElement {
@@ -53,7 +53,7 @@ export class MakingScreen extends Screen {
         return created_div;
     };
     
-    private makeMaterialSection(materials: readonly Item[]): HTMLElement {
+    private makeMaterialSection(materials: readonly Item[], info: MakingScreenRenderingContext): HTMLElement {
         const created_materials = createElementWith("section", {classes: ["material"]});
 
         if(materials.length == 1) created_materials.classList.add("one");
@@ -62,18 +62,18 @@ export class MakingScreen extends Screen {
             
             if(material instanceof MoneyItem) {
 
-                created_materials.appendChild(this.makeMaterialDiv(material, Game.inventoryManager.getMoney()));
+                created_materials.appendChild(this.makeMaterialDiv(material, info.money));
             } 
             else if(material instanceof SwordItem) {
-                const havingCount = Game.inventoryManager.getSwords().getCount(material.id);
+                const havingCount = info.havingSwords.getCount(material.id);
 
-                if(Game.swordManager.isFound(material.id))
+                if(info.foundSwordIds.has(material.id))
                     created_materials.appendChild(this.makeMaterialDiv(material, havingCount));
                 else
                     created_materials.appendChild(this.makeMaterialDiv(UnknownItem.instance, havingCount));
             }
             else if(material instanceof PieceItem) {
-                created_materials.appendChild(this.makeMaterialDiv(material, Game.inventoryManager.getPieces().getCount(material.id)));
+                created_materials.appendChild(this.makeMaterialDiv(material, info.havingPieces.getCount(material.id)));
             }
 
         }
@@ -108,46 +108,76 @@ export class MakingScreen extends Screen {
 
         return created_article;
     }
+
+        public hasItem(item: Item, info: MakingScreenRenderingContext): boolean {
     
-    private makeRepairPaperPage(recipes: readonly Recipe[]): readonly HTMLElement[] {
+            if(
+                item instanceof MoneyItem
+                && info.money < item.count
+            ) return false;
+            else if (
+                item instanceof SwordItem
+                && !info.havingSwords.hasEnough(item.id, item.count)
+            ) return false;
+            else if (
+                item instanceof PieceItem
+                && !info.havingPieces.hasEnough(item.id, item.count)
+            ) return false;
+            else if (
+                item instanceof RepairPaperItem
+                && info.repairPaperCount < item.count
+            ) return false;
+
+            return true;
+        }
+
+        public hasItems(items: readonly Item[], info: MakingScreenRenderingContext): boolean {
+            return items.every(item => this.hasItem(item, info));
+        }
+    
+    private makeRepairPaperPage(recipes: readonly Recipe[], info: MakingScreenRenderingContext): readonly HTMLElement[] {
 
         return recipes.map(
             recipe =>
                 this.makeGroupArticle(
-                    this.makeMaterialSection(recipe.materials), 
+                    this.makeMaterialSection(recipe.materials, info), 
                     this.makeResultSection(recipe.result),
                     "blue",
-                    !Game.inventoryManager.hasItems(recipe.materials), 
-                    () => onClickMakingButton(recipe)
-                )
+                    !this.hasItems(recipe.materials, info), 
+                    () => this._actions?.onMaking(recipe))
         );
     }
 
-    private makeSwordPage(recipes: readonly Recipe[]): readonly HTMLElement[] {
-
+    private makeSwordPage(recipes: readonly Recipe[], info: MakingScreenRenderingContext): readonly HTMLElement[] {
+        info
         return recipes.map(
             recipe => this.makeGroupArticle(
-                    this.makeMaterialSection(recipe.materials), 
-                    (Game.swordManager.isFound(recipe.result.id))
+                    this.makeMaterialSection(recipe.materials, info), 
+                    (info.foundSwordIds.has(recipe.result.id))
                     ? this.makeResultSection(recipe.result)
                     : this.makeResultSection(UnknownItem.instance),
                     "purple",
-                    !(Game.inventoryManager.hasItems(recipe.materials)),
-                    () => onClickMakingButton(recipe)
+                    !this.hasItems(recipe.materials, info),
+                    () => this._actions?.onMaking(recipe)
                 )
         );
 
     }
 
-    protected render(context: GameContext) {
+    protected render(context: ScreenRenderingContext) {
 
-        if(context.type != ContextType.MAKING) return;
-
+        if(context.type != ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT) return;
+    
         if(this._elements.makingRecipes?.checked) this._elements.recipes?.forEach(element => element.classList.remove("active"));
         else if(this._elements.makingSwords?.checked) this._elements.recipes?.forEach(element => element.classList.add("active"));
 
-        this._elements.repairRecipes?.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes));
-        this._elements.swordRecipes?.replaceChildren(...this.makeSwordPage(context.swordRecipes));
+        this._elements.repairRecipes?.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes, context));
+        this._elements.swordRecipes?.replaceChildren(...this.makeSwordPage(context.swordRecipes, context));
+
+
+        setOnClick(this._elements.makingRecipes, () => this._actions?.onClickListButton());
+        setOnClick(this._elements.makingSwords, () => this._actions?.onClickListButton());
+
     }
 
     public animateLoading(speed: number, onfinish: () => void) {

@@ -1,3 +1,5 @@
+import { eventHandlerFunc } from "../event/listener/event_handler";
+
 export function $<T extends HTMLElement>(tag: string): T {
     return document.querySelector(tag) as T;
 }
@@ -43,3 +45,7 @@ export function createElementWith<T extends HTMLElement>(tag: string, attribute:
 
 export function display(element?: HTMLElement) { if(element) element.style.display = "block" };
 export function hide(element?: HTMLElement) { if(element) element.style.display = "none" };
+
+export function setOnClick(element: HTMLElement | undefined, handler?: () => void) {
+    if(element && handler) element.onclick = handler;
+}

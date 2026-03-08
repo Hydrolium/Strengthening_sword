@@ -3,7 +3,7 @@ import { InventoryManager } from "../manager/inventory_manager.js";
 import { MakingManager } from "../manager/making_manager.js";
 import {  StatManager } from "../manager/stat_manager.js";
 import { SwordManager } from "../manager/sword_manager.js";
-import { DeveloperMod } from "../screen/developer_mod.js";
+import { DeveloperMode } from "../screen/developer_mode.js";
 import { InformationScreen } from "../screen/information_screen.js";
 import { InventoryScreen } from "../screen/inventory_screen.js";
 import { MainScreen } from "../screen/main_screen.js";
@@ -11,39 +11,17 @@ import { MakingScreen } from "../screen/making_screen.js";
 import { MoneyDisplay } from "../screen/money_display.js";
 import { RecordStorage } from "../screen/record_storage.js";
 import { StatScreen } from "../screen/stat_screen.js";
-import { ContextType } from "./context.js";
-import { $, createImageWithSrc, display, hide } from "./element_controller.js";
+import { $, createImageWithSrc } from "./element_controller.js";
+import { InventoryUpdateContextType } from "../context/updating/inventory_update_context.js";
+import { SwordDB } from "./sword_db.js";
+import { ScreenManager } from "../manager/screen_manager.js";
+import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
+import { ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { EventHandler } from "../event/listener/event_handler.js";
+import { SwordUpdateContextType } from "../context/updating/sword_update_context.js";
+import { StatUpdateContextType } from "../context/updating/stat_update_context.js";
 
-export class Game {
 
-    public static readonly startMoney = 500000
-
-    public static dataManager: DataManager;
-
-    public static swordManager: SwordManager;
-    public static inventoryManager: InventoryManager;
-    public static makingManager: MakingManager;
-    public static statManager: StatManager;
-
-    public static mainScreen: MainScreen;
-    public static informationScreen: InformationScreen;
-    public static inventoryScreen: InventoryScreen;
-    public static makingScreen: MakingScreen;
-    public static statScreen: StatScreen;
-
-    public static moneyDisplay: MoneyDisplay;
-    public static recordStorage: RecordStorage;
-
-    public static developerMod: DeveloperMod;
-
-    public static currentScreenId: string;
-
-    public static init(start=0) {
-        hide($("#popup-message-box"));
-        Game.mainScreen.show();
-        Game.swordManager?.jumpTo(start);
-    }
-}
 
 async function loadAllImg(srcs: readonly string[]): Promise<void> {
 
@@ -68,9 +46,9 @@ async function loadAllImg(srcs: readonly string[]): Promise<void> {
 
 async function gameStart() {
 
-    Game.dataManager = new DataManager();
+    const dataManager = new DataManager();
     
-    const data = await Game.dataManager.loadAllData();
+    const data = await dataManager.loadAllData();
 
     if(data == null) return;
 
@@ -78,43 +56,135 @@ async function gameStart() {
         await loadAllImg(Object.values(data.path));
     }
 
-    Game.swordManager = new SwordManager(data.sword);
-    Game.inventoryManager = new InventoryManager();
-    Game.makingManager = new MakingManager(data.recipe);
-    Game.statManager = new StatManager(data.stat);
+    const swordDB = new SwordDB(data.sword);
 
-    Game.mainScreen = new MainScreen();
-    Game.informationScreen = new InformationScreen();
-    Game.inventoryScreen = new InventoryScreen();
-    Game.makingScreen = new MakingScreen();
-    Game.statScreen = new StatScreen();
+    const swordManager = new SwordManager();
+    const inventoryManager = new InventoryManager();
+    const makingManager = new MakingManager(data.recipe);
+    const statManager = new StatManager(data.stat);
+    const screenManager = new ScreenManager();
 
-    Game.moneyDisplay = new MoneyDisplay();
-    Game.recordStorage = new RecordStorage();
 
-    Game.developerMod = new DeveloperMod();
+    const mainScreen = new MainScreen();
+    const informationScreen = new InformationScreen();
+    const inventoryScreen = new InventoryScreen();
+    const makingScreen = new MakingScreen();
+    const statScreen = new StatScreen();
 
-    Game.swordManager.subscribe(Game.mainScreen);
-    Game.swordManager.subscribe(Game.moneyDisplay);
-    Game.swordManager.subscribe(Game.recordStorage);
+    const moneyDisplay = new MoneyDisplay();
+    const recordStorage = new RecordStorage();
 
-    Game.inventoryManager.subscribe(Game.makingScreen);
-    Game.inventoryManager.subscribe(Game.inventoryScreen);
-    Game.inventoryManager.subscribe(Game.moneyDisplay);
-    Game.inventoryManager.subscribe(Game.recordStorage);
+    const developerMode = new DeveloperMode();
 
-    Game.makingManager.subscribe(Game.makingScreen);
-    Game.makingManager.subscribe(Game.moneyDisplay);
-    Game.makingManager.subscribe(Game.recordStorage);
+    const eventHandler = new EventHandler(
+        swordDB,
+        swordManager,
+        inventoryManager,
+        makingManager,
+        statManager,
+        screenManager
+        ,mainScreen,
+        informationScreen,
+        inventoryScreen,
+        makingScreen,
+        statScreen,
+        developerMode
+    )
 
-    Game.statManager.subscribe(Game.statScreen);
+    swordManager.subscribe(mainScreen, moneyDisplay, recordStorage);
 
-    Game.inventoryManager.saveMoney(Game.startMoney, {
-        type: ContextType.SYSTEM_MONEY_GIFT,
-        money: Game.startMoney
+    inventoryManager.subscribe(makingScreen, inventoryScreen, moneyDisplay, recordStorage);
+
+    makingManager.subscribe(makingScreen, moneyDisplay, recordStorage);
+
+    statManager.subscribe(statScreen);
+
+    screenManager.subscribe(mainScreen, informationScreen, inventoryScreen, makingScreen, statScreen);
+
+    $("#main-game-button").addEventListener("click",
+        () => screenManager.update({
+            type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
+            renderingContext: {
+                type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
+                isMax: swordManager.currentSwordIndex >= swordDB.maxUpgradableIndex,
+                sword: swordDB.getSwordByIndex(swordManager.currentSwordIndex)
+            }
+        })
+    );
+    $("#information-button").addEventListener("click",
+        () => screenManager.update({
+            type: ScreenShowingContextType.INFORMATION_SCREEN_SHOWING_CONTEXT,
+            renderingContext: {
+                type: ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT,
+                swords: swordDB.swords,
+                founds: swordManager.getFoundSwordIndexes()
+            }
+        })
+    );
+    $("#inventory-button").addEventListener("click",
+        () => screenManager.update({
+            type: ScreenShowingContextType.INVENTORY_SCREEN_SHOWING_CONTEXT,
+            renderingContext: {
+                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                pieceStorage: inventoryManager.getPieces(),
+                repairPapers: inventoryManager.getRepairPaper(),
+                swordStorage: inventoryManager.getSwords()
+            }
+        })
+    );
+    $("#making-button").addEventListener("click",
+        () => screenManager.update({
+            type: ScreenShowingContextType.MAKING_SCREEN_SHOWING_CONTEXT,
+            renderingContext: {
+                type: ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
+                foundSwordIds: new Set(Array.from(swordManager.getFoundSwordIndexes(), index => swordDB.getSwordByIndex(index).id)),
+                havingPieces: inventoryManager.getPieces(),
+                havingSwords: inventoryManager.getSwords(),
+                money: inventoryManager.getMoney(),
+                repairPaperCount: inventoryManager.getRepairPaper(),
+                repairPaperRecipes: makingManager.repairPaperRecipes,
+                swordRecipes: makingManager.swordRecipes
+            }
+        })
+    );
+    $("#stat-button").addEventListener("click",
+        () => screenManager.update({
+            type: ScreenShowingContextType.STAT_SCREEN_SHOWING_CONTEXT,
+            renderingContext: {
+                type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT,
+                statPoint: statManager.statPoint,
+                stats: statManager.stats
+            }
+        })
+    );
+
+    inventoryManager.update({
+        type: InventoryUpdateContextType.SYSTEM_MONEY_GIFT,
+        money: 500000
     });
 
-    Game.init();
+    swordManager.update({
+        type: SwordUpdateContextType.SWORD_CHANGE,
+        maxUpgradableIndex: swordDB.maxUpgradableIndex,
+        sword: swordDB.getSwordByIndex(0)
+    });
+    swordManager.update({
+        type: SwordUpdateContextType.FINDING_NEW_SWORD_UPDATE,
+        index: 0
+    });
+    statManager.update({
+        type: StatUpdateContextType.GETTING_STAT_POINT
+    });
+    screenManager.update({
+        type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
+        renderingContext: {
+            type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
+            isMax: swordManager.currentSwordIndex >= swordDB.maxUpgradableIndex,
+            sword: swordDB.getSwordByIndex(swordManager.currentSwordIndex)
+        }
+    });
+
+    // Game.init();
 }
 
 gameStart();

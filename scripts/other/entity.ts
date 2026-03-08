@@ -1,16 +1,15 @@
-import { InventoryManager } from "../manager/inventory_manager.js";
+import { ScreenContext } from "../context/rendering/screen_context.js";
 import { Refreshable } from "../screen/screen.js";
-import { GameContext } from "./context.js";
 
 export class Observer {
 
     private readonly observers: Refreshable[] = [];
 
-    public subscribe(Refreshable: Refreshable) {
-        this.observers.push(Refreshable);
+    public subscribe(...refreshable: Refreshable[]) {
+        this.observers.push(...refreshable);
     }
     
-    public notify(context?: GameContext) {
+    protected notify(context: ScreenContext) {
         this.observers.forEach(Refreshable => Refreshable.refresh(context));
     }
 }
@@ -43,6 +42,7 @@ export interface StorageInfo<T extends Item> {
     getCount(id: string): number;
     hasEnough(id: string, count: number): boolean;
     sorted(compareFn?: (a: T, b: T) => number): readonly T[];
+
 }
 
 export class Storage<T extends Item> implements StorageInfo<T> {
@@ -50,20 +50,19 @@ export class Storage<T extends Item> implements StorageInfo<T> {
     private _items: Map<string, T> = new Map();
 
     constructor(
-        private owner: InventoryManager,
-        private stockClass: ItemClass<T>,
-        private infinityCheck: () => boolean) { }
+        private itemClass: ItemClass<T>) {}
 
     public get size(): number {
         return this._items.size;
     }
 
     public getAll(): readonly T[] {
-        return Array.from(this._items.values());
+        return Array.from(this._items.values())
+        //.filter(item => item.count > 0);
     }
 
     public getCount(id: string): number {
-        return (this.infinityCheck()) ? Infinity : this._items.get(id)?.count ?? 0;
+        return this._items.get(id)?.count ?? 0;
     }
 
     public hasEnough(id: string, count: number): boolean {
@@ -81,12 +80,9 @@ export class Storage<T extends Item> implements StorageInfo<T> {
 
         const exisiting = this._items.get(item.id);
 
-        if(exisiting) this._items.set(item.id, new this.stockClass(item.id, item.name, item.imgSrc, item.count + exisiting.count))
-        else this._items.set(item.id, new this.stockClass(item.id, item.name, item.imgSrc, item.count));
+        if(exisiting) this._items.set(item.id, new this.itemClass(item.id, item.name, item.imgSrc, item.count + exisiting.count))
+        else this._items.set(item.id, new this.itemClass(item.id, item.name, item.imgSrc, item.count));
 
-        this.owner.notify(
-            this.owner.inventoryContext
-        );
     }
 
     public remove(id: string, count: number) {
@@ -95,13 +91,8 @@ export class Storage<T extends Item> implements StorageInfo<T> {
         const exisiting = this._items.get(id);
         if(!exisiting) return;
 
-        this._items.set(exisiting.id, new this.stockClass(exisiting.id, exisiting.name, exisiting.imgSrc, exisiting.count - count))
-
-        if(exisiting.count <= 0) this._items.delete(id);
-
-        this.owner.notify(
-            this.owner.inventoryContext
-        );
+        if(exisiting.count - count <= 0 ) this._items.delete(id);
+        else this._items.set(exisiting.id, new this.itemClass(exisiting.id, exisiting.name, exisiting.imgSrc, exisiting.count - count))
     }
 }
 
@@ -148,22 +139,6 @@ export class SwordInfoByPiece {
         public readonly prob: number,
         public readonly maxDrop: number
     ) {}
-}
-
-export enum SwordTestResult {
-    REJECTED_BY_MONEY_LACK,
-    REJECTED_BY_MAX_UPGRADE,
-    SUCCESS,
-    GREAT_SUCCESS,
-    FAIL_BUT_INVALIDATED,
-    FAIL
-}
-
-export enum StatTestResult {
-    REJECTED_BY_POINT_LACK,
-    REJECTED_BY_MAX_UPGRADE,
-    SUCCESS,
-    SUCCESS_AND_ALL_MAX
 }
 
 export class Recipe {

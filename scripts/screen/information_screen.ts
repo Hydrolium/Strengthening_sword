@@ -1,26 +1,30 @@
-import { onClickSwordInfoButton } from "../other/click_events.js";
 import { ColoredTextElement } from "../other/colored_text.js";
-import { ContextType, GameContext } from "../other/context.js";
 import { $, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
 import { Color, Sword, SwordItem, UnknownItem } from "../other/entity.js";
 import { Popup } from "../popup/popup_message.js";
 import { Screen } from "./screen.js";
+import { ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
+import { InformationScreenActions } from "../event/information_screen_event_controller.js";
 
 export class InformationScreen extends Screen {
 
-    protected readonly _id = "game-information";
+    protected readonly _id = ScreenShowingContextType.INFORMATION_SCREEN_SHOWING_CONTEXT;
 
     private readonly _elements: {
         foundSwords?: HTMLDivElement,
         swordCount?: HTMLSpanElement
     } = {};
 
-    public override changeBody() {
-        super.changeBody();
+    private _actions?: InformationScreenActions;
 
+    public setActions(actions: InformationScreenActions) {
+        this._actions = actions;
+    }
+
+    protected init() {
         this._elements.foundSwords = $<HTMLDivElement>("#found-swords");
         this._elements.swordCount = $<HTMLSpanElement>("#found-sword-count");
-
     }
 
     private makeIcon(item: SwordItem | UnknownItem): HTMLDivElement {
@@ -31,14 +35,14 @@ export class InformationScreen extends Screen {
         if(item instanceof SwordItem) {
             created_div.appendChild(createElementWith("span", {classes: ["sword_name"], text: item.name}));
 
-            created_div.addEventListener("click", () => onClickSwordInfoButton(item.id));
+            created_div.addEventListener("click", () => this._actions?.onSwordInfoSearch(item.id));
         }
         return created_div;
     }
 
-    protected render(context?: GameContext) {
+    protected render(context?: ScreenRenderingContext) {
 
-        if(context?.type != ContextType.FOUND_SWORDS) return;
+        if(context?.type != ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT) return;
 
         const created_found = context.swords.map((sword, index) => {
             if(context.founds.has(index)) return this.makeIcon(sword.toItem());
