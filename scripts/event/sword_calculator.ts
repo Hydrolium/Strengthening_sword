@@ -46,7 +46,7 @@ export class SwordCalculator {
     public calculateLoss(index: number): number {
         let sum = 0;
         for(let i = 0; i <= index; i++) {
-            sum += this._statManager.calculate(StatID.SMITH, this._swordDB.getSwordByIndex(index).cost);
+            sum += this._statManager.calculate(StatID.SMITH, this._swordDB.getSwordByIndex(i).cost);
         }
 
         return sum;

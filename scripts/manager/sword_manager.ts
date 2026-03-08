@@ -53,8 +53,9 @@ export class SwordManager extends Observer {
             if(Math.random() < statManager.calculate(StatID.GOD_HAND)) {
                 return {
                     type: SwordTestResultType.GREAT_SUCCESS,
-                    resultSwordIdx: this._currentSwordIndex + 2,
-                    oldSword: sword};
+                    resultSwordIdx: Math.min(this._currentSwordIndex + 2, maxUpgradableIndex),
+                    oldSword: sword
+                };
             } else {
                 return {type: SwordTestResultType.SUCCESS, resultSwordIdx: this._currentSwordIndex + 1, oldSword: sword};
             }

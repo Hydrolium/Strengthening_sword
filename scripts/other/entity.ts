@@ -91,7 +91,7 @@ export class Storage<T extends Item> implements StorageInfo<T> {
         const exisiting = this._items.get(id);
         if(!exisiting) return;
 
-        if(exisiting.count - count <= 0 ) this._items.delete(id);
+        if(exisiting.count <= count ) this._items.delete(id);
         else this._items.set(exisiting.id, new this.itemClass(exisiting.id, exisiting.name, exisiting.imgSrc, exisiting.count - count))
     }
 }
