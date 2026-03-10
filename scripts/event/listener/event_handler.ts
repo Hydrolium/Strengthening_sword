@@ -3,7 +3,7 @@ import { MakingManager } from "../../manager/making_manager";
 import { ScreenManager } from "../../manager/screen_manager";
 import { StatManager } from "../../manager/stat_manager";
 import { SwordManager } from "../../manager/sword_manager";
-import { SwordDB } from "../../other/sword_db";
+import { SwordDB } from "../../db/sword_db";
 import { DeveloperMode } from "../../screen/developer_mode";
 import { InformationScreen } from "../../screen/information_screen";
 import { InventoryScreen } from "../../screen/inventory_screen";
@@ -39,11 +39,10 @@ export class EventHandler {
         _developerMode: DeveloperMode
     ) {
         this._mainScreenEventController = new MainScreenEventController(_swordDB, _swordManager, _inventoryManager, _statManager, _mainScreen, _developerMode);
-        this._informationScreenEventController = new InformationScreenEventController(_swordDB, _informationScreen);
+        this._informationScreenEventController = new InformationScreenEventController(_swordDB, _swordManager, _statManager, _informationScreen);
         this._inventoryScreenEventController = new InventoryScreenEventController(_swordDB, _swordManager, _inventoryManager, _statManager, _screenManager, _mainScreen, _inventoryScreen);
         this._makingScreenEventController = new MakingScreenEventController(_swordDB, _swordManager, _inventoryManager, _makingManager, _statManager, _screenManager, _makingScreen);
         this._statScreenEventController = new StatScreenEventController(_statManager, _statScreen);
-
 
         _mainScreen.setActions(this._mainScreenEventController);
         _informationScreen.setActions(this._informationScreenEventController);

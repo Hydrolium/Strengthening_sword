@@ -36,8 +36,8 @@ export class SwordManager extends Observer {
         }
     }
 
-    public isFound(sword: Sword): boolean {
-        return this._foundSwordIndexes.has(sword.index);
+    public isFound(index: number): boolean {
+        return this._foundSwordIndexes.has(index);
     }
 
     public getFoundSwordIndexes() : ReadonlySet<number> {

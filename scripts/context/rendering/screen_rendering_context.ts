@@ -46,7 +46,7 @@ export interface InformationScreenRenderingContext {
     
     readonly type: ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT;
 
-    readonly swords: readonly Sword[];
+    readonly swords: readonly SwordItem[];
     readonly founds: ReadonlySet<number>;
 }
 

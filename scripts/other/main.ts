@@ -13,13 +13,14 @@ import { RecordStorage } from "../screen/record_storage.js";
 import { StatScreen } from "../screen/stat_screen.js";
 import { $, createImageWithSrc } from "./element_controller.js";
 import { InventoryUpdateContextType } from "../context/updating/inventory_update_context.js";
-import { SwordDB } from "./sword_db.js";
+import { SwordDB } from "../db/sword_db.js";
 import { ScreenManager } from "../manager/screen_manager.js";
 import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
 import { ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
 import { EventHandler } from "../event/listener/event_handler.js";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context.js";
 import { StatUpdateContextType } from "../context/updating/stat_update_context.js";
+import { CalculatedSwordDB } from "../db/calculated_sword_db.js";
 
 
 
@@ -64,7 +65,6 @@ async function gameStart() {
     const statManager = new StatManager(data.stat);
     const screenManager = new ScreenManager();
 
-
     const mainScreen = new MainScreen();
     const informationScreen = new InformationScreen();
     const inventoryScreen = new InventoryScreen();
@@ -101,13 +101,15 @@ async function gameStart() {
 
     screenManager.subscribe(mainScreen, informationScreen, inventoryScreen, makingScreen, statScreen);
 
+    const calculatedSwordDB = new CalculatedSwordDB(swordDB, swordManager, statManager);
+
     $("#main-game-button").addEventListener("click",
         () => screenManager.update({
             type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
                 type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
                 isMax: swordManager.currentSwordIndex >= swordDB.maxUpgradableIndex,
-                sword: swordDB.getSwordByIndex(swordManager.currentSwordIndex)
+                sword: calculatedSwordDB.getCalculatedSwordbyIndex(swordManager.currentSwordIndex)
             }
         })
     );
@@ -116,7 +118,7 @@ async function gameStart() {
             type: ScreenShowingContextType.INFORMATION_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
                 type: ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT,
-                swords: swordDB.swords,
+                swords: swordDB.swords.map(sword => sword.toItem()),
                 founds: swordManager.getFoundSwordIndexes()
             }
         })
@@ -183,8 +185,6 @@ async function gameStart() {
             sword: swordDB.getSwordByIndex(swordManager.currentSwordIndex)
         }
     });
-
-    // Game.init();
 }
 
 gameStart();

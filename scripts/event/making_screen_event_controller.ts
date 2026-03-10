@@ -9,7 +9,7 @@ import { ScreenManager } from "../manager/screen_manager";
 import { StatManager } from "../manager/stat_manager";
 import { SwordManager } from "../manager/sword_manager";
 import { MoneyItem, Recipe, SwordItem } from "../other/entity";
-import { SwordDB } from "../other/sword_db";
+import { SwordDB } from "../db/sword_db";
 import { MakingScreen } from "../screen/making_screen";
 
 export interface MakingScreenActions {
@@ -34,12 +34,12 @@ export class MakingScreenEventController implements MakingScreenActions {
         if(!this._inventoryManager.hasItems(recipe.materials)) return;
 
         if(recipe.result instanceof SwordItem) {
-            const sword = this._swordDB.getSwordById(recipe.result.id);
-            if(!this._swordManager.isFound(sword)) {
+            const swordIndex = this._swordDB.getIndexById(recipe.result.id);
+            if(!this._swordManager.isFound(swordIndex)) {
 
                 this._swordManager.update({
                     type: SwordUpdateContextType.FINDING_NEW_SWORD_UPDATE,
-                    index: sword.index
+                    index: swordIndex
                 });
 
                 this._statManager.update({
@@ -64,11 +64,11 @@ export class MakingScreenEventController implements MakingScreenActions {
         });
 
         if(recipe.result instanceof SwordItem) {
-            const sword = this._swordDB.getSwordById(recipe.result.id)
-            if(!this._swordManager.isFound(sword)) {
+            const swordIndex = this._swordDB.getIndexById(recipe.result.id)
+            if(!this._swordManager.isFound(swordIndex)) {
                 this._swordManager.update({
                     type: SwordUpdateContextType.FINDING_NEW_SWORD_UPDATE,
-                    index: sword.index
+                    index: swordIndex
                 });
                 this._statManager.update({
                     type: StatUpdateContextType.GETTING_STAT_POINT
@@ -84,7 +84,7 @@ export class MakingScreenEventController implements MakingScreenActions {
 
         this._makingManager.update({
             type: MakingUpdateContextType.MAKING,
-            foundSwordIds: new Set(Array.from(this._swordManager.getFoundSwordIndexes(), index => this._swordDB.getSwordByIndex(index).id)),
+            foundSwordIds: new Set(Array.from(this._swordManager.getFoundSwordIndexes(), index => this._swordDB.getIdByIndex(index))),
             havingPieces: this._inventoryManager.getPieces(),
             havingSwords: this._inventoryManager.getSwords(),
             money: this._inventoryManager.getMoney(),
@@ -111,7 +111,7 @@ export class MakingScreenEventController implements MakingScreenActions {
     public onClickListButton = () => {
         this._screenManager.update({
             type: ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
-            foundSwordIds: new Set(Array.from(this._swordManager.getFoundSwordIndexes(), index => this._swordDB.getSwordByIndex(index).id)),
+            foundSwordIds: new Set(Array.from(this._swordManager.getFoundSwordIndexes(), index => this._swordDB.getIdByIndex(index))),
             havingPieces: this._inventoryManager.getPieces(),
             havingSwords: this._inventoryManager.getSwords(),
             money: this._inventoryManager.getMoney(),

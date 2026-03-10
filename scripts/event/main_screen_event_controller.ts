@@ -1,17 +1,16 @@
  import { InventoryUpdateContextType } from "../context/updating/inventory_update_context";
-import { MakingUpdateContextType } from "../context/updating/making_update_context";
 import { StatUpdateContextType } from "../context/updating/stat_update_context";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context";
 import { InventoryManager } from "../manager/inventory_manager";
 import { StatManager } from "../manager/stat_manager";
 import { SwordManager } from "../manager/sword_manager";
 import { RepairPaperItem, Sword } from "../other/entity";
-import { SwordDB } from "../other/sword_db";
+import { SwordDB } from "../db/sword_db";
 import { SwordTestResult0, SwordTestResult1, SwordTestResultType } from "../other/test_result";
 import { Popup } from "../popup/popup_message";
 import { DeveloperMode } from "../screen/developer_mode";
 import { MainScreen } from "../screen/main_screen";
-import { SwordCalculator } from "./sword_calculator";
+import { CalculatedSwordDB } from "../db/calculated_sword_db";
 
 export interface MainScreenActions {
     onUpgrade: () => void;
@@ -21,22 +20,24 @@ export interface MainScreenActions {
     onInit: (popup: Popup) => void;
 }
 
-export class MainScreenEventController extends SwordCalculator implements MainScreenActions {
+export class MainScreenEventController implements MainScreenActions {
+
+    private readonly _swordDB: CalculatedSwordDB;
 
     constructor(
         _swordDB: SwordDB,
-        _swordManager: SwordManager,
+        private readonly _swordManager: SwordManager,
         private readonly _inventoryManager: InventoryManager,
-        _statManager: StatManager,
+        private readonly _statManager: StatManager,
         private readonly _mainScreen: MainScreen,
         private readonly _developerMode: DeveloperMode,
     ) {
-        super(_swordDB, _swordManager, _statManager);
+        this._swordDB = new CalculatedSwordDB(_swordDB, _swordManager, _statManager);
     }
 
     private updateSword(sword: Sword) {
 
-        if(!this._swordManager.isFound(sword)) {
+        if(!this._swordManager.isFound(sword.index)) {
             this._swordManager.update({
                 type: SwordUpdateContextType.FINDING_NEW_SWORD_UPDATE,
                 index: sword.index
@@ -60,7 +61,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
         if(testResult.resultSwordIdx >= this._swordDB.maxUpgradableIndex)
             this._mainScreen.popupGameEndMessage();
 
-        this.updateSword(this._swordDB.getSwordByIndex(testResult.resultSwordIdx));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.resultSwordIdx));
 
         this._inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_UPGRADE,
@@ -73,7 +74,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
         if(testResult.resultSwordIdx >= this._swordDB.maxUpgradableIndex)
             this._mainScreen.popupGameEndMessage();
 
-        this.updateSword(this._swordDB.getSwordByIndex(testResult.resultSwordIdx));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.resultSwordIdx));
 
         this._inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_UPGRADE,
@@ -89,7 +90,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
 
         this._mainScreen.popupInvalidationMessage(dropped_pieces);
 
-        this.updateSword(this._swordDB.getSwordByIndex(0));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
 
         this._inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_BREAK,
@@ -113,7 +114,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
 
         this._mainScreen.popupFallMessage(
             testResult.result,
-            this.calculateLoss(testResult.result.index),
+            this._swordDB.calculateLoss(testResult.result.index),
             dropped_pieces,
             this._inventoryManager.getRepairPaper(),
             testResult.result!.requiredRepairs
@@ -129,7 +130,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
 
     public onUpgrade = () => {
 
-        const sword = this.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
+        const sword = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
         const testResult = this._swordManager.test(sword, this._swordDB.maxUpgradableIndex, this._inventoryManager, this._statManager, this._developerMode);
         
         switch(testResult.type) {
@@ -144,7 +145,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
 
     public onSell = () => {
 
-        const sword = this.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);;
+        const sword = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);;
     
         this._inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_SELL,
@@ -152,17 +153,17 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
             price: sword.price
         });
 
-        this.updateSword(this._swordDB.getSwordByIndex(0));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
     }
 
     public onSave = () => {
     
         this._inventoryManager.update({
             type: InventoryUpdateContextType.ITEM_SAVE,
-            item: this.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex).toItem()
+            item: this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex).toItem()
         });
 
-        this.updateSword(this._swordDB.getSwordByIndex(0));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
     }
 
     public onRepair = (sword: Sword, popup: Popup) => {
@@ -180,7 +181,7 @@ export class MainScreenEventController extends SwordCalculator implements MainSc
     }
 
     public onInit = (popup: Popup) => {
-        this.updateSword(this._swordDB.getSwordByIndex(0));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
         
         popup.close();
     }

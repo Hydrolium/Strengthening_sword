@@ -45,7 +45,7 @@ export class InformationScreen extends Screen {
         if(context?.type != ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT) return;
 
         const created_found = context.swords.map((sword, index) => {
-            if(context.founds.has(index)) return this.makeIcon(sword.toItem());
+            if(context.founds.has(index)) return this.makeIcon(sword);
             return this.makeIcon(UnknownItem.instance);
         });
 
@@ -110,7 +110,7 @@ export class InformationScreen extends Screen {
         } else popup.addParagraphText("파괴 시 획득 가능한 조각이 없습니다.");
         
 
-        popup.setFooter("*해당 정보는 강화소의 스탯이 계산되지 않은 정보입니다*", Color.RED)
+        // popup.setFooter("*해당 정보는 강화소의 스탯이 계산되지 않은 정보입니다*", Color.RED)
         popup.addCloseButton();
 
         popup.build();

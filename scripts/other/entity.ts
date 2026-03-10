@@ -58,7 +58,6 @@ export class Storage<T extends Item> implements StorageInfo<T> {
 
     public getAll(): readonly T[] {
         return Array.from(this._items.values())
-        //.filter(item => item.count > 0);
     }
 
     public getCount(id: string): number {

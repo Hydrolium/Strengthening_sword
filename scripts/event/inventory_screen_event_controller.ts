@@ -7,10 +7,10 @@ import { ScreenManager } from "../manager/screen_manager";
 import { StatManager } from "../manager/stat_manager";
 import { SwordManager } from "../manager/sword_manager";
 import { PieceItem, SwordItem } from "../other/entity";
-import { SwordDB } from "../other/sword_db";
+import { SwordDB } from "../db/sword_db";
 import { InventoryScreen } from "../screen/inventory_screen";
 import { MainScreen } from "../screen/main_screen";
-import { SwordCalculator } from "./sword_calculator";
+import { CalculatedSwordDB } from "../db/calculated_sword_db";
 
 export interface InventoryScreenActions {
     onSwordItemSell: (swordItem: SwordItem) => void;
@@ -20,11 +20,13 @@ export interface InventoryScreenActions {
 }
 
 
-export class InventoryScreenEventController extends SwordCalculator implements InventoryScreenActions { 
+export class InventoryScreenEventController implements InventoryScreenActions { 
+
+    private readonly _swordDB: CalculatedSwordDB;
 
     constructor(
         _swordDB: SwordDB,
-        _swordManager: SwordManager,
+        private readonly _swordManager: SwordManager,
         private readonly _inventoryManager: InventoryManager,
         _statManager: StatManager,
         private readonly _screenManager: ScreenManager,
@@ -32,15 +34,15 @@ export class InventoryScreenEventController extends SwordCalculator implements I
         private readonly _mainScreen: MainScreen,
         private readonly _inventoryScreen: InventoryScreen,
     ) {
-        super(_swordDB, _swordManager, _statManager);
+        this._swordDB = new CalculatedSwordDB(_swordDB, _swordManager, _statManager);
     }
     
     public onSwordItemSell = (swordItem: SwordItem) => {
 
-        this._inventoryScreen.popupSwordItemSellMessage(this.getCalculatedSwordbyId(swordItem.id), popup => {
+        this._inventoryScreen.popupSwordItemSellMessage(this._swordDB.getCalculatedSwordbyId(swordItem.id), popup => {
 
             if(this._inventoryManager.hasItem(swordItem)) {
-                const sword = this.getCalculatedSwordbyId(swordItem.id);
+                const sword = this._swordDB.getCalculatedSwordbyId(swordItem.id);
                 this._inventoryManager.update({
                     type: InventoryUpdateContextType.SWORD_ITEM_SELL,
                     id: sword.id,
@@ -54,12 +56,12 @@ export class InventoryScreenEventController extends SwordCalculator implements I
 
     public onSwordItemBreak = (swordItem: SwordItem) => {
 
-        this._inventoryScreen.popupSwordItemBreakMessage(this.getCalculatedSwordbyId(swordItem.id), () => {
+        this._inventoryScreen.popupSwordItemBreakMessage(this._swordDB.getCalculatedSwordbyId(swordItem.id), () => {
 
             let pieceItems: PieceItem[] = [];
             if(this._inventoryManager.hasItem(swordItem)) {
     
-                pieceItems = this.getCalculatedSwordbyId(swordItem.id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
+                pieceItems = this._swordDB.getCalculatedSwordbyId(swordItem.id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
     
                 this._inventoryManager.update({
                     type: InventoryUpdateContextType.SWORD_ITEM_BREAK,
@@ -77,7 +79,7 @@ export class InventoryScreenEventController extends SwordCalculator implements I
     
         if(this._inventoryManager.hasItem(swordItem)) {
 
-            const sword = this.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
+            const sword = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
 
             this._inventoryManager.update({
                 type: InventoryUpdateContextType.SWORD_ITEM_SWAP,
@@ -88,10 +90,10 @@ export class InventoryScreenEventController extends SwordCalculator implements I
             this._swordManager.update({
                 type: SwordUpdateContextType.SWORD_CHANGE,
                 maxUpgradableIndex: this._swordDB.maxUpgradableIndex,
-                sword: this._swordDB.getSwordById(swordItem.id)
+                sword: this._swordDB.getCalculatedSwordbyId(swordItem.id)
             });
 
-            const cs = this.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
+            const cs = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
 
             this._screenManager.update({
                 type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
@@ -106,7 +108,7 @@ export class InventoryScreenEventController extends SwordCalculator implements I
 
     public onSwordsByPieceSearch = (pieceItem: PieceItem) => {
         this._inventoryScreen.popupWherePieceDroppedMessage(
-            pieceItem, this._swordDB.getSwordsByPieceId(pieceItem.id), this._swordManager.getFoundSwordIndexes()
+            pieceItem, this._swordDB.getCalculatedSwordsByPieceId(pieceItem.id), this._swordManager.getFoundSwordIndexes()
         );
     }
 

@@ -1,4 +1,4 @@
-import { Sword, SwordInfoByPiece } from "./entity";
+import { Sword, SwordInfoByPiece } from "../other/entity";
 
 export class SwordDB {
     private readonly _swords: readonly Sword[];
@@ -34,6 +34,15 @@ export class SwordDB {
 
     }
 
+    public getIndexById(id: string): number {
+        const res = this._swords.findIndex(sword => sword.id == id);
+        if(res === -1) throw new Error(`Sword with ID ${id} not found.`);
+        return res;
+    }
+
+    public getIdByIndex(index: number): string {
+        return this._swords[index].id;
+    }
 
     public getSwordsByPieceId(pieceId: string): readonly SwordInfoByPiece[] {
         return this._pieceInfos.get(pieceId) ?? [];
@@ -47,9 +56,5 @@ export class SwordDB {
 
     public getSwordByIndex(index: number): Sword {
         return this._swords[index];
-    }
-
-    public getIndexById(id: string): number {
-        return this._swords.indexOf(this.getSwordById(id));
     }
 }
