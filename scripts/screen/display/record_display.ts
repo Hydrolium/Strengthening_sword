@@ -1,9 +1,9 @@
-import { ScreenContext } from "../context/rendering/screen_context.js";
-import { MoneyChangeReason, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
-import { $, createElementWith } from "../other/element_controller.js";
-import { Refreshable } from "./screen.js";
+import {  ScreenDrawingContext } from "../../context/rendering/screen_context";
+import { MoneyChangeReason, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context";
+import { $, createElementWith } from "../../other/element_controller";
+import { Display } from "./display";
 
-export class RecordStorage extends Refreshable {
+export class RecordDisplay extends Display {
     
     private _records: string[] = [];
     private readonly _maxRecordableCount: number = 10;
@@ -18,9 +18,9 @@ export class RecordStorage extends Refreshable {
         $("#records").replaceChildren(...ret);
     }
 
-    public refresh = (context?: ScreenContext) => {
+    public refresh = (context: ScreenDrawingContext) => {
 
-        if(context?.type != ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT) return
+        if(context?.type != ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT) return
 
         switch(context?.reason) {
             case MoneyChangeReason.SYSTEM_MONEY_GIFT :

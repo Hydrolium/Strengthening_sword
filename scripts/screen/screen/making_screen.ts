@@ -1,11 +1,10 @@
-import { ScreenContext } from "../context/rendering/screen_context.js";
-import { MakingScreenRenderingContext, ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
-import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
-import { MakingScreenActions } from "../event/making_screen_event_controller.js";
-import { $, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../other/element_controller.js";
-import { Color, Item, MoneyItem, PieceItem, Recipe, RepairPaperItem, Storage, SwordItem, UnknownItem } from "../other/entity.js";
-import { Popup } from "../popup/popup_message.js";
-import { Keyframes, Screen } from "./screen.js";
+import { MakingScreenRenderingContext, ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context.js";
+import { MakingScreenActions } from "../../event/making_screen_event_controller.js";
+import { $, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../../other/element_controller.js";
+import { Item, MoneyItem, PieceItem, Recipe, RepairPaperItem,  SwordItem, UnknownItem } from "../../other/entity.js";
+import { Keyframes } from "../refreshable.js";
+import { Screen } from "./screen.js";
 
 type ButtonColor = "blue" | "purple";
 
@@ -164,9 +163,9 @@ export class MakingScreen extends Screen {
 
     }
 
-    protected render(context: ScreenRenderingContext) {
+    protected render(context: ScreenDrawingContext) {
 
-        if(context.type != ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT) return;
+        if(context.type != ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT) return;
     
         if(this._elements.makingRecipes?.checked) this._elements.recipes?.forEach(element => element.classList.remove("active"));
         else if(this._elements.makingSwords?.checked) this._elements.recipes?.forEach(element => element.classList.add("active"));
@@ -191,14 +190,5 @@ export class MakingScreen extends Screen {
             onfinish();
             element_loadding.animate(Keyframes.loadingKef, {duration: speed/2, direction: "reverse"}).onfinish = () => hide(element_loadding);
         };
-    }
-
-    public popupCreatedSwordMessage() {
-        const popup = new Popup();
-        popup.setTitle("검을 제작했습니다.", Color.SKY);
-        popup.setSubTitle("보관함으로 검이 지급되었습니다.");
-        popup.addCloseButton();
-        popup.build();
-        popup.show();
     }
 }

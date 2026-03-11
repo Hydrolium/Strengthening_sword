@@ -1,4 +1,4 @@
-import { ScreenRenderingContextType } from "../context/rendering/screen_rendering_context";
+import { ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
 import { ScreenShowingContextType } from "../context/rendering/screen_showing_context";
 import { InventoryUpdateContextType } from "../context/updating/inventory_update_context";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context";
@@ -8,8 +8,8 @@ import { StatManager } from "../manager/stat_manager";
 import { SwordManager } from "../manager/sword_manager";
 import { PieceItem, SwordItem } from "../other/entity";
 import { SwordDB } from "../db/sword_db";
-import { InventoryScreen } from "../screen/inventory_screen";
-import { MainScreen } from "../screen/main_screen";
+import { InventoryScreen } from "../screen/screen/inventory_screen";
+import { MainScreen } from "../screen/screen/main_screen";
 import { CalculatedSwordDB } from "../db/calculated_sword_db";
 
 export interface InventoryScreenActions {
@@ -30,7 +30,6 @@ export class InventoryScreenEventController implements InventoryScreenActions {
         private readonly _inventoryManager: InventoryManager,
         _statManager: StatManager,
         private readonly _screenManager: ScreenManager,
-
         private readonly _mainScreen: MainScreen,
         private readonly _inventoryScreen: InventoryScreen,
     ) {
@@ -39,38 +38,45 @@ export class InventoryScreenEventController implements InventoryScreenActions {
     
     public onSwordItemSell = (swordItem: SwordItem) => {
 
-        this._inventoryScreen.popupSwordItemSellMessage(this._swordDB.getCalculatedSwordbyId(swordItem.id), popup => {
+        this._screenManager.update({
+            type: ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT,
+            sword: this._swordDB.getCalculatedSwordbyId(swordItem.id),
+            sellFunc: popup => {
 
-            if(this._inventoryManager.hasItem(swordItem)) {
-                const sword = this._swordDB.getCalculatedSwordbyId(swordItem.id);
-                this._inventoryManager.update({
-                    type: InventoryUpdateContextType.SWORD_ITEM_SELL,
-                    id: sword.id,
-                    name: sword.name,
-                    price: sword.price
-                })
+                if(this._inventoryManager.hasItem(swordItem)) {
+                    const sword = this._swordDB.getCalculatedSwordbyId(swordItem.id);
+                    this._inventoryManager.update({
+                        type: InventoryUpdateContextType.SWORD_ITEM_SELL,
+                        id: sword.id,
+                        name: sword.name,
+                        price: sword.price
+                    })
+                }
+                popup.close();
             }
-            popup.close();
         });
+
     }
 
     public onSwordItemBreak = (swordItem: SwordItem) => {
 
-        this._inventoryScreen.popupSwordItemBreakMessage(this._swordDB.getCalculatedSwordbyId(swordItem.id), () => {
+        this._screenManager.update({
+            type: ScreenDrawingContextType.ASKING_SWORD_ITEM_BREAK_CONTEXT,
+            sword: this._swordDB.getCalculatedSwordbyId(swordItem.id),
+            breakFunc: () => {
 
-            let pieceItems: PieceItem[] = [];
-            if(this._inventoryManager.hasItem(swordItem)) {
-    
-                pieceItems = this._swordDB.getCalculatedSwordbyId(swordItem.id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
-    
-                this._inventoryManager.update({
-                    type: InventoryUpdateContextType.SWORD_ITEM_BREAK,
-                    swordItem: swordItem,
-                    pieceItems: pieceItems
-                })
+                let pieceItems: PieceItem[] = [];
+                if(this._inventoryManager.hasItem(swordItem)) {
+        
+                    pieceItems = this._swordDB.getCalculatedSwordbyId(swordItem.id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
+        
+                    this._inventoryManager.update({
+                        type: InventoryUpdateContextType.SWORD_ITEM_BREAK,
+                        swordItem: swordItem,
+                        pieceItems: pieceItems
+                    });
+                }
             }
-
-            this._inventoryScreen.popupBreakMessage(pieceItems);
         });
 
     }
@@ -98,7 +104,7 @@ export class InventoryScreenEventController implements InventoryScreenActions {
             this._screenManager.update({
                 type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
                 renderingContext: {
-                    type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
+                    type: ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
                     isMax: cs.index >= this._swordDB.maxUpgradableIndex,
                     sword: cs
                 }
@@ -107,9 +113,11 @@ export class InventoryScreenEventController implements InventoryScreenActions {
     }
 
     public onSwordsByPieceSearch = (pieceItem: PieceItem) => {
-        this._inventoryScreen.popupWherePieceDroppedMessage(
-            pieceItem, this._swordDB.getCalculatedSwordsByPieceId(pieceItem.id), this._swordManager.getFoundSwordIndexes()
-        );
+        this._screenManager.update({
+            type: ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT,
+            pieceItem: pieceItem,
+            swords: this._swordDB.getCalculatedSwordsByPieceId(pieceItem.id),
+            founds: this._swordManager.getFoundSwordIndexes()
+        });
     }
-
 }

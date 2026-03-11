@@ -1,16 +1,35 @@
-import { ScreenContext } from "../context/rendering/screen_context.js";
-import { Refreshable } from "../screen/screen.js";
+import { ScreenDrawingContext, ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
+import { ScreenShowingContext, ScreenShowingContextType } from "../context/rendering/screen_showing_context";
+import { Refreshable } from "../screen/refreshable";
 
-export class Observer {
+export abstract class Observer {
 
-    private readonly observers: Refreshable[] = [];
+    abstract readonly target: ReadonlySet<ScreenShowingContextType | ScreenDrawingContextType>;
 
-    public subscribe(...refreshable: Refreshable[]) {
-        this.observers.push(...refreshable);
+    private readonly showingObservers: Map<ScreenShowingContextType, Refreshable> = new Map();
+    private readonly renderingObservers: Map<ScreenDrawingContextType, Refreshable> = new Map();
+
+    public subscribeShowing(contextType: ScreenShowingContextType, refreshable: Refreshable) {
+        if(!this.target.has(contextType)) throw Error(`${contextType} 은 이 Observer가 구독할 수 없습니다.`);
+        
+        this.showingObservers.set(contextType, refreshable);
     }
     
-    protected notify(context: ScreenContext) {
-        this.observers.forEach(Refreshable => Refreshable.refresh(context));
+    public subscribeDrawing(contextType: ScreenDrawingContextType, refreshable: Refreshable) {
+        if(!this.target.has(contextType)) throw Error(`${contextType} 은 이 Observer가 구독할 수 없습니다.`);
+
+        this.renderingObservers.set(contextType, refreshable);
+    }
+
+    protected notifyShowing(context: ScreenShowingContext) {
+        this.showingObservers.forEach((refreshable, type) => {
+            if(type == context.type) refreshable.show(context);
+        });
+    }
+    protected notifyDrawing(context: ScreenDrawingContext) {
+        this.renderingObservers.forEach((refreshable, type) => {
+            if(type == context.type) refreshable.refresh(context);
+        });
     }
 }
 

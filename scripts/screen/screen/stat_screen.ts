@@ -1,9 +1,8 @@
-import { ScreenRenderingContext, ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
-import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
-import { StatScreenActions } from "../event/stat_screen_event_controller.js";
-import { $, createElement, createElementWith, createImageWithSrc, write } from "../other/element_controller.js";
-import { Color, StatInfo } from "../other/entity.js";
-import { Popup } from "../popup/popup_message.js";
+import {  ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context.js";
+import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context.js";
+import { StatScreenActions } from "../../event/stat_screen_event_controller.js";
+import { $, createElement, createElementWith, createImageWithSrc, write } from "../../other/element_controller.js";
+import { StatInfo } from "../../other/entity.js";
 import { Screen } from "./screen.js";
 
 export class StatScreen extends Screen {
@@ -93,39 +92,12 @@ export class StatScreen extends Screen {
         return created_section;
     };
 
-    protected render(context: ScreenRenderingContext) {
+    protected render(context: ScreenDrawingContext) {
 
-        if(context.type != ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT) return;
+        if(context.type != ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT) return;
 
         this._elements.statBox?.replaceChildren(...context.stats.map(stat => this.makeStatSection(stat)));
         write(this._elements.statPointCount, context.statPoint);
     }
 
-    public popupMaxStatMessage() {
-        const popup = new Popup();
-        popup.setTitle("이미 최대로 강화된 스탯입니다!", Color.PURPLE);
-        popup.setSubTitle("다른 스탯을 강화해 보세요.");
-        popup.addCloseButton();
-        popup.build();
-        popup.show();
-    }
-    
-    public popupStatPointLackMessage() {
-        const popup = new Popup();
-        popup.setTitle("스탯 포인트가 부족합니다!", Color.RED);
-        popup.setSubTitle("새로운 검을 발견해 스탯 포인트를 얻어보세요.");
-        popup.addCloseButton();
-        popup.build();
-        popup.show();
-    }
-
-    public popupGameAllStatMessage() {
-        const popup = new Popup();
-        popup.setTitle("모든 스탯을 끝까지 업그레이드 했습니다", Color.GOLD);
-        popup.setSubTitle("고대 룬의 마법이 당신과 함께합니다!");
-        popup.addParagraphText("창을 닫아도 게임은 계속됩니다.");
-        popup.addCloseButton();
-        popup.build();
-        popup.show();
-    }
 }

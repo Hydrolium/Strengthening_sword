@@ -4,23 +4,24 @@ import { MakingManager } from "../manager/making_manager.js";
 import {  StatManager } from "../manager/stat_manager.js";
 import { SwordManager } from "../manager/sword_manager.js";
 import { DeveloperMode } from "../screen/developer_mode.js";
-import { InformationScreen } from "../screen/information_screen.js";
-import { InventoryScreen } from "../screen/inventory_screen.js";
-import { MainScreen } from "../screen/main_screen.js";
-import { MakingScreen } from "../screen/making_screen.js";
-import { MoneyDisplay } from "../screen/money_display.js";
-import { RecordStorage } from "../screen/record_storage.js";
-import { StatScreen } from "../screen/stat_screen.js";
+import { InformationScreen } from "../screen/screen/information_screen.js";
+import { InventoryScreen } from "../screen/screen/inventory_screen.js";
+import { MainScreen } from "../screen/screen/main_screen.js";
+import { MakingScreen } from "../screen/screen/making_screen.js";
+import { MoneyDisplay } from "../screen/display/money_display.js";
+import { RecordDisplay } from "../screen/display/record_display.js";
+import { StatScreen } from "../screen/screen/stat_screen.js";
 import { $, createImageWithSrc } from "./element_controller.js";
 import { InventoryUpdateContextType } from "../context/updating/inventory_update_context.js";
 import { SwordDB } from "../db/sword_db.js";
 import { ScreenManager } from "../manager/screen_manager.js";
 import { ScreenShowingContextType } from "../context/rendering/screen_showing_context.js";
-import { ScreenRenderingContextType } from "../context/rendering/screen_rendering_context.js";
+import { popupDrawingTypes, ScreenDrawingContextType } from "../context/rendering/screen_rendering_context.js";
 import { EventHandler } from "../event/listener/event_handler.js";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context.js";
 import { StatUpdateContextType } from "../context/updating/stat_update_context.js";
 import { CalculatedSwordDB } from "../db/calculated_sword_db.js";
+import { PopupDisplay } from "../screen/display/popup_display.js";
 
 
 
@@ -72,7 +73,8 @@ async function gameStart() {
     const statScreen = new StatScreen();
 
     const moneyDisplay = new MoneyDisplay();
-    const recordStorage = new RecordStorage();
+    const recordDisplay = new RecordDisplay();
+    const popupDisplay = new PopupDisplay();
 
     const developerMode = new DeveloperMode();
 
@@ -91,15 +93,25 @@ async function gameStart() {
         developerMode
     )
 
-    swordManager.subscribe(mainScreen, moneyDisplay, recordStorage);
+    swordManager.subscribeDrawing(ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT, mainScreen);
 
-    inventoryManager.subscribe(makingScreen, inventoryScreen, moneyDisplay, recordStorage);
+    inventoryManager.subscribeDrawing(ScreenDrawingContextType.MONEY_DISPLAY_RENDERING_CONTEXT, moneyDisplay);
+    inventoryManager.subscribeDrawing(ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT, recordDisplay);
+    inventoryManager.subscribeDrawing(ScreenDrawingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT, inventoryScreen);
 
-    makingManager.subscribe(makingScreen, moneyDisplay, recordStorage);
+    makingManager.subscribeDrawing(ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT, makingScreen);
 
-    statManager.subscribe(statScreen);
+    statManager.subscribeDrawing(ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT, statScreen);
 
-    screenManager.subscribe(mainScreen, informationScreen, inventoryScreen, makingScreen, statScreen);
+    screenManager.subscribeShowing(ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT, mainScreen);
+    screenManager.subscribeShowing(ScreenShowingContextType.INFORMATION_SCREEN_SHOWING_CONTEXT, informationScreen);
+    screenManager.subscribeShowing(ScreenShowingContextType.INVENTORY_SCREEN_SHOWING_CONTEXT, inventoryScreen);
+    screenManager.subscribeShowing(ScreenShowingContextType.MAKING_SCREEN_SHOWING_CONTEXT, makingScreen);
+    screenManager.subscribeShowing(ScreenShowingContextType.STAT_SCREEN_SHOWING_CONTEXT, statScreen);
+
+    for(const type of popupDrawingTypes) {
+        screenManager.subscribeDrawing(type, popupDisplay);
+    }
 
     const calculatedSwordDB = new CalculatedSwordDB(swordDB, swordManager, statManager);
 
@@ -107,7 +119,7 @@ async function gameStart() {
         () => screenManager.update({
             type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
-                type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
+                type: ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
                 isMax: swordManager.currentSwordIndex >= swordDB.maxUpgradableIndex,
                 sword: calculatedSwordDB.getCalculatedSwordbyIndex(swordManager.currentSwordIndex)
             }
@@ -117,7 +129,7 @@ async function gameStart() {
         () => screenManager.update({
             type: ScreenShowingContextType.INFORMATION_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
-                type: ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT,
+                type: ScreenDrawingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT,
                 swords: swordDB.swords.map(sword => sword.toItem()),
                 founds: swordManager.getFoundSwordIndexes()
             }
@@ -127,7 +139,7 @@ async function gameStart() {
         () => screenManager.update({
             type: ScreenShowingContextType.INVENTORY_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
-                type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
+                type: ScreenDrawingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT,
                 pieceStorage: inventoryManager.getPieces(),
                 repairPapers: inventoryManager.getRepairPaper(),
                 swordStorage: inventoryManager.getSwords()
@@ -138,7 +150,7 @@ async function gameStart() {
         () => screenManager.update({
             type: ScreenShowingContextType.MAKING_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
-                type: ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
+                type: ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
                 foundSwordIds: new Set(Array.from(swordManager.getFoundSwordIndexes(), index => swordDB.getSwordByIndex(index).id)),
                 havingPieces: inventoryManager.getPieces(),
                 havingSwords: inventoryManager.getSwords(),
@@ -153,7 +165,7 @@ async function gameStart() {
         () => screenManager.update({
             type: ScreenShowingContextType.STAT_SCREEN_SHOWING_CONTEXT,
             renderingContext: {
-                type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT,
+                type: ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT,
                 statPoint: statManager.statPoint,
                 stats: statManager.stats
             }
@@ -180,7 +192,7 @@ async function gameStart() {
     screenManager.update({
         type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
         renderingContext: {
-            type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
+            type: ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
             isMax: swordManager.currentSwordIndex >= swordDB.maxUpgradableIndex,
             sword: swordDB.getSwordByIndex(swordManager.currentSwordIndex)
         }

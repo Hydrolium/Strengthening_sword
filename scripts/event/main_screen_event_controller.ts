@@ -9,8 +9,10 @@ import { SwordDB } from "../db/sword_db";
 import { SwordTestResult0, SwordTestResult1, SwordTestResultType } from "../other/test_result";
 import { Popup } from "../popup/popup_message";
 import { DeveloperMode } from "../screen/developer_mode";
-import { MainScreen } from "../screen/main_screen";
+import { MainScreen } from "../screen/screen/main_screen";
 import { CalculatedSwordDB } from "../db/calculated_sword_db";
+import { ScreenManager } from "../manager/screen_manager";
+import { ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
 
 export interface MainScreenActions {
     onUpgrade: () => void;
@@ -29,6 +31,7 @@ export class MainScreenEventController implements MainScreenActions {
         private readonly _swordManager: SwordManager,
         private readonly _inventoryManager: InventoryManager,
         private readonly _statManager: StatManager,
+        private readonly _screenManager: ScreenManager,
         private readonly _mainScreen: MainScreen,
         private readonly _developerMode: DeveloperMode,
     ) {
@@ -57,9 +60,14 @@ export class MainScreenEventController implements MainScreenActions {
     }
 
     private onGreatSuccess(testResult: SwordTestResult1) {
-        this._mainScreen.popupGodHandMessage(testResult.resultSwordIdx);
+        this._screenManager.update({
+            type: ScreenDrawingContextType.GOD_HAND_CONTEXT,
+            newSwordIndex: testResult.resultSwordIdx
+        });
         if(testResult.resultSwordIdx >= this._swordDB.maxUpgradableIndex)
-            this._mainScreen.popupGameEndMessage();
+            this._screenManager.update({
+                type: ScreenDrawingContextType.GAME_END_CONTEXT
+            });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.resultSwordIdx));
 
@@ -72,7 +80,9 @@ export class MainScreenEventController implements MainScreenActions {
 
     private onSuccess(testResult: SwordTestResult1) {
         if(testResult.resultSwordIdx >= this._swordDB.maxUpgradableIndex)
-            this._mainScreen.popupGameEndMessage();
+            this._screenManager.update({
+                type: ScreenDrawingContextType.GAME_END_CONTEXT
+            });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.resultSwordIdx));
 
@@ -88,7 +98,10 @@ export class MainScreenEventController implements MainScreenActions {
             piece => piece.drop()
         ).filter(piece => piece.count > 0);
 
-        this._mainScreen.popupInvalidationMessage(dropped_pieces);
+        this._screenManager.update({
+            type: ScreenDrawingContextType.INVALIDATION_CONTEXT,
+            pieces: dropped_pieces
+        });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
 
@@ -112,13 +125,16 @@ export class MainScreenEventController implements MainScreenActions {
             piece => piece.drop()
         ).filter(piece => piece.count > 0);
 
-        this._mainScreen.popupFallMessage(
-            testResult.result,
-            this._swordDB.calculateLoss(testResult.result.index),
-            dropped_pieces,
-            this._inventoryManager.getRepairPaper(),
-            testResult.result!.requiredRepairs
-        );
+        this._screenManager.update({
+            type: ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT,
+            sword: testResult.result,
+            loss: this._swordDB.calculateLoss(testResult.result.index),
+            pieces: dropped_pieces,
+            havingRepairPaper: this._inventoryManager.getRepairPaper(),
+            requiredRepairPaper: testResult.result.requiredRepairs,
+            onRepair: (sword: Sword, popup: Popup) => this.onRepair(sword, popup),
+            onInit: (popup: Popup) => this.onInit(popup)
+        })
         
         this._inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_BREAK,
@@ -134,12 +150,14 @@ export class MainScreenEventController implements MainScreenActions {
         const testResult = this._swordManager.test(sword, this._swordDB.maxUpgradableIndex, this._inventoryManager, this._statManager, this._developerMode);
         
         switch(testResult.type) {
-            case SwordTestResultType.REJECTED_BY_MAX_UPGRADE: this._mainScreen.popupMaxUpgradeMessage(); break;
-            case SwordTestResultType.REJECTED_BY_MONEY_LACK: this._mainScreen.popupMoneyLackMessage(); break;
-            case SwordTestResultType.GREAT_SUCCESS: this.onGreatSuccess(testResult); break;
-            case SwordTestResultType.SUCCESS: this.onSuccess(testResult); break;
-            case SwordTestResultType.FAIL_BUT_INVALIDATED: this.onFailButInvalidated(testResult); break;
-            case SwordTestResultType.FAIL: this.onFail(testResult); break;
+        case SwordTestResultType.REJECTED_BY_MAX_UPGRADE: 
+            this._screenManager.update({ type: ScreenDrawingContextType.MAX_UPGRADE_CONTEXT }); break;
+        case SwordTestResultType.REJECTED_BY_MONEY_LACK:
+            this._screenManager.update({ type: ScreenDrawingContextType.MONEY_LACK_CONTEXT }); break;
+        case SwordTestResultType.GREAT_SUCCESS: this.onGreatSuccess(testResult); break;
+        case SwordTestResultType.SUCCESS: this.onSuccess(testResult); break;
+        case SwordTestResultType.FAIL_BUT_INVALIDATED: this.onFailButInvalidated(testResult); break;
+        case SwordTestResultType.FAIL: this.onFail(testResult); break;
         }
     }
 

@@ -1,4 +1,4 @@
-import { ScreenRenderingContextType } from "../context/rendering/screen_rendering_context";
+import { ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
 import { InventoryUpdateContextType } from "../context/updating/inventory_update_context";
 import { MakingUpdateContextType } from "../context/updating/making_update_context";
 import { StatUpdateContextType } from "../context/updating/stat_update_context";
@@ -10,7 +10,7 @@ import { StatManager } from "../manager/stat_manager";
 import { SwordManager } from "../manager/sword_manager";
 import { MoneyItem, Recipe, SwordItem } from "../other/entity";
 import { SwordDB } from "../db/sword_db";
-import { MakingScreen } from "../screen/making_screen";
+import { MakingScreen } from "../screen/screen/making_screen";
 
 export interface MakingScreenActions {
     onMaking: (recipe: Recipe) => void;
@@ -102,7 +102,7 @@ export class MakingScreenEventController implements MakingScreenActions {
                     (recipe.result instanceof SwordItem) ? 1200 : 700,
                     () => {
                         this.make(recipe);
-                        if((recipe.result instanceof SwordItem)) this._makingScreen.popupCreatedSwordMessage();
+                        if((recipe.result instanceof SwordItem)) this._screenManager.update({ type: ScreenDrawingContextType.SWORD_CRAFTING_CONTEXT });
                     }
                 );
         }
@@ -110,7 +110,7 @@ export class MakingScreenEventController implements MakingScreenActions {
 
     public onClickListButton = () => {
         this._screenManager.update({
-            type: ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
+            type: ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
             foundSwordIds: new Set(Array.from(this._swordManager.getFoundSwordIndexes(), index => this._swordDB.getIdByIndex(index))),
             havingPieces: this._inventoryManager.getPieces(),
             havingSwords: this._inventoryManager.getSwords(),

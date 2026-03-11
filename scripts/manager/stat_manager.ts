@@ -1,4 +1,4 @@
-import { ScreenRenderingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
 import { StatUpdateContext, StatUpdateContextType } from '../context/updating/stat_update_context.js';
 import { Observer, Stat, StatClass, StatInfo } from '../other/entity.js';
 import { StatTestResult } from '../other/test_result.js';
@@ -57,6 +57,10 @@ export function getStatClass(statID: StatID): StatClass {
 }
 
 export class StatManager extends Observer {
+
+    readonly target: ReadonlySet<ScreenDrawingContextType> = new Set([
+        ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT
+    ]);
     
     private _statPoint = 0;
     private _stats: Readonly<Record<StatID, Stat>> = {} as Record<StatID, Stat>;
@@ -78,8 +82,8 @@ export class StatManager extends Observer {
         switch(statUpdateContext.type) {
         case StatUpdateContextType.GETTING_STAT_POINT:
             this._statPoint++;
-            this.notify({
-                type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT,
+            this.notifyDrawing({
+                type: ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT,
                 statPoint: this._statPoint,
                 stats: Object.values(this._stats)
             });
@@ -94,8 +98,8 @@ export class StatManager extends Observer {
             this._statPoint--;
             stat.levelUp();
 
-            this.notify({
-                type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT,
+            this.notifyDrawing({
+                type: ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT,
                 statPoint: this.statPoint,
                 stats: this.stats
             });

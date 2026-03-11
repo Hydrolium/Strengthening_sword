@@ -1,7 +1,7 @@
 import { ColoredTextElement } from "../other/colored_text.js";
 import { $, createElement, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../other/element_controller.js";
 import { Color } from "../other/entity.js";
-import { Keyframes } from "../screen/screen.js";
+import { Keyframes } from "../screen/refreshable.js";
 
 export class Popup {
 

@@ -1,7 +1,8 @@
-import { PieceItem, Recipe, StatInfo, StorageInfo, Sword, SwordItem } from "../../other/entity";
+import { PieceItem, Recipe, StatInfo, StorageInfo, Sword, SwordInfoByPiece, SwordItem } from "../../other/entity";
+import { Popup } from "../../popup/popup_message";
 import { InventoryUpdateContextType } from "../updating/inventory_update_context";
 
-export enum ScreenRenderingContextType {
+export enum ScreenDrawingContextType {
 
     MAIN_SCREEN_RENDERING_CONTEXT = "MAIN_SCREEN_RENDERING_CONTEXT",
     MAKING_SCREEN_RENDERING_CONTEXT = "MAKING_SCREEN_RENDERING_CONTEXT",
@@ -9,21 +10,55 @@ export enum ScreenRenderingContextType {
     INFORMATION_SCREEN_RENDERING_CONTEXT = "INFORMATION_SCREEN_RENDERING_CONTEXT",
     STAT_SCREEN_RENDERING_CONTEXT = "STAT_SCREEN_RENDERING_CONTEXT",
 
-    RECORD_STORAGE_RENDERING_CONTEXT = "RECORD_STORAGE_RENDERING_CONTEXT",
-    MONEY_DISPLAY_RENDERING_CONTEXT = "MONEY_DISPLAY_RENDERING_CONTEXT"
+    RECORD_DISPLAY_RENDERING_CONTEXT = "RECORD_DISPLAY_RENDERING_CONTEXT",
+    MONEY_DISPLAY_RENDERING_CONTEXT = "MONEY_DISPLAY_RENDERING_CONTEXT",
+
+    UPGRADE_FAILURE_CONTEXT = "UPGRADE_FAILURE_CONTEXT",
+    MAX_UPGRADE_CONTEXT = "MAX_UPGRADE_CONTEXT",
+    MONEY_LACK_CONTEXT = "MONEY_LACK_CONTEXT",
+    INVALIDATION_CONTEXT = "INVALIDATION_CONTEXT",
+    GOD_HAND_CONTEXT = "GOD_HAND_CONTEXT",
+    GAME_END_CONTEXT = "GAME_END_CONTEXT",
+    SWORD_INFO_CONTEXT = "SWORD_INFO_CONTEXT",
+    ASKING_SWORD_ITEM_BREAK_CONTEXT = "ASKING_SWORD_ITEM_BREAK_CONTEXT",
+    SWORD_ITEM_BREAKED_CONTEXT = "SWORD_ITEM_BREAKED_CONTEXT",
+    ASKING_SWORD_ITEM_SELL_CONTEXT = "ASKING_SWORD_ITEM_SELL_CONTEXT",
+    WHERE_PIECE_DROPPED_CONTEXT = "WHERE_PIECE_DROPPED_CONTEXT",
+    SWORD_CRAFTING_CONTEXT = "SWORD_CRAFTING_CONTEXT",
+    MAX_STAT_CONTEXT = "MAX_STAT_CONTEXT",
+    STAT_POINT_LACK_CONTEXT = "STAT_POINT_LACK_CONTEXT",
+    GAME_ALL_STAT_CONTEXT = "GAME_ALL_STAT_CONTEXT"
 }
 
-export type ScreenRenderingContext = MainScreenRenderingContext | MakingScreenRenderingContext | InventoryScreenRenderingContext | InformationScreenRenderingContext | StatScreenRenderingContext | RecordStorageRenderingContext0 | RecordStorageRenderingContext1 | RecordStorageRenderingContext2 | RecordStorageRenderingContext3 | RecordStorageRenderingContext4 | MoneyDisplayRenderingContext;
+export type ScreenDrawingContext = MainScreenRenderingContext | MakingScreenRenderingContext | InventoryScreenRenderingContext | InformationScreenRenderingContext | StatScreenRenderingContext | RecordStorageRenderingContext0 | RecordStorageRenderingContext1 | RecordStorageRenderingContext2 | RecordStorageRenderingContext3 | RecordStorageRenderingContext4 | MoneyDisplayRenderingContext | UpgradeFailureContext | MaxUpgradeContext | MoneyLackContext | InvalidationContext | GodHandContext | GameEndContext | SwordInfoContext | AskingSwordItemBreakContext | SwordItemBreakedContext | AskingSwordItemSellContext | WherePieceDroppedContext | SwordCraftingContext | MaxStatContext | StatPointLackContext | GameAllStatContext; 
+
+export const popupDrawingTypes = [
+    ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT,
+    ScreenDrawingContextType.MAX_UPGRADE_CONTEXT,
+    ScreenDrawingContextType.MONEY_LACK_CONTEXT,
+    ScreenDrawingContextType.INVALIDATION_CONTEXT,
+    ScreenDrawingContextType.GOD_HAND_CONTEXT,
+    ScreenDrawingContextType.GAME_END_CONTEXT,
+    ScreenDrawingContextType.SWORD_INFO_CONTEXT,
+    ScreenDrawingContextType.ASKING_SWORD_ITEM_BREAK_CONTEXT,
+    ScreenDrawingContextType.SWORD_ITEM_BREAKED_CONTEXT,
+    ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT,
+    ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT,
+    ScreenDrawingContextType.SWORD_CRAFTING_CONTEXT,
+    ScreenDrawingContextType.MAX_STAT_CONTEXT,
+    ScreenDrawingContextType.STAT_POINT_LACK_CONTEXT,
+    ScreenDrawingContextType.GAME_ALL_STAT_CONTEXT,
+] as const;
 
 export interface MainScreenRenderingContext {
-    readonly type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT;
 
     readonly sword: Sword;
     readonly isMax: boolean;
 }
 
 export interface MakingScreenRenderingContext {
-    readonly type: ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT;
 
     readonly foundSwordIds: ReadonlySet<string>;
     readonly money: number;
@@ -35,7 +70,7 @@ export interface MakingScreenRenderingContext {
 }
 
 export interface InventoryScreenRenderingContext {
-    readonly type: ScreenRenderingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT;
     
     readonly swordStorage: StorageInfo<SwordItem>;
     readonly pieceStorage: StorageInfo<PieceItem>;
@@ -44,14 +79,14 @@ export interface InventoryScreenRenderingContext {
 
 export interface InformationScreenRenderingContext {
     
-    readonly type: ScreenRenderingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.INFORMATION_SCREEN_RENDERING_CONTEXT;
 
     readonly swords: readonly SwordItem[];
     readonly founds: ReadonlySet<number>;
 }
 
 export interface StatScreenRenderingContext {
-    readonly type: ScreenRenderingContextType.STAT_SCREEN_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.STAT_SCREEN_RENDERING_CONTEXT;
 
     readonly statPoint: number;
     readonly stats: readonly StatInfo[];
@@ -67,14 +102,14 @@ export enum MoneyChangeReason {
 }
 
 export interface RecordStorageRenderingContext0 {
-    readonly type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT;
 
     readonly reason: MoneyChangeReason.SYSTEM_MONEY_GIFT;
     readonly money: number;
 }
 
 export interface RecordStorageRenderingContext1 {
-    readonly type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT;
 
     readonly reason: MoneyChangeReason.SWORD_UPGRADE;
     readonly name: string;
@@ -82,7 +117,7 @@ export interface RecordStorageRenderingContext1 {
 }
 
 export interface RecordStorageRenderingContext2 {
-    readonly type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT;
 
     readonly reason: MoneyChangeReason.SWORD_SELL;
     readonly name: string;
@@ -90,7 +125,7 @@ export interface RecordStorageRenderingContext2 {
 }
 
 export interface RecordStorageRenderingContext3 {
-    readonly type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT;
 
     readonly reason: MoneyChangeReason.SWORD_RESTORE;
     readonly name: string;
@@ -98,7 +133,7 @@ export interface RecordStorageRenderingContext3 {
 }
 
 export interface RecordStorageRenderingContext4 {
-    readonly type: ScreenRenderingContextType.RECORD_STORAGE_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT;
 
     readonly reason: MoneyChangeReason.BUY_USING_MONEY;
     readonly resultName: string;
@@ -107,8 +142,89 @@ export interface RecordStorageRenderingContext4 {
 }
 
 export interface MoneyDisplayRenderingContext {
-    readonly type: ScreenRenderingContextType.MONEY_DISPLAY_RENDERING_CONTEXT;
+    readonly type: ScreenDrawingContextType.MONEY_DISPLAY_RENDERING_CONTEXT;
 
     readonly havingMoney: number;
     readonly deltaMoney: number;
+}
+
+
+export interface UpgradeFailureContext {
+    readonly type: ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT;
+
+    readonly sword: Sword;
+    readonly loss: number;
+    readonly pieces: readonly PieceItem[];
+    readonly havingRepairPaper: number;
+    readonly requiredRepairPaper: number;
+    
+    readonly onRepair: (sword: Sword, popup: Popup) => void;
+    readonly onInit: (popup: Popup) => void;
+}
+
+export interface MaxUpgradeContext {
+    readonly type: ScreenDrawingContextType.MAX_UPGRADE_CONTEXT;
+}
+
+export interface MoneyLackContext {
+    readonly type: ScreenDrawingContextType.MONEY_LACK_CONTEXT;
+}
+
+export interface InvalidationContext {
+    readonly type: ScreenDrawingContextType.INVALIDATION_CONTEXT;
+    readonly pieces: readonly PieceItem[];
+}
+
+export interface GodHandContext {
+    readonly type: ScreenDrawingContextType.GOD_HAND_CONTEXT;
+    readonly newSwordIndex: number;
+}
+
+export interface GameEndContext {
+    readonly type: ScreenDrawingContextType.GAME_END_CONTEXT;
+}
+
+export interface SwordInfoContext {
+    readonly type: ScreenDrawingContextType.SWORD_INFO_CONTEXT;
+    readonly sword: Sword;
+}
+
+export interface AskingSwordItemBreakContext {
+    readonly type: ScreenDrawingContextType.ASKING_SWORD_ITEM_BREAK_CONTEXT;
+    readonly sword: Sword;
+    readonly breakFunc: (popup: Popup) => void;
+}
+
+export interface SwordItemBreakedContext {
+    readonly type: ScreenDrawingContextType.SWORD_ITEM_BREAKED_CONTEXT;
+    readonly pieces: readonly PieceItem[];
+}
+
+export interface AskingSwordItemSellContext {
+    readonly type: ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT;
+    readonly sword: Sword;
+    readonly sellFunc: (popup: Popup) => void;
+}
+
+export interface WherePieceDroppedContext {
+    readonly type: ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT;
+    readonly pieceItem: PieceItem;
+    readonly swords: readonly SwordInfoByPiece[];
+    readonly founds: ReadonlySet<number>;
+}
+
+export interface SwordCraftingContext {
+    readonly type: ScreenDrawingContextType.SWORD_CRAFTING_CONTEXT;
+}
+
+export interface MaxStatContext {
+    readonly type: ScreenDrawingContextType.MAX_STAT_CONTEXT;
+}
+
+export interface StatPointLackContext {
+    readonly type: ScreenDrawingContextType.STAT_POINT_LACK_CONTEXT;
+}
+
+export interface GameAllStatContext {
+    readonly type: ScreenDrawingContextType.GAME_ALL_STAT_CONTEXT;
 }

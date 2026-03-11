@@ -1,4 +1,4 @@
-import { ScreenRenderingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
 import { SwordUpdateContext, SwordUpdateContextType } from '../context/updating/sword_update_context.js';
 import { Observer,  Sword } from '../other/entity.js';
 import { SwordTestResult, SwordTestResultType } from '../other/test_result.js';
@@ -7,6 +7,10 @@ import { InventoryManager } from './inventory_manager.js';
 import { StatID, StatManager } from './stat_manager.js';
 
 export class SwordManager extends Observer {
+
+    readonly target: ReadonlySet<ScreenDrawingContextType> = new Set([
+        ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT
+    ]);
 
     private _currentSwordIndex: number = 0;
 
@@ -23,8 +27,8 @@ export class SwordManager extends Observer {
 
                 this._currentSwordIndex = swordUpdateContext.sword.index;
 
-                this.notify({
-                    type: ScreenRenderingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
+                this.notifyDrawing({
+                    type: ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
                     isMax: this.currentSwordIndex >= swordUpdateContext.maxUpgradableIndex,
                     sword: swordUpdateContext.sword
                 });

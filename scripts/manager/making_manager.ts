@@ -1,8 +1,12 @@
-import { ScreenRenderingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
 import { MakingUpdateContext } from '../context/updating/making_update_context.js';
 import { Observer, Item, Recipe, MoneyItem, RepairPaperItem } from '../other/entity.js';
 
 export class MakingManager extends Observer {
+
+    readonly target: ReadonlySet<ScreenDrawingContextType> = new Set([
+        ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT
+    ]);
 
     public readonly repairPaperRecipes: readonly Recipe[] = [
         new Recipe(new RepairPaperItem(1), [new MoneyItem(300)]),
@@ -19,8 +23,8 @@ export class MakingManager extends Observer {
     }
 
     public update(makingContext: MakingUpdateContext) {
-        this.notify({
-            type: ScreenRenderingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
+        this.notifyDrawing({
+            type: ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
             
             foundSwordIds: makingContext.foundSwordIds,
             havingPieces: makingContext.havingPieces,
