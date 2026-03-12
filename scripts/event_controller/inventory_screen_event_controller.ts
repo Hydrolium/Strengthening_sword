@@ -58,7 +58,7 @@ export class InventoryScreenEventController implements InventoryScreenActions {
         
                     this._managers.inventoryManager.update({
                         type: InventoryUpdateContextType.SWORD_ITEM_BREAK,
-                        swordItem: swordItem,
+                        swordItemId: swordItem.id,
                         pieceItems: pieceItems
                     });
                 }
@@ -75,7 +75,7 @@ export class InventoryScreenEventController implements InventoryScreenActions {
 
             this._managers.inventoryManager.update({
                 type: InventoryUpdateContextType.SWORD_ITEM_SWAP,
-                swordItem: swordItem,
+                swordItemId: swordItem.id,
                 sword: sword
             });
             

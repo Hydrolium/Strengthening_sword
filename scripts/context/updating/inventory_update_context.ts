@@ -79,14 +79,14 @@ export interface SwordItemSellContext {
 export interface SwordItemBreakContext {
     readonly type: InventoryUpdateContextType.SWORD_ITEM_BREAK,
 
-    readonly swordItem: SwordItem,
+    readonly swordItemId: string,
     readonly pieceItems: readonly PieceItem[]
 }
 
 export interface SwordItemSwapContext {
     readonly type: InventoryUpdateContextType.SWORD_ITEM_SWAP,
 
-    readonly swordItem: SwordItem,
+    readonly swordItemId: string,
     readonly sword: Sword
 }
 

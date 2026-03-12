@@ -91,7 +91,7 @@ export class MainScreenEventController implements MainScreenActions {
             pieces: dropped_pieces
         });
 
-        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
+        this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.result.index));
 
         this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_BREAK,
@@ -176,7 +176,7 @@ export class MainScreenEventController implements MainScreenActions {
     
         if(this._managers.inventoryManager.hasRepairPaper(sword.requiredRepairs)) {
             this._managers. inventoryManager.update({
-                type: InventoryUpdateContextType.ITEM_SAVE,
+                type: InventoryUpdateContextType.ITEM_TAKE,
                 item: new RepairPaperItem(sword.requiredRepairs)
             });
 

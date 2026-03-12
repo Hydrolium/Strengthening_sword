@@ -130,14 +130,14 @@ export class InventoryManager extends Observer {
             });
         },
         [InventoryUpdateContextType.SWORD_ITEM_BREAK]: (context: SwordItemBreakContext) => {
-            this.take(context.swordItem);
+            this._swordStorage.remove(context.swordItemId, 1);
             context.pieceItems.forEach(pieceitem => this.save(pieceitem));
             this.notifyInventoryChanged();
 
         },
         [InventoryUpdateContextType.SWORD_ITEM_SWAP]: (context: SwordItemSwapContext) => {
             if(context.sword.canSave) this.save(context.sword.toItem());
-            this.take(context.swordItem);
+            this._swordStorage.remove(context.swordItemId, 1);
 
             this.notifyInventoryChanged();
 

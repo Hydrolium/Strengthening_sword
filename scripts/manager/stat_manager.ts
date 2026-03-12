@@ -38,12 +38,12 @@ export class MagicHat extends Stat {
 }
 
 export const StatID = {
-    LUCKY_BRACELET: "LUCKY_BRACELET",
-    GOD_HAND: "GOD_HAND",
-    BIG_MERCHANT: "BIG_MERCHANT",
-    SMITH: "SMITH",
-    INVALIDATED_SPHERE: "INVALIDATED_SPHERE",
-    MAGIC_HAT: "MAGIC_HAT"
+    LUCKY_BRACELET: "lucky_bracelet",
+    GOD_HAND: "god_hand",
+    BIG_MERCHANT: "big_merchant",
+    SMITH: "smith",
+    INVALIDATED_SPHERE: "invalidated_sphere",
+    MAGIC_HAT: "magic_hat"
 } as const;
 
 export type StatID = typeof StatID[keyof typeof StatID];
@@ -111,7 +111,6 @@ export class StatManager extends Observer {
         }
     }
 
-        
     public calculate(statId: StatID, initialValue?: number): number {
         return this._stats[statId].calculate(initialValue);
     }
@@ -121,10 +120,9 @@ export class StatManager extends Observer {
         if(this._stats[statId].isMaxLevel()) return StatTestResult.REJECTED_BY_MAX_UPGRADE;
         if(this._statPoint <= 0) return StatTestResult.REJECTED_BY_POINT_LACK;
 
-        if(Object.values(this._stats).every(s => s.isMaxLevel())) return StatTestResult.SUCCESS_AND_ALL_MAX;
+        if(Object.values(this._stats).every(
+            s => (s.id === statId && this._stats[statId].getCurrentLevel() + 1 === this._stats[statId].getMaxLevel()) || s.isMaxLevel())) return StatTestResult.SUCCESS_AND_ALL_MAX;
 
         return StatTestResult.SUCCESS;
-        
     }
-
 }
