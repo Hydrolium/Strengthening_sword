@@ -60,7 +60,7 @@ export class MakingScreenEventController implements MakingScreenActions {
                 this._inventoryManager.update({
                     type: InventoryUpdateContextType.ITEM_TAKE,
                     item: material
-                });
+                }); //나 한정훈 히히 
         });
 
         if(recipe.result instanceof SwordItem) {
