@@ -7,6 +7,8 @@ import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/re
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context";
 import { InventoryScreenActions } from "../../event_controller/inventory_screen_event_controller";
 import { Screen } from "./screen";
+import { ColoredTextElement } from "../../element/colored_text";
+import { Color } from "../../element/popup_info";
 
 export class InventoryScreen extends Screen {
 
@@ -73,14 +75,18 @@ export class InventoryScreen extends Screen {
 
         created_article.appendChild(created_div);
         created_article.appendChild(createElementWith("p", {classes: ["item_name"], text: item.name}));
-        created_article.appendChild(createElementWith("p", {classes: ["item_count"], text: `${item.count}`}));
+        created_article.appendChild(createElementWith("p", {classes: ["item_count"], text: `x ${item.count}`}));
 
         return created_article;
     }
 
     private makeRepairGroupSection(repairPaperCount: number): HTMLElement {
         const created_repairGroup = createElementWith("section", {classes: ["item_group"]});
-        created_repairGroup.appendChild(createElementWith("div", {classes: [ "underline", "bok"]}));
+
+        const created_group_title = createElementWith("div", {classes: [ "underline", "bok"]});
+        created_group_title.replaceChildren(...new ColoredTextElement().add("복구권", Color.GOLD).build());
+
+        created_repairGroup.appendChild(created_group_title);
         created_repairGroup.appendChild(
             this.makeInventoryArticle(new RepairPaperItem(repairPaperCount)),
         )
@@ -89,7 +95,11 @@ export class InventoryScreen extends Screen {
 
     private makePieceGroupSection(pieceItemList: readonly PieceItem[]): HTMLElement {
         const created_pieceGroup = createElementWith("section", {classes: ["item_group"]});
-        created_pieceGroup.appendChild(createElementWith("div", {classes: ["underline", "pie"]}));
+
+        const created_group_title = createElementWith("div", {classes: [ "underline", "pie"]});
+        created_group_title.replaceChildren(...new ColoredTextElement().add("조각", Color.GREEN).add(" (마우스를 아이콘 위에 올려 메뉴 확인)", Color.DARK_GRAY).build());
+
+        created_pieceGroup.appendChild(created_group_title);
         pieceItemList.forEach(
             pieceItem => created_pieceGroup.appendChild(this.makeInventoryArticle(pieceItem)));
         return created_pieceGroup;
@@ -97,7 +107,11 @@ export class InventoryScreen extends Screen {
 
     private makeSwordGroupSection(swordItemList: readonly SwordItem[]): HTMLElement {
         const created_swordGroup = createElementWith("section", {classes: ["item_group"]});
-        created_swordGroup.appendChild(createElementWith("div", {classes: ["underline", "swo"]}));
+
+        const created_group_title = createElementWith("div", {classes: [ "underline", "swo"]});
+        created_group_title.replaceChildren(...new ColoredTextElement().add("검", Color.BLUE).add(" (마우스를 아이콘 위에 올려 메뉴 확인)", Color.DARK_GRAY).build());
+
+        created_swordGroup.appendChild(created_group_title);
 
         swordItemList.forEach(
             swordItem => {

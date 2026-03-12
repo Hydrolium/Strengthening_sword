@@ -42,9 +42,10 @@ export class MakingScreen extends Screen {
         this._elements.swordRecipes = $("#sword-recipes");
     }
 
-    private makeMaterialDiv(material: Item, havingCount: number): HTMLDivElement {
+    private makeMaterialDiv(material: Item, havingCount: number, clickable: boolean): HTMLDivElement {
 
         const created_div = createElementWith<HTMLDivElement>("div", {classes: ["item"]});
+        if(clickable) created_div.classList.add("clickable");
 
         const created_img = createImageWithSrc(material.imgSrc);
 
@@ -53,6 +54,7 @@ export class MakingScreen extends Screen {
         if(!(material instanceof MoneyItem)) created_div.appendChild(createElementWith("span", {classes: ["name"], text: material.name}));
 
         const count_span = createElementWith("span", {classes: ["count"], text: (material instanceof MoneyItem) ? material.count + "원" : havingCount + "/" + material.count });
+        
         if(havingCount < material.count) count_span.classList.add("unable");
         created_div.appendChild(count_span);
         return created_div;
@@ -67,27 +69,36 @@ export class MakingScreen extends Screen {
             
             if(material instanceof MoneyItem) {
 
-                created_materials.appendChild(this.makeMaterialDiv(material, info.money));
+                created_materials.appendChild(this.makeMaterialDiv(material, info.money, false));
             } 
             else if(material instanceof SwordItem) {
                 const havingCount = info.havingSwords.getCount(material.id);
 
-                if(info.foundSwordIds.has(material.id))
-                    created_materials.appendChild(this.makeMaterialDiv(material, havingCount));
-                else
-                    created_materials.appendChild(this.makeMaterialDiv(UnknownItem.instance, havingCount));
+                if(info.foundSwordIds.has(material.id)) {
+                    const created_materialDiv = this.makeMaterialDiv(material, havingCount, true);
+                    created_materialDiv.addEventListener("click", () => this._actions?.onSwordInfoSearch(material.id));
+                    created_materials.appendChild(created_materialDiv);
+                } else
+                    created_materials.appendChild(this.makeMaterialDiv(UnknownItem.instance, havingCount, false));
             }
             else if(material instanceof PieceItem) {
-                created_materials.appendChild(this.makeMaterialDiv(material, info.havingPieces.getCount(material.id)));
+                const created_materialDiv = this.makeMaterialDiv(material, info.havingPieces.getCount(material.id), true);
+                created_materialDiv.addEventListener("click", () => this._actions?.onPieceInfoSearch(material));
+                created_materials.appendChild(created_materialDiv);
             }
 
         }
         return created_materials;
     }
     
-    private makeResultSection(item: Item): HTMLElement  {
+    private makeResultSection(item: Item, clickable: boolean): HTMLElement  {
         const created_result = createElementWith("section", {classes: ["result"]});
         const created_imgDiv = createElementWith("div", {classes: ["item"]});
+
+        if(item instanceof SwordItem && clickable) {
+            created_imgDiv.classList.add("clickable");
+            created_imgDiv.addEventListener("click", () => this._actions?.onSwordInfoSearch(item.id));
+        }
 
         created_imgDiv.appendChild(createImageWithSrc(item.imgSrc));
         created_imgDiv.appendChild(createElementWith("span", {classes: ["name"], text: item.name}));
@@ -105,9 +116,9 @@ export class MakingScreen extends Screen {
         created_article.appendChild(material_section);
         created_article.appendChild(resultSection);
         
-        const btn = createElementWith<HTMLButtonElement>("button", {classes: [color], text: "제작"});
+        const btn = createElementWith<HTMLButtonElement>("button", {classes: [color], text: (canMake) ? "제작" : "제작 불가"});
         btn.addEventListener("click", clickFunction);
-        btn.disabled = canMake;
+        btn.disabled = !canMake;
 
         created_article.appendChild(btn);
 
@@ -146,9 +157,9 @@ export class MakingScreen extends Screen {
             recipe =>
                 this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials, info), 
-                    this.makeResultSection(recipe.result),
+                    this.makeResultSection(recipe.result, false),
                     "blue",
-                    !this.hasItems(recipe.materials, info), 
+                    this.hasItems(recipe.materials, info), 
                     () => this._actions?.onMaking(recipe))
         );
     }
@@ -159,10 +170,10 @@ export class MakingScreen extends Screen {
             recipe => this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials, info), 
                     (info.foundSwordIds.has(recipe.result.id))
-                    ? this.makeResultSection(recipe.result)
-                    : this.makeResultSection(UnknownItem.instance),
+                    ? this.makeResultSection(recipe.result, true)
+                    : this.makeResultSection(UnknownItem.instance, false),
                     "purple",
-                    !this.hasItems(recipe.materials, info),
+                    this.hasItems(recipe.materials, info),
                     () => this._actions?.onMaking(recipe)
                 )
         );

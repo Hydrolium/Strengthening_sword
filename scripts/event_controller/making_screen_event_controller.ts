@@ -4,7 +4,7 @@ import { MakingUpdateContextType } from "../context/updating/making_update_conte
 import { StatUpdateContextType } from "../context/updating/stat_update_context";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context";
 import { Recipe } from "../define/object/recipe";
-import { MoneyItem } from "../define/object/item";
+import { MoneyItem, PieceItem } from "../define/object/item";
 import { SwordItem } from "../define/object/item";
 import { Managers } from "../manager/manager";
 import { CalculatedSwordDB } from "../define/calculated_sword_db";
@@ -12,6 +12,8 @@ import { CalculatedSwordDB } from "../define/calculated_sword_db";
 export interface MakingScreenActions {
     onMaking: (recipe: Recipe) => void;
     onClickListButton: () => void;
+    onSwordInfoSearch: (swordId: string) => void;
+    onPieceInfoSearch: (pieceItem: PieceItem) => void;
 }
 
 export class MakingScreenEventController implements MakingScreenActions {
@@ -112,6 +114,22 @@ export class MakingScreenEventController implements MakingScreenActions {
             repairPaperRecipes: this._managers.makingManager.repairPaperRecipes,
             swordRecipes: this._managers.makingManager.swordRecipes
         })
+    }
+
+    public onSwordInfoSearch = (swordId: string) => {
+        this._managers.screenManager.update({
+            type: ScreenDrawingContextType.SWORD_INFO_CONTEXT,
+            sword: this._swordDB.getCalculatedSwordbyId(swordId)
+        });
+    }
+
+    public onPieceInfoSearch = (pieceItem: PieceItem) => {
+        this._managers.screenManager.update({
+            type: ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT,
+            pieceItem: pieceItem,
+            swords: this._swordDB.getCalculatedSwordsByPieceId(pieceItem.id),
+            founds: this._managers.swordManager.getFoundSwordIndexes()
+        });
     }
 
 }

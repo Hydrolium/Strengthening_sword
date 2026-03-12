@@ -29,7 +29,7 @@ export class StatScreen extends Screen {
         const created_iconBox = createElementWith<HTMLDivElement>("div", {classes: ["icon"]});
         created_iconBox.addEventListener("click", onclick);
 
-        const created_statUpDiv = createElementWith("div", {classes: ["stat_up"]});
+        const created_statUpDiv = createElementWith("div", {classes: ["stat_up"], text: "스탯 강화"});
         created_iconBox.appendChild(createImageWithSrc(src))
         created_iconBox.appendChild(created_statUpDiv);
 

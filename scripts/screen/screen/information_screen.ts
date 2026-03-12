@@ -33,9 +33,9 @@ export class InformationScreen extends Screen {
 
         if(item instanceof SwordItem) {
             created_div.appendChild(createElementWith("span", {classes: ["sword_name"], text: item.name}));
-
             created_div.addEventListener("click", () => this._actions?.onSwordInfoSearch(item.id));
         }
+        
         return created_div;
     }
 

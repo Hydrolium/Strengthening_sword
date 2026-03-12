@@ -36,8 +36,10 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 #toturial-button:checked + label {border-color: var(--color-sky);}
 #toturial-button + label span {position: absolute;top: 50%;left: 50%;color: white;font-size: 0.85rem;transform: translate(-50%, -50%);text-shadow: -1px -1px 0px var(--color-green),-1px 1px 0px var(--color-green),1px 1px 0px var(--color-green),1px -1px 0px var(--color-green),-1px 0px 0px var(--color-green),1px 0px 0px var(--color-green),0px 1px 0px var(--color-green),0px -1px 0px var(--color-green);}
 #toturial-button:checked + label span {text-shadow: -1px -1px 0px var(--color-sky),-1px 1px 0px var(--color-sky),1px 1px 0px var(--color-sky),1px -1px 0px var(--color-sky),-1px 0px 0px var(--color-sky),1px 0px 0px var(--color-sky),0px 1px 0px var(--color-sky),0px -1px 0px var(--color-sky);}
-#toturial-button + label span::after {content: '튜토리얼';}
-#toturial-button:checked + label span::after {content: '돌아가기';}
+#toturial-button + label span#toturial-text {visibility: visible;}
+#toturial-button:checked + label span#toturial-text {visibility: hidden;}
+#toturial-button + label span#toturial-back-text {visibility: hidden;}
+#toturial-button:checked + label span#toturial-back-text {visibility: visible;}
 #toturial-button + label img {width: 100%;height: 100%;}
 #toturial-button:checked + label img.first {display: none;} 
 #toturial-button + label:hover {transform: scale(1.1);}
@@ -57,20 +59,10 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 
 .swordbox .infomation {display: flex;flex-direction: column;align-items: center;}
 #sword-number {font-size: 1.75rem; color: var(--color-dark-gray);}
-#sword-number.hightlight {color: var(--color-red);}
-#sword-number::after {content: "강";}
-#sword-number.hightlight::after {content: "강 (MAX)";}
+#sword-number.isMax {color: var(--color-red);}
 #sword-name {font-size: 2.25rem; color: var(--color-gold);}
 #sword-prob{font-size: 1.25rem; color: var(--color-dark-gray);}
-#sword-prob::before {content: "강화 불가";}
-#sword-prob::after {content: "";}
-#sword-prob[enabled=true]::before {content: "강화 성공 확률: ";}
-#sword-prob[enabled=true]::after {content: "%";}
 #sword-cost, #sword-price {font-size: 1rem; color: var(--color-dark-gray);}
-#sword-cost[enabled=true]::before {content: "강화 비용: ";}
-#sword-cost[enabled=true]::after {content: "원";}
-#sword-price::before {content: "판매 가격: ";}
-#sword-price::after {content: "원";}
 .buttons {display: flex;justify-content: center;margin-top: 0.5rem;}
 .buttons.end_sort {width: 240px;justify-content: flex-end;}
 .buttons a {
@@ -148,7 +140,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .message .message_main .text .title.gold {color: var(--color-gold);}
 .message .message_main .text .title.dark_gray {color: var(--color-dark-gray);}
 .message .message_main .text .title.black {color: var(--color-black);}
-.message .message_main .text .subtitle {font-size: 1.75rem;}
+.message .message_main .text .subtitle {font-size: 1.75rem; color: var(--color-black)}
 .message .message_main .text .paragraph {display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 1rem 0; padding: 1rem 0; width: 100%; border-bottom: var(--color-dark-gray) 1px solid; border-top: var(--color-dark-gray) 1px solid;}
 .message .message_main .text .paragraph p {margin:0.25rem; font-size: 1.4rem; color: var(--color-dark-gray);}
 .message .message_main .text .footer {margin: 1rem 0 0 0;font-size: 1.5rem;}
@@ -170,7 +162,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .img_name_count_paragraph span {font-size: 1.4rem; white-space: pre;}
 
 .colored_text.red {color: var(--color-red);}
-.colored_textgreen {color: var(--color-green);}
+.colored_text.green {color: var(--color-green);}
 .colored_text.sky {color: var(--color-sky);}
 .colored_text.blue {color: var(--color-blue);}
 .colored_text.navy {color: var(--color-navy);}
@@ -207,17 +199,12 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .inventory_window main .no_item {color: var(--color-dark-gray);font-size: 1.05rem;}
 .inventory_window main .item_group {width: 100%;display: flex;flex-wrap: wrap;justify-content: space-between;height: fit-content;}
 .inventory_window main .item_group .underline {width: 100%;height:1.75rem;border: solid 3px var(--color-dark-gray);font-size: 1.1rem;}
-.inventory_window main .item_group .underline.bok::before {content: "복구권";color: var(--color-gold);}
-.inventory_window main .item_group .underline.pie::before {content: "조각";color: var(--color-green);}
-.inventory_window main .item_group .underline.pie::after {content: " (마우스를 아이콘 위에 올려 메뉴 확인)";font-size: 0.9rem;color: var(--color-dark-gray);}
-.inventory_window main .item_group .underline.swo::before {content: "검";color: var(--color-blue);}
-.inventory_window main .item_group .underline.swo::after {content: " (마우스를 아이콘 위에 올려 메뉴 확인)";font-size: 0.9rem;color: var(--color-dark-gray);}
+.inventory_window main .item_group .underline span:not(:first-child) {font-size: 0.9rem;}
 .inventory_window main .item_group .group {display: grid;grid-template-columns: 1fr 2fr 1fr;width: 230px;height: 54px;align-items: center;margin: 0.5rem;}
 .inventory_window main .item_group .group .item {width: 50px;height: 50px;background-image: url("/images/ui/frames/item_frame.png");background-size: contain;position: relative;cursor: pointer;}
 .inventory_window main .item_group .group .item img {width: 80%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.5s;}
 .inventory_window main .item_group .group .item img:hover,
 .inventory_window main .item_group .group .item .hover_menu:hover + img {width: 100%;transition: all 0.1s;}
-.inventory_window main .item_group .group .item_count::before {content: "x ";}
 .inventory_window main .item_group .group .item .hover_menu {
   position: absolute;top: 0;left: 0;z-index: 1;
   width: 100%;
@@ -298,6 +285,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .maker_window main .recipe_box .recipes .group .result .item {width: 55px;height: 55px;background-image: url("/images/ui/frames/result_frame.png");background-size: contain;position: relative;}
 .maker_window main .recipe_box .recipes .group .item img {width: 90%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.3s;}
 .maker_window main .recipe_box .recipes .group .result .item img {filter: drop-shadow(2px 2px 3px var(--color-light-gray));}
+.maker_window main .recipe_box .recipes .group .item.clickable {cursor: pointer;}
 .maker_window main .recipe_box .recipes .group .item .count {position: absolute;bottom: -10%;left: 50%;transform: translateX(-50%);font-size: 16px;color: var(--color-white);pointer-events: none;transition: opacity 0.3s;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
 .maker_window main .recipe_box .recipes .group .item .count.unable {color: var(--color-red);text-shadow: -1px -1px 0px var(--color-white),-1px 1px 0px var(--color-white),1px 1px 0px var(--color-white),1px -1px 0px var(--color-white),-1px 0px 0px var(--color-white),1px 0px 0px var(--color-white),0px 1px 0px var(--color-white),0px -1px 0px var(--color-white);}
 .maker_window main .recipe_box .recipes .group .material .item img:hover {width: 110%;}
@@ -309,7 +297,6 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .maker_window main .recipe_box .recipes .group button.blue {color: var(--color-blue);}
 .maker_window main .recipe_box .recipes .group button.purple {color: var(--color-purple);}
 .maker_window main .recipe_box .recipes .group button:disabled {background-color: var(--color-light-gray);color: var(--color-dark-gray);font-size: 1.1rem;transform: scale(0.9);}
-.maker_window main .recipe_box .recipes .group button:disabled::after {content: " 불가";}
 .maker_window main .recipe_box .recipes .group button:not(:disabled):hover {color: var(--color-white);}
 .maker_window main .recipe_box .recipes .group button.blue:not(:disabled):hover {background-color: var(--color-blue);}
 .maker_window main .recipe_box .recipes .group button.purple:not(:disabled):hover {background-color: var(--color-purple);}
@@ -331,8 +318,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .stat_window main .stats .stat.green .icon img {border-color: var(--color-green);}
 .stat_window main .stats .stat.sky .icon img {border-color: var(--color-sky);}
 .stat_window main .stats .stat.navy .icon img {border-color: var(--color-navy);}
-.stat_window main .stats .stat .icon .stat_up {width: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);opacity: 0;transition: all .3s;}
-.stat_window main .stats .stat .icon .stat_up::before {content: "스탯 강화";color: var(--color-white);font-size: 1.2rem;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
+.stat_window main .stats .stat .icon .stat_up {width: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);opacity: 0;transition: all .3s; color: var(--color-white);font-size: 1.2rem;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
 .stat_window main .stats .stat .icon:hover img {filter: brightness(0.6);transform: scale(1.1);}
 .stat_window main .stats .stat .icon:active img {transform: scale(0.9);}
 .stat_window main .stats .stat .icon:hover .stat_up {opacity: 1;}

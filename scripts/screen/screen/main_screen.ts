@@ -52,28 +52,24 @@ export class MainScreen extends Screen {
 
         this._elements.swordImage!.src = context.sword.imgSrc;
 
-        write(this._elements.swordNumber, context.sword.index);
-
-        if(context.isMax) this._elements.swordNumber?.classList.add("hightlight");
-
         write(this._elements.swordName, context.sword.name);
 
-        this._elements.swordProb?.setAttribute("enabled", `${!context.isMax}`);
-        this._elements.swordCost?.setAttribute("enabled", `${!context.isMax}`);
-
         if(!context.isMax) {
+            write(this._elements.swordNumber, `${context.sword.index}강`);
+            this._elements.swordNumber?.classList.remove("isMax")
 
-            const prob = context.sword.prob;
-
-            write(this._elements.swordProb, Math.floor(prob*100));
-            write(this._elements.swordCost, `${context.sword.cost}`);
+            write(this._elements.swordProb, `강화 성공 확률: ${Math.floor(context.sword.prob * 100)}%`);
+            write(this._elements.swordCost, `강화 비용: ${context.sword.cost}원`);
         } else {
+            write(this._elements.swordNumber, `${context.sword.index}강 (MAX)`);
+            this._elements.swordNumber?.classList.add("isMax");
+
             write(this._elements.swordProb, "");
             write(this._elements.swordCost, "");
         }
 
         if(context.sword.price > 0) {
-            write(this._elements.swordPrice, `${context.sword.price}`);
+            write(this._elements.swordPrice, `판매 가격: ${context.sword.price}원`);
             visible(this._elements.swordPrice);
             visible(this._elements.sellButton);
         } else {

@@ -162,6 +162,11 @@
         "id": "oblivion_orb",
         "prob": 0.5,
         "max_drop": 1
+      },
+      {
+        "id": "rejuvenation_bead",
+        "prob": 0.5,
+        "max_drop": 1
       }
     ]
   },
@@ -247,6 +252,11 @@
         "id": "quicksilver_sash",
         "prob": 0.5,
         "max_drop": 1
+      },
+      {
+        "id": "rejuvenation_bead",
+        "prob": 0.5,
+        "max_drop": 2
       }
     ]
   },
@@ -347,6 +357,11 @@
         "id": "aether_wisp",
         "prob": 0.75,
         "max_drop": 1
+      },
+      {
+        "id": "rejuvenation_bead",
+        "prob": 0.75,
+        "max_drop": 2
       }
     ]
   },
