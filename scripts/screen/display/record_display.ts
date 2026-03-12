@@ -1,6 +1,5 @@
-import {  ScreenDrawingContext } from "../../context/rendering/screen_context";
-import { MoneyChangeReason, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context";
-import { $, createElementWith } from "../../other/element_controller";
+import { MoneyChangeReason, ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context";
+import { $, createElementWith } from "../../element/element_controller";
 import { Display } from "./display";
 
 export class RecordDisplay extends Display {

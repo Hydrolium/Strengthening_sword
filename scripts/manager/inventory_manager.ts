@@ -1,6 +1,14 @@
-import { MoneyChangeReason, ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
+import { MoneyChangeReason, ScreenDrawingContextType } from '../context/rendering/screen_drawing_context.js';
 import { BuyUsingMoneyContext, InventoryUpdateContext, InventoryUpdateContextType, ItemSaveContext, ItemTakeContext, SwordBreakContext, SwordItemBreakContext, SwordItemSellContext, SwordItemSwapContext, SwordRestoreContext, SwordSellContext, SwordUpgradeContext, SystemMoneyGiftContext } from '../context/updating/inventory_update_context.js';
-import { Observer, Storage, Item, SwordItem, PieceItem, MoneyItem, RepairPaperItem, StorageInfo } from '../other/entity.js';
+import { RepairPaperItem } from "../define/object/item.js";
+import { MoneyItem } from "../define/object/item.js";
+import { SwordItem } from "../define/object/item.js";
+import { PieceItem } from "../define/object/item.js";
+import { Item } from "../define/object/item.js";
+import { Observer } from "../define/observer.js";
+import { Storage } from "../define/storage.js";
+import { StorageInfo } from "../define/storage.js";
+import { DeveloperMode } from '../define/developer_mode.js';
 
 export class InventoryManager extends Observer {
 
@@ -9,14 +17,27 @@ export class InventoryManager extends Observer {
         ScreenDrawingContextType.RECORD_DISPLAY_RENDERING_CONTEXT,
         ScreenDrawingContextType.INVENTORY_SCREEN_RENDERING_CONTEXT
     ]);
-    
 
-    private _swordStorage: Storage<SwordItem> = new Storage<SwordItem>(SwordItem);
-    private _pieceStorage: Storage<PieceItem> = new Storage<PieceItem>(PieceItem);
+    private _swordStorage: Storage<SwordItem> = new Storage<SwordItem>(SwordItem, this._developerMode);
+    private _pieceStorage: Storage<PieceItem> = new Storage<PieceItem>(PieceItem, this._developerMode);
 
-    private _money: number = 0;
+    private _having_money: number = 0;
 
     private _repairPaperCount: number = 0;
+
+    private get _money(): number {
+        return (this._developerMode.infinityGold) ? Infinity : this._having_money
+    }
+
+    private set _money(money: number) {
+        this._having_money = money;
+    }
+
+    constructor(
+        private readonly _developerMode: DeveloperMode
+    ) {
+        super();
+    }
 
     private notifyMoneyChanged(deltaMoney: number) {
         this.notifyDrawing({

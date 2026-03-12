@@ -1,6 +1,6 @@
-import { ScreenDrawingContext } from "../../context/rendering/screen_rendering_context";
+import { ScreenDrawingContext } from "../../context/rendering/screen_drawing_context";
 import { ScreenShowingContext, ScreenShowingContextType } from "../../context/rendering/screen_showing_context";
-import { $ } from "../../other/element_controller";
+import { $ } from "../../element/element_controller";
 import { Refreshable } from "../refreshable";
 import { InformationScreen } from "./information_screen";
 import { InventoryScreen } from "./inventory_screen";
@@ -8,7 +8,7 @@ import { MainScreen } from "./main_screen";
 import { MakingScreen } from "./making_screen";
 import { StatScreen } from "./stat_screen";
 
-export interface Screen {
+export interface Screens {
     readonly mainScreen: MainScreen,
     readonly informationScreen: InformationScreen,
     readonly inventoryScreen: InventoryScreen,

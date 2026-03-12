@@ -1,18 +1,15 @@
  import { InventoryUpdateContextType } from "../context/updating/inventory_update_context";
 import { StatUpdateContextType } from "../context/updating/stat_update_context";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context";
-import { InventoryManager } from "../manager/inventory_manager";
-import { StatManager } from "../manager/stat_manager";
-import { SwordManager } from "../manager/sword_manager";
-import { RepairPaperItem, Sword } from "../other/entity";
-import { SwordDB } from "../db/sword_db";
-import { SwordTestResult0, SwordTestResult1, SwordTestResultType } from "../other/test_result";
-import { Popup } from "../popup/popup_message";
-import { DeveloperMode } from "../screen/developer_mode";
-import { MainScreen } from "../screen/screen/main_screen";
-import { CalculatedSwordDB } from "../db/calculated_sword_db";
-import { ScreenManager } from "../manager/screen_manager";
-import { ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
+import { Sword } from "../define/object/sword";
+import { RepairPaperItem } from "../define/object/item";
+import { SwordTestResult0, SwordTestResult1, SwordTestResultType } from "../define/object/test_result";
+import { Popup } from "../element/popup_message";
+import { DeveloperMode } from "../define/developer_mode";
+import { CalculatedSwordDB } from "../define/calculated_sword_db";
+import { ScreenDrawingContextType } from "../context/rendering/screen_drawing_context";
+import { Managers } from "../manager/manager";
+import { StatID } from "../manager/stat_manager";
 
 export interface MainScreenActions {
     onUpgrade: () => void;
@@ -24,34 +21,25 @@ export interface MainScreenActions {
 
 export class MainScreenEventController implements MainScreenActions {
 
-    private readonly _swordDB: CalculatedSwordDB;
-
     constructor(
-        _swordDB: SwordDB,
-        private readonly _swordManager: SwordManager,
-        private readonly _inventoryManager: InventoryManager,
-        private readonly _statManager: StatManager,
-        private readonly _screenManager: ScreenManager,
-        private readonly _mainScreen: MainScreen,
-        private readonly _developerMode: DeveloperMode,
-    ) {
-        this._swordDB = new CalculatedSwordDB(_swordDB, _swordManager, _statManager);
-    }
+        private readonly _swordDB: CalculatedSwordDB,
+        private readonly _managers: Managers
+    ) { }
 
     private updateSword(sword: Sword) {
 
-        if(!this._swordManager.isFound(sword.index)) {
-            this._swordManager.update({
+        if(!this._managers.swordManager.isFound(sword.index)) {
+            this._managers.swordManager.update({
                 type: SwordUpdateContextType.FINDING_NEW_SWORD_UPDATE,
                 index: sword.index
             });
 
-            this._statManager.update({
+            this._managers.statManager.update({
                 type: StatUpdateContextType.GETTING_STAT_POINT
             });
         }
 
-        this._swordManager.update({
+        this._managers.swordManager.update({
             type: SwordUpdateContextType.SWORD_CHANGE,
             maxUpgradableIndex: this._swordDB.maxUpgradableIndex,
             sword: sword
@@ -60,18 +48,18 @@ export class MainScreenEventController implements MainScreenActions {
     }
 
     private onGreatSuccess(testResult: SwordTestResult1) {
-        this._screenManager.update({
+        this._managers.screenManager.update({
             type: ScreenDrawingContextType.GOD_HAND_CONTEXT,
             newSwordIndex: testResult.resultSwordIdx
         });
         if(testResult.resultSwordIdx >= this._swordDB.maxUpgradableIndex)
-            this._screenManager.update({
+            this._managers.screenManager.update({
                 type: ScreenDrawingContextType.GAME_END_CONTEXT
             });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.resultSwordIdx));
 
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_UPGRADE,
             name: testResult.oldSword.name,
             cost: testResult.oldSword.cost
@@ -80,13 +68,13 @@ export class MainScreenEventController implements MainScreenActions {
 
     private onSuccess(testResult: SwordTestResult1) {
         if(testResult.resultSwordIdx >= this._swordDB.maxUpgradableIndex)
-            this._screenManager.update({
+            this._managers.screenManager.update({
                 type: ScreenDrawingContextType.GAME_END_CONTEXT
             });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(testResult.resultSwordIdx));
 
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_UPGRADE,
             name: testResult.oldSword.name,
             cost: testResult.oldSword.cost
@@ -98,21 +86,21 @@ export class MainScreenEventController implements MainScreenActions {
             piece => piece.drop()
         ).filter(piece => piece.count > 0);
 
-        this._screenManager.update({
+        this._managers.screenManager.update({
             type: ScreenDrawingContextType.INVALIDATION_CONTEXT,
             pieces: dropped_pieces
         });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
 
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_BREAK,
             name: testResult.result.name,
             cost: testResult.result.cost,
             pieces: dropped_pieces
         });
 
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_RESTORE,
             name: testResult.result.name,
             cost: testResult.result.cost
@@ -125,18 +113,18 @@ export class MainScreenEventController implements MainScreenActions {
             piece => piece.drop()
         ).filter(piece => piece.count > 0);
 
-        this._screenManager.update({
+        this._managers.screenManager.update({
             type: ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT,
             sword: testResult.result,
             loss: this._swordDB.calculateLoss(testResult.result.index),
             pieces: dropped_pieces,
-            havingRepairPaper: this._inventoryManager.getRepairPaper(),
+            havingRepairPaper: this._managers.inventoryManager.getRepairPaper(),
             requiredRepairPaper: testResult.result.requiredRepairs,
             onRepair: (sword: Sword, popup: Popup) => this.onRepair(sword, popup),
             onInit: (popup: Popup) => this.onInit(popup)
         })
         
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_BREAK,
             name: testResult.result.name,
             cost: testResult.result.cost,
@@ -146,14 +134,14 @@ export class MainScreenEventController implements MainScreenActions {
 
     public onUpgrade = () => {
 
-        const sword = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
-        const testResult = this._swordManager.test(sword, this._swordDB.maxUpgradableIndex, this._inventoryManager, this._statManager, this._developerMode);
+        const sword = this._swordDB.getCalculatedSwordbyIndex(this._managers.swordManager.currentSwordIndex);
+        const testResult = this._managers.swordManager.test(sword, this._swordDB.maxUpgradableIndex, this._managers.inventoryManager.getMoney(), this._managers.statManager.calculate(StatID.GOD_HAND), this._managers.statManager.calculate(StatID.INVALIDATED_SPHERE));
         
         switch(testResult.type) {
         case SwordTestResultType.REJECTED_BY_MAX_UPGRADE: 
-            this._screenManager.update({ type: ScreenDrawingContextType.MAX_UPGRADE_CONTEXT }); break;
+            this._managers.screenManager.update({ type: ScreenDrawingContextType.MAX_UPGRADE_CONTEXT }); break;
         case SwordTestResultType.REJECTED_BY_MONEY_LACK:
-            this._screenManager.update({ type: ScreenDrawingContextType.MONEY_LACK_CONTEXT }); break;
+            this._managers.screenManager.update({ type: ScreenDrawingContextType.MONEY_LACK_CONTEXT }); break;
         case SwordTestResultType.GREAT_SUCCESS: this.onGreatSuccess(testResult); break;
         case SwordTestResultType.SUCCESS: this.onSuccess(testResult); break;
         case SwordTestResultType.FAIL_BUT_INVALIDATED: this.onFailButInvalidated(testResult); break;
@@ -163,9 +151,9 @@ export class MainScreenEventController implements MainScreenActions {
 
     public onSell = () => {
 
-        const sword = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);;
+        const sword = this._swordDB.getCalculatedSwordbyIndex(this._managers.swordManager.currentSwordIndex);;
     
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.SWORD_SELL,
             name: sword.name,
             price: sword.price
@@ -176,9 +164,9 @@ export class MainScreenEventController implements MainScreenActions {
 
     public onSave = () => {
     
-        this._inventoryManager.update({
+        this._managers.inventoryManager.update({
             type: InventoryUpdateContextType.ITEM_SAVE,
-            item: this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex).toItem()
+            item: this._swordDB.getCalculatedSwordbyIndex(this._managers.swordManager.currentSwordIndex).toItem()
         });
 
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
@@ -186,8 +174,8 @@ export class MainScreenEventController implements MainScreenActions {
 
     public onRepair = (sword: Sword, popup: Popup) => {
     
-        if(this._inventoryManager.hasRepairPaper(sword.requiredRepairs)) {
-            this._inventoryManager.update({
+        if(this._managers.inventoryManager.hasRepairPaper(sword.requiredRepairs)) {
+            this._managers. inventoryManager.update({
                 type: InventoryUpdateContextType.ITEM_SAVE,
                 item: new RepairPaperItem(sword.requiredRepairs)
             });

@@ -1,7 +1,7 @@
-import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context";
+import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context";
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context";
-import { MainScreenActions } from "../../event/main_screen_event_controller";
-import { $, invisible, setOnClick, visible, write } from "../../other/element_controller";
+import { MainScreenActions } from "../../event_controller/main_screen_event_controller";
+import { $, invisible, setOnClick, visible, write } from "../../element/element_controller";
 import { Screen } from "./screen";
 
 export class MainScreen extends Screen {

@@ -1,4 +1,4 @@
-import { Sword } from "./entity";
+import { Sword } from "./sword";
 
 export enum StatTestResult {
     REJECTED_BY_POINT_LACK,
@@ -6,7 +6,6 @@ export enum StatTestResult {
     SUCCESS,
     SUCCESS_AND_ALL_MAX
 }
-
 
 export type SwordTestResult = SwordTestResult0 | SwordTestResult1;
 

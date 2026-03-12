@@ -1,5 +1,11 @@
-import { getStatClass, StatID } from "./stat_manager.js";
-import { Color, Piece, PieceItem, Recipe, Stat, Sword, SwordItem } from "../other/entity.js";
+import { getStatClass, StatID } from "../manager/stat_manager.js";
+import { Color } from "../element/popup_info.js";
+import { Recipe } from "./object/recipe.js";
+import { Stat } from "./object/stat.js";
+import { Piece } from "./object/piece.js";
+import { Sword } from "./object/sword.js";
+import { SwordItem } from "./object/item.js";
+import { PieceItem } from "./object/item.js";
 
 export type StatIDs = "luckly_bracelet" | "god_hand" | "big_merchant" | "smith" | "invalidated_sphere" | "magic_hat"
 
@@ -47,7 +53,7 @@ interface Data {
     readonly stat?: Readonly<Record<StatID, Stat>>;
 }
 
-export class DataManager {
+export class DataReader {
 
     public async loadAllData(): Promise<Data | null> {
 

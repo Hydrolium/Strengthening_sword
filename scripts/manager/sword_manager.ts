@@ -1,10 +1,8 @@
-import { ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenDrawingContextType } from '../context/rendering/screen_drawing_context.js';
 import { SwordUpdateContext, SwordUpdateContextType } from '../context/updating/sword_update_context.js';
-import { Observer,  Sword } from '../other/entity.js';
-import { SwordTestResult, SwordTestResultType } from '../other/test_result.js';
-import { DeveloperMode } from '../screen/developer_mode.js';
-import { InventoryManager } from './inventory_manager.js';
-import { StatID, StatManager } from './stat_manager.js';
+import { Sword } from "../define/object/sword.js";
+import { Observer } from "../define/observer.js";
+import { SwordTestResult, SwordTestResultType } from '../define/object/test_result.js';
 
 export class SwordManager extends Observer {
 
@@ -48,13 +46,19 @@ export class SwordManager extends Observer {
         return this._foundSwordIndexes;
     }
 
-    public test(sword: Sword, maxUpgradableIndex: number, inventoryManager: InventoryManager, statManager: StatManager, developerMode: DeveloperMode): SwordTestResult {
+    public test(
+        sword: Sword,
+        maxUpgradableIndex: number,
+        havingMoney: number,
+        godHandProb: number,
+        invalidatedSphereProb: number
+    ): SwordTestResult {
 
         if(this._currentSwordIndex >= maxUpgradableIndex) return {type: SwordTestResultType.REJECTED_BY_MAX_UPGRADE, result: sword};
-        if(!inventoryManager.hasMoney(sword.cost)) return {type: SwordTestResultType.REJECTED_BY_MONEY_LACK, result: sword};
+        if(havingMoney < sword.cost) return {type: SwordTestResultType.REJECTED_BY_MONEY_LACK, result: sword};
 
-        if(developerMode.alwaysSuccess || Math.random() < sword.prob) {
-            if(Math.random() < statManager.calculate(StatID.GOD_HAND)) {
+        if(Math.random() < sword.prob) {
+            if(Math.random() < godHandProb) {
                 return {
                     type: SwordTestResultType.GREAT_SUCCESS,
                     resultSwordIdx: Math.min(this._currentSwordIndex + 2, maxUpgradableIndex),
@@ -64,7 +68,7 @@ export class SwordManager extends Observer {
                 return {type: SwordTestResultType.SUCCESS, resultSwordIdx: this._currentSwordIndex + 1, oldSword: sword};
             }
         } else {
-            if(Math.random() < statManager.calculate(StatID.INVALIDATED_SPHERE)/100 ) {
+            if(Math.random() < invalidatedSphereProb ) {
                 return {type: SwordTestResultType.FAIL_BUT_INVALIDATED, result: sword};
             } else return {type: SwordTestResultType.FAIL, result: sword};
         }

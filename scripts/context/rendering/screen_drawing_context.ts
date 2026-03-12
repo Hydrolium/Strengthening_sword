@@ -1,6 +1,12 @@
-import { PieceItem, Recipe, StatInfo, StorageInfo, Sword, SwordInfoByPiece, SwordItem } from "../../other/entity";
-import { Popup } from "../../popup/popup_message";
+import { Recipe } from "../../define/object/recipe";
+import { StatInfo } from "../../define/object/stat";
+import { SwordInfoByPiece } from "../../define/object/sword";
+import { SwordItem } from "../../define/object/item";
+import { PieceItem } from "../../define/object/item";
+import { StorageInfo } from "../../define/storage";
+import { Popup } from "../../element/popup_message";
 import { InventoryUpdateContextType } from "../updating/inventory_update_context";
+import { Sword } from "../../define/object/sword";
 
 export enum ScreenDrawingContextType {
 
@@ -9,6 +15,8 @@ export enum ScreenDrawingContextType {
     INVENTORY_SCREEN_RENDERING_CONTEXT = "INVENTORY_SCREEN_RENDERING_CONTEXT",
     INFORMATION_SCREEN_RENDERING_CONTEXT = "INFORMATION_SCREEN_RENDERING_CONTEXT",
     STAT_SCREEN_RENDERING_CONTEXT = "STAT_SCREEN_RENDERING_CONTEXT",
+
+    MAKING_SCREEN_ANIMATING_CONTEXT = "MAKING_SCREEN_ANIMATING_CONTEXT",
 
     RECORD_DISPLAY_RENDERING_CONTEXT = "RECORD_DISPLAY_RENDERING_CONTEXT",
     MONEY_DISPLAY_RENDERING_CONTEXT = "MONEY_DISPLAY_RENDERING_CONTEXT",
@@ -30,7 +38,7 @@ export enum ScreenDrawingContextType {
     GAME_ALL_STAT_CONTEXT = "GAME_ALL_STAT_CONTEXT"
 }
 
-export type ScreenDrawingContext = MainScreenRenderingContext | MakingScreenRenderingContext | InventoryScreenRenderingContext | InformationScreenRenderingContext | StatScreenRenderingContext | RecordStorageRenderingContext0 | RecordStorageRenderingContext1 | RecordStorageRenderingContext2 | RecordStorageRenderingContext3 | RecordStorageRenderingContext4 | MoneyDisplayRenderingContext | UpgradeFailureContext | MaxUpgradeContext | MoneyLackContext | InvalidationContext | GodHandContext | GameEndContext | SwordInfoContext | AskingSwordItemBreakContext | SwordItemBreakedContext | AskingSwordItemSellContext | WherePieceDroppedContext | SwordCraftingContext | MaxStatContext | StatPointLackContext | GameAllStatContext; 
+export type ScreenDrawingContext = MainScreenRenderingContext | MakingScreenRenderingContext | InventoryScreenRenderingContext | InformationScreenRenderingContext | StatScreenRenderingContext | RecordStorageRenderingContext0 | RecordStorageRenderingContext1 | RecordStorageRenderingContext2 | RecordStorageRenderingContext3 | RecordStorageRenderingContext4 | MoneyDisplayRenderingContext | MakingScreenAnimatingContext | UpgradeFailureContext | MaxUpgradeContext | MoneyLackContext | InvalidationContext | GodHandContext | GameEndContext | SwordInfoContext | AskingSwordItemBreakContext | SwordItemBreakedContext | AskingSwordItemSellContext | WherePieceDroppedContext | SwordCraftingContext | MaxStatContext | StatPointLackContext | GameAllStatContext; 
 
 export const popupDrawingTypes = [
     ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT,
@@ -91,6 +99,13 @@ export interface StatScreenRenderingContext {
     readonly statPoint: number;
     readonly stats: readonly StatInfo[];
 
+}
+
+export interface MakingScreenAnimatingContext {
+    readonly type: ScreenDrawingContextType.MAKING_SCREEN_ANIMATING_CONTEXT;
+
+    readonly speed: number;
+    readonly onFinish: () => void;
 }
 
 export enum MoneyChangeReason {

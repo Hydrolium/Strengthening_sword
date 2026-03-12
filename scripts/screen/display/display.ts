@@ -1,4 +1,4 @@
-import { ScreenDrawingContext } from "../../context/rendering/screen_rendering_context";
+import { ScreenDrawingContext } from "../../context/rendering/screen_drawing_context";
 import { ScreenShowingContext } from "../../context/rendering/screen_showing_context";
 import { Refreshable } from "../refreshable";
 import { MoneyDisplay } from "./money_display";
@@ -15,7 +15,7 @@ export abstract class Display implements Refreshable {
 
 }
 
-export interface Display {
+export interface Displays {
     readonly moneyDisplay: MoneyDisplay,
     readonly popupDisplay: PopupDisplay,
     readonly recordDisplay: RecordDisplay

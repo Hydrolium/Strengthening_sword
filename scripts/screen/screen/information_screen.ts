@@ -1,8 +1,9 @@
-import { $, createElementWith, createImageWithSrc, write } from "../../other/element_controller.js";
-import { SwordItem, UnknownItem } from "../../other/entity.js";
-import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context.js";
+import { $, createElementWith, createImageWithSrc, write } from "../../element/element_controller.js";
+import { UnknownItem } from "../../define/object/item.js";
+import { SwordItem } from "../../define/object/item.js";
+import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context.js";
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context.js";
-import { InformationScreenActions } from "../../event/information_screen_event_controller.js";
+import { InformationScreenActions } from "../../event_controller/information_screen_event_controller.js";
 import { Screen } from "./screen.js";
 
 export class InformationScreen extends Screen {

@@ -1,6 +1,5 @@
-import { ScreenDrawingContext } from "../../context/rendering/screen_context";
-import { ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context";
-import { $ } from "../../other/element_controller";
+import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context";
+import { $ } from "../../element/element_controller";
 import { Keyframes } from "../refreshable";
 import { Display } from "./display";
 

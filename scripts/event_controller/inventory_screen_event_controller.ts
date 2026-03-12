@@ -1,16 +1,11 @@
-import { ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
+import { ScreenDrawingContextType } from "../context/rendering/screen_drawing_context";
 import { ScreenShowingContextType } from "../context/rendering/screen_showing_context";
 import { InventoryUpdateContextType } from "../context/updating/inventory_update_context";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context";
-import { InventoryManager } from "../manager/inventory_manager";
-import { ScreenManager } from "../manager/screen_manager";
-import { StatManager } from "../manager/stat_manager";
-import { SwordManager } from "../manager/sword_manager";
-import { PieceItem, SwordItem } from "../other/entity";
-import { SwordDB } from "../db/sword_db";
-import { InventoryScreen } from "../screen/screen/inventory_screen";
-import { MainScreen } from "../screen/screen/main_screen";
-import { CalculatedSwordDB } from "../db/calculated_sword_db";
+import { SwordItem } from "../define/object/item";
+import { PieceItem } from "../define/object/item";
+import { CalculatedSwordDB } from "../define/calculated_sword_db";
+import { Managers } from "../manager/manager";
 
 export interface InventoryScreenActions {
     onSwordItemSell: (swordItem: SwordItem) => void;
@@ -22,30 +17,21 @@ export interface InventoryScreenActions {
 
 export class InventoryScreenEventController implements InventoryScreenActions { 
 
-    private readonly _swordDB: CalculatedSwordDB;
-
     constructor(
-        _swordDB: SwordDB,
-        private readonly _swordManager: SwordManager,
-        private readonly _inventoryManager: InventoryManager,
-        _statManager: StatManager,
-        private readonly _screenManager: ScreenManager,
-        private readonly _mainScreen: MainScreen,
-        private readonly _inventoryScreen: InventoryScreen,
-    ) {
-        this._swordDB = new CalculatedSwordDB(_swordDB, _swordManager, _statManager);
-    }
+        private readonly _swordDB: CalculatedSwordDB,
+        private readonly _managers: Managers
+    ) { }
     
     public onSwordItemSell = (swordItem: SwordItem) => {
 
-        this._screenManager.update({
+        this._managers.screenManager.update({
             type: ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT,
             sword: this._swordDB.getCalculatedSwordbyId(swordItem.id),
             sellFunc: popup => {
 
-                if(this._inventoryManager.hasItem(swordItem)) {
+                if(this._managers.inventoryManager.hasItem(swordItem)) {
                     const sword = this._swordDB.getCalculatedSwordbyId(swordItem.id);
-                    this._inventoryManager.update({
+                    this._managers.inventoryManager.update({
                         type: InventoryUpdateContextType.SWORD_ITEM_SELL,
                         id: sword.id,
                         name: sword.name,
@@ -60,17 +46,17 @@ export class InventoryScreenEventController implements InventoryScreenActions {
 
     public onSwordItemBreak = (swordItem: SwordItem) => {
 
-        this._screenManager.update({
+        this._managers.screenManager.update({
             type: ScreenDrawingContextType.ASKING_SWORD_ITEM_BREAK_CONTEXT,
             sword: this._swordDB.getCalculatedSwordbyId(swordItem.id),
             breakFunc: () => {
 
                 let pieceItems: PieceItem[] = [];
-                if(this._inventoryManager.hasItem(swordItem)) {
+                if(this._managers.inventoryManager.hasItem(swordItem)) {
         
                     pieceItems = this._swordDB.getCalculatedSwordbyId(swordItem.id).pieces.map(piece => piece.drop()).filter(pieceItem => pieceItem.count > 0);
         
-                    this._inventoryManager.update({
+                    this._managers.inventoryManager.update({
                         type: InventoryUpdateContextType.SWORD_ITEM_BREAK,
                         swordItem: swordItem,
                         pieceItems: pieceItems
@@ -83,25 +69,25 @@ export class InventoryScreenEventController implements InventoryScreenActions {
 
     public onSwordSwap = (swordItem: SwordItem) => {
     
-        if(this._inventoryManager.hasItem(swordItem)) {
+        if(this._managers.inventoryManager.hasItem(swordItem)) {
 
-            const sword = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
+            const sword = this._swordDB.getCalculatedSwordbyIndex(this._managers.swordManager.currentSwordIndex);
 
-            this._inventoryManager.update({
+            this._managers.inventoryManager.update({
                 type: InventoryUpdateContextType.SWORD_ITEM_SWAP,
                 swordItem: swordItem,
                 sword: sword
             });
             
-            this._swordManager.update({
+            this._managers.swordManager.update({
                 type: SwordUpdateContextType.SWORD_CHANGE,
                 maxUpgradableIndex: this._swordDB.maxUpgradableIndex,
                 sword: this._swordDB.getCalculatedSwordbyId(swordItem.id)
             });
 
-            const cs = this._swordDB.getCalculatedSwordbyIndex(this._swordManager.currentSwordIndex);
+            const cs = this._swordDB.getCalculatedSwordbyIndex(this._managers.swordManager.currentSwordIndex);
 
-            this._screenManager.update({
+            this._managers.screenManager.update({
                 type: ScreenShowingContextType.MAIN_SCREEN_SHOWING_CONTEXT,
                 renderingContext: {
                     type: ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT,
@@ -113,11 +99,11 @@ export class InventoryScreenEventController implements InventoryScreenActions {
     }
 
     public onSwordsByPieceSearch = (pieceItem: PieceItem) => {
-        this._screenManager.update({
+        this._managers.screenManager.update({
             type: ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT,
             pieceItem: pieceItem,
             swords: this._swordDB.getCalculatedSwordsByPieceId(pieceItem.id),
-            founds: this._swordManager.getFoundSwordIndexes()
+            founds: this._managers.swordManager.getFoundSwordIndexes()
         });
     }
 }

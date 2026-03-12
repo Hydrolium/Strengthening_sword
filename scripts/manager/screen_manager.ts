@@ -1,7 +1,7 @@
 import { ScreenContext } from "../context/rendering/screen_context";
-import { ScreenDrawingContextType } from "../context/rendering/screen_rendering_context";
+import { ScreenDrawingContextType } from "../context/rendering/screen_drawing_context";
 import { isScreenShowingContext, ScreenShowingContextType } from "../context/rendering/screen_showing_context";
-import { Observer } from "../other/entity";
+import { Observer } from "../define/observer";
 
 export class ScreenManager extends Observer {
 
@@ -11,6 +11,10 @@ export class ScreenManager extends Observer {
         ScreenShowingContextType.INVENTORY_SCREEN_SHOWING_CONTEXT,
         ScreenShowingContextType.MAKING_SCREEN_SHOWING_CONTEXT,
         ScreenShowingContextType.STAT_SCREEN_SHOWING_CONTEXT,
+
+        ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT,
+        ScreenDrawingContextType.MAKING_SCREEN_ANIMATING_CONTEXT,
+
         ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT,
         ScreenDrawingContextType.MAX_UPGRADE_CONTEXT,
         ScreenDrawingContextType.MONEY_LACK_CONTEXT,

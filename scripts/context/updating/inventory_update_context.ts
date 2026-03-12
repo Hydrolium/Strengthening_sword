@@ -1,4 +1,7 @@
-import { PieceItem, RepairPaperItem, Sword, SwordItem } from "../../other/entity";
+import { Sword } from "../../define/object/sword";
+import { RepairPaperItem } from "../../define/object/item";
+import { SwordItem } from "../../define/object/item";
+import { PieceItem } from "../../define/object/item";
 
 export enum InventoryUpdateContextType {
     SYSTEM_MONEY_GIFT = "SYSTEM_MONEY_GIFT",

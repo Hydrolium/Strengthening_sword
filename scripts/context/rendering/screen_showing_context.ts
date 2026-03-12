@@ -1,5 +1,5 @@
 import { ScreenContext } from "./screen_context";
-import { InformationScreenRenderingContext, InventoryScreenRenderingContext, MainScreenRenderingContext, MakingScreenRenderingContext, StatScreenRenderingContext } from "./screen_rendering_context";
+import { InformationScreenRenderingContext, InventoryScreenRenderingContext, MainScreenRenderingContext, MakingScreenRenderingContext, StatScreenRenderingContext } from "./screen_drawing_context";
 
 export enum ScreenShowingContextType {
 

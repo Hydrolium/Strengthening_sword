@@ -1,8 +1,14 @@
-import { MakingScreenRenderingContext, ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context.js";
+import { MakingScreenRenderingContext, ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context.js";
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context.js";
-import { MakingScreenActions } from "../../event/making_screen_event_controller.js";
-import { $, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../../other/element_controller.js";
-import { Item, MoneyItem, PieceItem, Recipe, RepairPaperItem,  SwordItem, UnknownItem } from "../../other/entity.js";
+import { MakingScreenActions } from "../../event_controller/making_screen_event_controller.js";
+import { $, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../../element/element_controller.js";
+import { Recipe } from "../../define/object/recipe.js";
+import { UnknownItem } from "../../define/object/item.js";
+import { RepairPaperItem } from "../../define/object/item.js";
+import { MoneyItem } from "../../define/object/item.js";
+import { SwordItem } from "../../define/object/item.js";
+import { PieceItem } from "../../define/object/item.js";
+import { Item } from "../../define/object/item.js";
 import { Keyframes } from "../refreshable.js";
 import { Screen } from "./screen.js";
 
@@ -165,6 +171,11 @@ export class MakingScreen extends Screen {
 
     protected render(context: ScreenDrawingContext) {
 
+        if(context.type == ScreenDrawingContextType.MAKING_SCREEN_ANIMATING_CONTEXT) {
+            this.animateLoading(context.speed, context.onFinish);
+            return;
+        }
+
         if(context.type != ScreenDrawingContextType.MAKING_SCREEN_RENDERING_CONTEXT) return;
     
         if(this._elements.makingRecipes?.checked) this._elements.recipes?.forEach(element => element.classList.remove("active"));
@@ -173,13 +184,12 @@ export class MakingScreen extends Screen {
         this._elements.repairRecipes?.replaceChildren(...this.makeRepairPaperPage(context.repairPaperRecipes, context));
         this._elements.swordRecipes?.replaceChildren(...this.makeSwordPage(context.swordRecipes, context));
 
-
         setOnClick(this._elements.makingRecipes, () => this._actions?.onClickListButton());
         setOnClick(this._elements.makingSwords, () => this._actions?.onClickListButton());
 
     }
 
-    public animateLoading(speed: number, onfinish: () => void) {
+    private animateLoading(speed: number, onFinish: () => void) {
 
         const element_loadding = $<HTMLDivElement>("#maker-window-lodding");
         const element_hammer = $<HTMLDivElement>("#maker-window-lodding div");
@@ -187,7 +197,7 @@ export class MakingScreen extends Screen {
         display(element_loadding);
         element_loadding.animate(Keyframes.loadingKef, {duration: speed/2});
         element_hammer.animate(Keyframes.hammerKef, {duration: speed, fill: "both"}).onfinish = () => {
-            onfinish();
+            onFinish();
             element_loadding.animate(Keyframes.loadingKef, {duration: speed/2, direction: "reverse"}).onfinish = () => hide(element_loadding);
         };
     }

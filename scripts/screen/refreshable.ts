@@ -1,4 +1,4 @@
-import { ScreenDrawingContext } from "../context/rendering/screen_rendering_context";
+import { ScreenDrawingContext } from "../context/rendering/screen_drawing_context";
 import { ScreenShowingContext } from "../context/rendering/screen_showing_context";
 
 export class Keyframes {

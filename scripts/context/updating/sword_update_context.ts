@@ -1,4 +1,4 @@
-import { Sword } from "../../other/entity";
+import { Sword } from "../../define/object/sword";
 
 export enum SwordUpdateContextType {
     SWORD_CHANGE = "SWORD_CHANGE",

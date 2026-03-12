@@ -1,8 +1,8 @@
-import {  ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context.js";
+import {  ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context.js";
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context.js";
-import { StatScreenActions } from "../../event/stat_screen_event_controller.js";
-import { $, createElement, createElementWith, createImageWithSrc, write } from "../../other/element_controller.js";
-import { StatInfo } from "../../other/entity.js";
+import { StatScreenActions } from "../../event_controller/stat_screen_event_controller.js";
+import { $, createElement, createElementWith, createImageWithSrc, write } from "../../element/element_controller.js";
+import { StatInfo } from "../../define/object/stat.js";
 import { Screen } from "./screen.js";
 
 export class StatScreen extends Screen {

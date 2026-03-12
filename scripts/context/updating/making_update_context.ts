@@ -1,4 +1,7 @@
-import { PieceItem, Recipe, StorageInfo, SwordItem } from "../../other/entity";
+import { Recipe } from "../../define/object/recipe";
+import { SwordItem } from "../../define/object/item";
+import { PieceItem } from "../../define/object/item";
+import { StorageInfo } from "../../define/storage";
 
 export enum MakingUpdateContextType {
     MAKING = "MAKING"

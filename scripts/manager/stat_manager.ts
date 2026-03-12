@@ -1,7 +1,10 @@
-import { ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenDrawingContextType } from '../context/rendering/screen_drawing_context.js';
 import { StatUpdateContext, StatUpdateContextType } from '../context/updating/stat_update_context.js';
-import { Observer, Stat, StatClass, StatInfo } from '../other/entity.js';
-import { StatTestResult } from '../other/test_result.js';
+import { StatClass } from "../define/object/stat.js";
+import { Stat } from "../define/object/stat.js";
+import { StatInfo } from "../define/object/stat.js";
+import { Observer } from "../define/observer.js";
+import { StatTestResult } from '../define/object/test_result.js';
 
 export class LuckyBracelet extends Stat {
     public calculate(initialProb: number): number {
@@ -25,7 +28,7 @@ export class Smith extends Stat {
 }
 export class InvalidatedSphere extends Stat {
     public calculate(): number {
-        return this.getCurrentValue();
+        return this.getCurrentValue()/100;
     }
 }
 export class MagicHat extends Stat {

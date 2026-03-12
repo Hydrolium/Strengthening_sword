@@ -1,6 +1,6 @@
-import { $, createElement } from "../other/element_controller.js";
-import { Color } from "../other/entity.js";
-import { Popup } from "../popup/popup_message.js";
+import { $, createElement } from "../element/element_controller.js";
+import { Color } from "../element/popup_info.js";
+import { Popup } from "../element/popup_message.js";
 
 export class DeveloperMode {
     private _touch = 0;
@@ -43,7 +43,6 @@ export class DeveloperMode {
     private popupDeveloperModeMessage() {
         const popup = new Popup();
         popup.setTitle("개발자 모드", Color.DARK_BLUE);
-
 
         popup.addParagraphElement(
             this.makeCheckBox("골드 무한", this.infinityGold,

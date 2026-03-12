@@ -1,8 +1,11 @@
-import { AskingSwordItemBreakContext, AskingSwordItemSellContext, GameAllStatContext, GameEndContext, GodHandContext, InvalidationContext, MaxStatContext, MaxUpgradeContext, MoneyLackContext, ScreenDrawingContext, ScreenDrawingContextType, StatPointLackContext, SwordCraftingContext, SwordInfoContext, SwordItemBreakedContext, UpgradeFailureContext, WherePieceDroppedContext } from "../../context/rendering/screen_rendering_context";
-import { ColoredTextElement } from "../../other/colored_text";
-import { createElementWith, createImageWithSrc } from "../../other/element_controller";
-import { Color, UnknownItem } from "../../other/entity";
-import { ButtonType, HoverEffect, Popup } from "../../popup/popup_message";
+import { AskingSwordItemBreakContext, AskingSwordItemSellContext, GameAllStatContext, GameEndContext, GodHandContext, InvalidationContext, MaxStatContext, MaxUpgradeContext, MoneyLackContext, ScreenDrawingContext, ScreenDrawingContextType, StatPointLackContext, SwordCraftingContext, SwordInfoContext, SwordItemBreakedContext, UpgradeFailureContext, WherePieceDroppedContext } from "../../context/rendering/screen_drawing_context";
+import { ColoredTextElement } from "../../element/colored_text";
+import { createElementWith, createImageWithSrc } from "../../element/element_controller";
+import { Color } from "../../element/popup_info";
+import { UnknownItem } from "../../define/object/item";
+import { Popup } from "../../element/popup_message";
+import { ButtonType } from "../../element/popup_info";
+import { HoverEffect } from "../../element/popup_info";
 import { Display } from "./display";
 
 export class PopupDisplay extends Display {

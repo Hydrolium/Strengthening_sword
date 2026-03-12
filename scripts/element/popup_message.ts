@@ -1,7 +1,7 @@
-import { ColoredTextElement } from "../other/colored_text.js";
-import { $, createElement, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../other/element_controller.js";
-import { Color } from "../other/entity.js";
+import { ColoredTextElement } from "./colored_text.js";
+import { $, createElement, createElementWith, createImageWithSrc, display, hide } from "./element_controller.js";
 import { Keyframes } from "../screen/refreshable.js";
+import { ButtonType, Color, HoverEffect } from "./popup_info.js";
 
 export class Popup {
 
@@ -121,19 +121,4 @@ export class Popup {
     }
 }
 
-export enum HoverEffect {
-    ROTATE = "rotate",
-    INCREASE = "increase",
-    TURNING = "turning",
-    DECREASE = "decrease"
-}
 
-export enum ButtonType {
-    CLOSE = "close",
-    MAKE = "make",
-    REGAME = "regame",
-    REPAIR = "repair",
-    SAVE = "save",
-    SELL = "sell",
-    UPGRADE = "upgrade"
-}

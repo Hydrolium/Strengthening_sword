@@ -1,6 +1,10 @@
-import { ScreenDrawingContextType } from '../context/rendering/screen_rendering_context.js';
+import { ScreenDrawingContextType } from '../context/rendering/screen_drawing_context.js';
 import { MakingUpdateContext } from '../context/updating/making_update_context.js';
-import { Observer, Item, Recipe, MoneyItem, RepairPaperItem } from '../other/entity.js';
+import { Recipe } from "../define/object/recipe.js";
+import { RepairPaperItem } from "../define/object/item.js";
+import { MoneyItem } from "../define/object/item.js";
+import { Item } from "../define/object/item.js";
+import { Observer } from "../define/observer.js";
 
 export class MakingManager extends Observer {
 

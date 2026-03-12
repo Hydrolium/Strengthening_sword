@@ -1,8 +1,11 @@
-import { $, createElementWith, createImageWithSrc } from "../../other/element_controller";
-import { Item, PieceItem, RepairPaperItem, SwordItem } from "../../other/entity";
-import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_rendering_context";
+import { $, createElementWith, createImageWithSrc } from "../../element/element_controller";
+import { RepairPaperItem } from "../../define/object/item";
+import { SwordItem } from "../../define/object/item";
+import { PieceItem } from "../../define/object/item";
+import { Item } from "../../define/object/item";
+import { ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context";
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context";
-import { InventoryScreenActions } from "../../event/inventory_screen_event_controller";
+import { InventoryScreenActions } from "../../event_controller/inventory_screen_event_controller";
 import { Screen } from "./screen";
 
 export class InventoryScreen extends Screen {

@@ -1,5 +1,5 @@
 import { createElementWith } from "./element_controller";
-import { Color } from "./entity";
+import { Color } from "./popup_info";
 
 export class ColoredTextElement {
     private _elements: HTMLElement[] = [];
