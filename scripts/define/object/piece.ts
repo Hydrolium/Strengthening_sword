@@ -6,6 +6,7 @@ export class Piece {
         public readonly id: string,
         public readonly name: string,
         public readonly imgSrc: string,
+        public readonly description: string,
         public readonly prob: number,
         public readonly maxDrop: number = 1) { }
 

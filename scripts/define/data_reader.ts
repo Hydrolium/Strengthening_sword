@@ -25,6 +25,11 @@ interface SwordData {
     readonly pieces: readonly PieceData[];
 }
 
+interface PieceInfoData {
+    readonly id: string;
+    readonly description: string;
+}
+
 interface StatData {
     readonly id: StatIDs;
     readonly description: string;
@@ -59,27 +64,29 @@ export class DataReader {
 
         try {
 
-            const [pathRes, swordRes, recipeRes, statRes, koreanRes] = await Promise.all([
+            const [pathRes, swordRes, pieceRes, recipeRes, statRes, koreanRes] = await Promise.all([
                 fetch('data/path.json'),
                 fetch('data/sword.json'),
+                fetch('data/piece.json'),
                 fetch('data/recipes.json'),
                 fetch('data/stat.json'),
                 fetch('data/korean.json')
             ]);
 
-            if(!pathRes.ok || !swordRes.ok || !recipeRes.ok || !statRes.ok || !koreanRes.ok) {
+            if(!pathRes.ok || !swordRes.ok || !pieceRes.ok || !recipeRes.ok || !statRes.ok || !koreanRes.ok) {
                 throw new Error("데이터 파일 로딩 실패");
             }
 
             const paths: Record<string, string> = await pathRes.json();
             const swords: SwordData[] = await swordRes.json();
+            const pieces: PieceInfoData[] = await pieceRes.json();
             const recipes: RecipeData[] = await recipeRes.json();
             const stats: StatData[] = await statRes.json();
             const koreans: Record<string, string> = await  koreanRes.json();
 
             return {
                 path: paths,
-                sword: this.convertSword(swords, paths, koreans),
+                sword: this.convertSword(swords, pieces, paths, koreans),
                 recipe: this.convertRecipe(recipes as any, paths, koreans),
                 stat: this.convertStat(stats as any, paths, koreans),
             };
@@ -90,15 +97,22 @@ export class DataReader {
         return null;
     }
 
-    private convertSword(swords: readonly SwordData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): readonly Sword[] {
+    private convertSword(
+        swords: readonly SwordData[],
+        pieces: readonly PieceInfoData[],
+        paths: Readonly<Record<string, string>>,
+        koreans: Readonly<Record<string, string>>): readonly Sword[] {
+
         return swords.map(
-                (sword, index) =>
-                    new Sword(
+                (sword, index) => {
+                    const pieceDescription = pieces.find(pid => pid.id == sword.id)?.description ?? "";
+                    return new Sword(
                         sword.id, index, koreans[sword.id], paths[sword.id], sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave,
                         sword.pieces.map(
-                            drop => new Piece(drop.id, koreans[drop.id], paths[drop.id], drop.prob, drop.max_drop)
+                            drop => new Piece(drop.id, koreans[drop.id], paths[drop.id], pieceDescription, drop.prob, drop.max_drop)
                         )
                     )
+                }
             );
     }
 

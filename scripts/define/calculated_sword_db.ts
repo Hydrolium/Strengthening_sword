@@ -39,7 +39,6 @@ export class CalculatedSwordDB {
         }
 
         this._pieceInfos = pieceInfos;
-
     }
 
     public getIndexById(id: string): number {
@@ -73,7 +72,7 @@ export class CalculatedSwordDB {
             this._statManager.calculate(StatID.BIG_MERCHANT, sword.price),
             sword.requiredRepairs,
             sword.canSave,
-            sword.pieces.map(piece => new Piece(piece.id, piece.name, piece.imgSrc, piece.prob, this._statManager.calculate(StatID.MAGIC_HAT, piece.maxDrop)))
+            sword.pieces.map(piece => new Piece(piece.id, piece.name, piece.imgSrc, piece.description, piece.prob, this._statManager.calculate(StatID.MAGIC_HAT, piece.maxDrop)))
         );
     }
 

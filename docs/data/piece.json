@@ -1,0 +1,130 @@
+[
+  {
+    "id": "watchful_wardstone",
+    "description": "안개를 걷어내고 승리의 시야를 밝히는 파수꾼의 증표"
+  },
+  {
+    "id": "giants_belf",
+    "description": "고대 거인들의 생명력이 깃든 튼튼한 가죽 띠"
+  },
+  {
+    "id": "forbidden_idol",
+    "description": "타락한 자들이 치유의 상징이라 읽컫는 불경한 조각상"
+  },
+  {
+    "id": "navori_quickblades",
+    "description": "쾌속의 검술의 정수가 담긴 전설 속 쌍검의 파편"
+  },
+  {
+    "id": "dorans_ring",
+    "description": "대장장이 도란이 초심자를 위해 벼려낸 균형 잡힌 반지"
+  },
+  {
+    "id": "ruby_crystal",
+    "description": "대지의 박동을 머금어 소지자의 혈색을 돌게 하는 붉은 원석"
+  },
+  {
+    "id": "elixir_of_sorcery",
+    "description": "한계를 돌파하는 마력을 주입하는 신비로운 보랏빛 비약"
+  },
+  {
+    "id": "broken_stopwatch",
+    "description": "찰나의 기적을 보여주고 이제는 수명을 다해 멈춰버린 기계 장치"
+  },
+  {
+    "id": "oblivion_orb",
+    "description": "상처가 아물지 않는 저주 술식이 새겨진 기괴한 고대 유물"
+  },
+  {
+    "id": "minion_dematerailizer",
+    "description": "미니언의 구조를 순식간에 분석하여 원초로 되돌리는 공학 도구"
+  },
+  {
+    "id": "bamis_cinder",
+    "description": "태고의 화산에서 가져온 주변을 서서히 불태우는 뜨거운 열기"
+  },
+  {
+    "id": "blasting_wand",
+    "description": "거친 마력을 폭발적으로 쏟아내도록 설계된 투박한 지팡이"
+  },
+  {
+    "id": "sapphire_crystal",
+    "description": "정신력 강화 비약의 재료로 쓰이는 신비로운 푸른 보석"
+  },
+  {
+    "id": "trinity_force",
+    "description": "고대 신의 세 가지 위대한 힘이 완벽하게 결합된 전장의 만능 무기"
+  },
+  {
+    "id": "quicksilver_sash",
+    "description": "모든 속박과 저주를 단숨에 풀어버리는 술식이 내장된 은빛 금속 띠"
+  },
+  {
+    "id": "guardians_orb",
+    "description": "폭풍 신의 시련에서 생존을 돕기 위해 제작된 축복받은 마력의 구체"
+  },
+  {
+    "id": "verdant_barrier",
+    "description": "해로운 마력을 부드럽게 튕겨내는 생명의 기운이 응축된 보호의 형상"
+  },
+  {
+    "id": "abyssal_mask",
+    "description": "마법 저항 의지를 꺾는다 알려진 심연의 공포가 형상화된 가면"
+  },
+  {
+    "id": "dark_seal",
+    "description": "승리의 영광과 패배의 파멸의 교훈이 새겨진 위험한 징표"
+  },
+  {
+    "id": "glacial_buckler",
+    "description": "혹한의 냉기로 벼려져 모든 공격을 튕겨내는 야만족의 단단한 방패"
+  },
+  {
+    "id": "aether_wisp",
+    "description": "형체없이 흘러다니는 몸을 공기처럼 가볍게 만드는 마력의 잔영"
+  },
+  {
+    "id": "tear_of_the_goddess",
+    "description": "태생부터 정해진 마력 한계량을 돌파시켜주는 여신의 축복이 내려진 보석"
+  },
+  {
+    "id": "blighting_jewel",
+    "description": "적의 마법 방어 체계를 부식시켜 파괴하는 붉길한 자줏빛 보석"
+  },
+  {
+    "id": "faerie_charm",
+    "description": "숲속 요정들이 손수 만든 미미하지만 끊임없는 마력의 원천"
+  },
+  {
+    "id": "rejuvenation_bead",
+    "description": "지친 몸의 회복을 돕는 은은한 생명력이 뿜어져 나오는 구슬"
+  },
+  {
+    "id": "axiom_arc",
+    "description": "죽음의 기운을 흡수하는 전설 속 사신이라 불리던 암살자의 유물"
+  },
+  {
+    "id": "evenshroud",
+    "description": "일몰의 기운으로 적을 무력화하고 고통을 연쇄시키는 갑옷"
+  },
+  {
+    "id": "kindlegem",
+    "description": "화염 속성 마력이 흘러나오는 꺼지지 않는 불씨"
+  },
+  {
+    "id": "spellthiefs_edge",
+    "description": "적의 마력을 훔쳐내기 위해 고안된 날카롭고 교활한 단검"
+  },
+  {
+    "id": "anathemas_chains",
+    "description": "대상을 향한 복수심과 비례하는 저주를 대상에게 내리는 악신의 편린"
+  },
+  {
+    "id": "commencing_stopwatch",
+    "description": "단 한번, 찰나의 시간을 멈춰 위협에서 벗어나게 하는 정밀 기계 장치"
+  },
+  {
+    "id": "refillable_potion",
+    "description": "마을의 맑은 샘물을 담으면 치유의 마력이 다시 차오르는 신기한 호리병"
+  }
+]

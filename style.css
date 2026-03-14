@@ -57,12 +57,18 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 }
 .swordbox .sword_img:hover {transform: scale(1.2);border-radius: 0;}
 
-.swordbox .infomation {display: flex;flex-direction: column;align-items: center;}
+.swordbox .infomation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: pre;
+}
 #sword-number {font-size: 1.75rem; color: var(--color-dark-gray);}
 #sword-number.isMax {color: var(--color-red);}
 #sword-name {font-size: 2.25rem; color: var(--color-gold);}
 #sword-prob{font-size: 1.25rem; color: var(--color-dark-gray);}
-#sword-cost, #sword-price {font-size: 1rem; color: var(--color-dark-gray);}
+#sword-info-1, #sword-info-2 {font-size: 1rem; color: var(--color-dark-gray);}
+
 .buttons {display: flex;justify-content: center;margin-top: 0.5rem;}
 .buttons.end_sort {width: 240px;justify-content: flex-end;}
 .buttons a {
@@ -140,7 +146,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .message .message_main .text .title.gold {color: var(--color-gold);}
 .message .message_main .text .title.dark_gray {color: var(--color-dark-gray);}
 .message .message_main .text .title.black {color: var(--color-black);}
-.message .message_main .text .subtitle {font-size: 1.75rem; color: var(--color-black)}
+.message .message_main .text .subtitle {font-size: 1.6rem; color: var(--color-black)}
 .message .message_main .text .paragraph {display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 1rem 0; padding: 1rem 0; width: 100%; border-bottom: var(--color-dark-gray) 1px solid; border-top: var(--color-dark-gray) 1px solid;}
 .message .message_main .text .paragraph p {margin:0.25rem; font-size: 1.4rem; color: var(--color-dark-gray);}
 .message .message_main .text .footer {margin: 1rem 0 0 0;font-size: 1.5rem;}
@@ -311,15 +317,29 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .stat_window main .stats {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;width: 100%;height: 80%;overflow: hidden scroll;}
 .stat_window main .stats .stat {display: flex;flex-direction: column;align-items: center;justify-content: space-between;width: 200px;height: 160px;margin: 10px 20px;}
 .stat_window main .stats .stat .icon {width: 70px;height: 70px;position: relative;cursor: pointer;}
-.stat_window main .stats .stat .icon img {width: 100%;height: 100%;border-radius: 50%;border: solid 5px;transition: all .3s;}
-.stat_window main .stats .stat.blue .icon img {border-color: var(--color-blue);}
-.stat_window main .stats .stat.red .icon img {border-color: var(--color-red);}
-.stat_window main .stats .stat.purple .icon img {border-color: var(--color-purple);}
-.stat_window main .stats .stat.green .icon img {border-color: var(--color-green);}
-.stat_window main .stats .stat.sky .icon img {border-color: var(--color-sky);}
-.stat_window main .stats .stat.navy .icon img {border-color: var(--color-navy);}
+.stat_window main .stats .stat .icon img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: solid 5px;
+  transition: all .3s;
+  border-color: var(--color-black);
+}
 .stat_window main .stats .stat .icon .stat_up {width: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);opacity: 0;transition: all .3s; color: var(--color-white);font-size: 1.2rem;text-shadow: -1px -1px 0px var(--color-black),-1px 1px 0px var(--color-black),1px 1px 0px var(--color-black),1px -1px 0px var(--color-black),-1px 0px 0px var(--color-black),1px 0px 0px var(--color-black),0px 1px 0px var(--color-black),0px -1px 0px var(--color-black);}
-.stat_window main .stats .stat .icon:hover img {filter: brightness(0.6);transform: scale(1.1);}
+.stat_window main .stats .stat .icon:hover img {filter: brightness(0.8);transform: scale(1.1);}
+
+.stat_window main .stats .stat.red .icon:hover img {border-color: var(--color-red);}
+.stat_window main .stats .stat.green .icon:hover img {border-color: var(--color-green);}
+.stat_window main .stats .stat.sky .icon:hover img {border-color: var(--color-sky);}
+.stat_window main .stats .stat.blue .icon:hover img {border-color: var(--color-blue);}
+.stat_window main .stats .stat.navy .icon:hover img {border-color: var(--color-navy);}
+.stat_window main .stats .stat.purple .icon:hover img {border-color: var(--color-purple);}
+.stat_window main .stats .stat.dark_blue .icon:hover img {border-color: var(--color-dark-blue);}
+.stat_window main .stats .stat.brown .icon:hover img {border-color: var(--color-brown);}
+.stat_window main .stats .stat.gold .icon:hover img {border-color: var(--color-gold);}
+.stat_window main .stats .stat.dark_gray .icon:hover img {border-color: var(--color-dark-gray);}
+.stat_window main .stats .stat.black .icon:hover img{border-color: var(--color-black);}
+
 .stat_window main .stats .stat .icon:active img {transform: scale(0.9);}
 .stat_window main .stats .stat .icon:hover .stat_up {opacity: 1;}
 .stat_window main .stats .stat .level {margin: 0.4rem 0;}
@@ -330,17 +350,23 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .stat_window main .stats .stat .level ul .point.active:hover ~ .point.active {transform: scale(1.2);}
 .stat_window main .stats .stat .info {border-radius: 5px;padding: 0 1rem;pointer-events: none;}
 .stat_window main .stats .stat .info .name {font-size: 1.2rem;}
-.stat_window main .stats .stat.blue .info .name {color: var(--color-blue);}
+
 .stat_window main .stats .stat.red .info .name {color: var(--color-red);}
-.stat_window main .stats .stat.purple .info .name {color: var(--color-purple);}
 .stat_window main .stats .stat.green .info .name {color: var(--color-green);}
 .stat_window main .stats .stat.sky .info .name {color: var(--color-sky);}
+.stat_window main .stats .stat.blue .info .name {color: var(--color-blue);}
 .stat_window main .stats .stat.navy .info .name {color: var(--color-navy);}
+.stat_window main .stats .stat.purple .info .name {color: var(--color-purple);}
+.stat_window main .stats .stat.dark_blue .info .name {color: var(--color-dark-blue);}
+.stat_window main .stats .stat.brown .info .name {color: var(--color-brown);}
+.stat_window main .stats .stat.gold .info .name {color: var(--color-gold);}
+.stat_window main .stats .stat.dark_gray .info .name {color: var(--color-dark-gray);}
+.stat_window main .stats .stat.black .info .name {color: var(--color-black);}
+
+
 .stat_window main .stats .stat .info .description {font-size: 1rem;color: var(--color-dark-gray);}
 .stat_window main .stats .stat .info .detail {font-size: 1rem;color: var(--color-light-gray);list-style: none;display: flex;justify-content: center;align-items: center;}
 .stat_window main .stats .stat .info .detail li:not(:first-child):before {content: ">";font-size: 1.1rem;color: var(--color-gray);margin: 0 0.2rem;}
 .stat_window main .stats .stat .info .detail li.active {color: var(--color-red);}
 #developer-mod-button {position: fixed;top: 0;right: 0;width: 20px;height: 20px;}
-input[type="checkbox"] {
-  accent-color: var(--color-blue);
-}
+input[type="checkbox"] {accent-color: var(--color-blue);}

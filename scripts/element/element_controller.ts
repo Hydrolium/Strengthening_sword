@@ -6,12 +6,8 @@ export function write(element: HTMLElement | undefined, text: any) {
     if (element) element.textContent = `${text}`;
 }
 
-export function visible(element?: HTMLElement) {
-    if(element) element.style.visibility = "visible";
-}
-
-export function invisible(element?: HTMLElement) {
-    if(element) element.style.visibility = "hidden";
+export function setVisibility(element: HTMLElement | undefined, visible: boolean) {
+    if(element) element.style.visibility = (visible) ? "visible" : "hidden";
 }
 
 export function createImageWithSrc(src: string, alt=""): HTMLImageElement {
