@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검 강화하기 게임 방법</title>
+  <link type="image/x-icon" rel="shortcut icon" href="images/ui/tutorial.png"/>
+  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon:400" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body ondragstart="return false">
+  <header class="main_header tutorial">
+    <h1>검 강화하기 게임 방법</h1>
+    <div class="toturial_button sky" onclick="window.close();">
+      <span>돌아가기</span>
+      <img src="images/swords/dagger.png" alt="tutorial">
+    </div>
+  </header>
+  <main class="main_main tutorial" id="tutorial-container">
+  </main>
+  <footer class="main_footer tutorial">
+    <ul>
+      <li><a id="main-game-button" onclick="setBody('tutorial-sword')"><div class="icon sword"><img src="images/ui/icons.png" alt="검강화" /></div>검강화</a><span class="tutorial_element small up right">검강화 화면으로 이동합니다.</span></li>
+      <li><a id="information-button" onclick="setBody('tutorial-information')"><div class="icon information"><img src="images/ui/icons.png" alt="검도감" /></div>검도감</a><span class="tutorial_element small up right">검도감 화면으로 이동합니다.</span></li>
+      <li><a id="inventory-button" onclick="setBody('tutorial-inventory')"><div class="icon inventory"><img src="images/ui/icons.png" alt="보관함" /></div>보관함</a><span class="tutorial_element small up right">보관함 화면으로 이동합니다.</span></li>
+      <li><a id="making-button" onclick="setBody('tutorial-making')"><div class="icon making"><img src="images/ui/icons.png" alt="제작소" /></div>제작소</a><span class="tutorial_element small up right">제작소 화면으로 이동합니다.</span></li>
+      <li><a id="stat-button" onclick="setBody('tutorial-stat')"><div class="icon stat"><img src="images/ui/icons.png" alt="강화소" /></div>강화소</a><span class="tutorial_element small up right">강화소 화면으로 이동합니다.</span></li>
+    </ul>
+    <div class="coinbox">보유자산: <span id="money-number">999999</span>원 <span id="money-change"></span>
+      <div id="money-record"><p class="record_title">최근 기록</p>
+        <div id="records">
+          <p>기본금 지급 +999999</p>
+        </div>
+      </div>
+      <span class="tutorial_element small up left">보유 자산이 표시됩니다.<br/>마우스를 올리면 최근 기록을 확인할 수 있습니다.</span>
+    </div>
+  </footer>
+  <template id="tutorial-main">
+    <div class="game_info_text">
+      <p>검 강화하기는 검을 강화하여 더 높은 단계의 검을 만들어가는 게임입니다.</p>
+      <p>게임은 크게 검강화, 검도감, 보관함, 제작소, 강화소로 구성되어 있습니다.</p>
+      <p>각 메뉴에 대한 자세한 설명은 하단의 메뉴 버튼을 클릭하여 확인할 수 있습니다.</p>
+      <p>각 요소에 대한 자세한 설명은 마우스를 올려 확인하세요.</p>
+    </div>
+  </template>
+  <template id="tutorial-sword">
+    <div class="window">
+      <header>
+        검강화
+        <p class="screen_info">게임이 진행되는 메인 화면</p>
+      </header>
+      <div class="swordbox">
+        <div class="sword_img_box">
+          <img id="sword-image" class="sword_img" src="images/swords/deaths_dance.png"/>
+          <span class="tutorial_element">검의 이미지가 표시되며,<br>클릭 시 상세 정보를 확인할 수 있습니다.</span>
+        </div>
+        <section class="infomation">
+          <p class="sword_number">999강<span class="tutorial_element up">검의 강화 횟수가 표시됩니다.</span></p>
+          <p class="sword_name">죽음의 무도<span class="tutorial_element up">검 이름이 표시됩니다.</span></p>
+          <p class="sword_prob">강화 성공 확률: 100%<span class="tutorial_element up">다음 단계 강화 성공 확률이 표시됩니다.</span></p>
+          <p class="sword_info">강화 비용: 1000000원<span class="tutorial_element up">강화 시 필요한 비용이 표시됩니다.</span></p>
+          <p class="sword_info">판매 가격: 2000000원<span class="tutorial_element up">판매 시 얻을 수 있는 금액이 표시됩니다.</span></p>
+        </section>
+        <div id="main-game-button" class="buttons end_sort">
+          <a class="brown tobottom decrease hide" id="save-button"><img src="images/ui/buttons/save.png" alt="보관하기" /><span>보관하기</span></a>
+          <a class="blue toleft rotate center" id="upgrade-button"><img src="images/ui/buttons/upgrade.png" alt="강화하기" /> <span>강화하기</span></a>
+          <a class="red increase hide" id="sell-button"><img src="images/ui/buttons/sell.png" alt="판매하기" /> <span>판매하기</span></a>
+          <span class="tutorial_element small up">보관하기: 검을 보관함에 보관한 뒤 0강부터 다시 시작합니다.<br/>강화하기: 검을 강화합니다. 실패 시 0강으로 초기화됩니다.<br/>판매하기: 검을 판매하고 0강부터 다시 시작합니다.</span>
+        </div>
+      </div>
+      <p class="tip">마우스를 올려 자세한 정보를 확인하세요.</p>
+    </div>
+  </template>
+  <template id="tutorial-information">
+    <div class="window sword_book_window">
+      <header>
+        검도감
+        <p class="screen_info">검의 정보를 확인할 수 있는 화면</p>
+      </header>
+      <main>
+        <header>현재 <span id="found-sword-count">1</span>개의 검 발견<span class="tutorial_element up">현재 발견한 검의 개수가 표시됩니다.</span></header>
+        <div class="swords" id="found-swords">
+          <div class="sword_icon sword"><img src="images/swords/deaths_dance.png" alt="죽음의 무도"><span class="sword_name">죽음의 무도</span><span class="tutorial_element small up right">강화에 성공하여 발견한 검입니다.<br>클릭하여 상세정보를 확인할 수 있습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+          <div class="sword_icon unknown"><img src="images/items/unknown.png" alt="발견 안됨"><span class="tutorial_element up right">발견되지 않은 검입니다.<br>상세 정보를 확인할 수 없습니다.</span></div>
+        </div>
+      </main>
+      <p class="tip">마우스를 올려 자세한 정보를 확인하세요.</p>
+    </div>
+  </template>
+  <template id="tutorial-inventory">
+    <div class="window inventory_window">
+      <header>보관함</header>
+      <main id="inventory-items">
+        <section class="item_group">
+          <div class="underline bok">
+            <span class="colored_text gold">복구권</span>
+          </div>
+          <article class="group">
+            <div class="item"><img src="images/items/repair_paper.png" alt=""></div>
+            <p class="item_name">복구권</p><p class="item_count">x 1</p>
+          </article>
+          <span class="tutorial_element small down">검 파괴 시 복구하는데 사용되는 복구권입니다.<br/>제작소에서 구매할 수 있습니다.</span>
+        </section>
+        <section class="item_group">
+          <div class="underline pie">
+            <span class="colored_text green">조각</span>
+            <span class="colored_text dark_gray"> (마우스를 아이콘 위에 올려 메뉴 확인)</span>
+          </div>
+          <article class="group">
+            <div class="item"><div class="hover_menu hover_menu_1"><span>획득처</span></div><img src="images/pieces/faerie_charm.png" alt=""></div>
+            <p class="item_name">요정의 부적</p><p class="item_count">x 1</p>
+          </article>
+          <span class="tutorial_element small down">검 파괴 시 확득 가능한 조각 목록입니다.<br/>아이콘을 클릭하여 획득처를 확인할 수 있습니다.</span>
+        </section>
+        <section class="item_group">
+          <div class="underline swo">
+            <span class="colored_text blue">검</span>
+            <span class="colored_text dark_gray"> (마우스를 아이콘 위에 올려 메뉴 확인)</span>
+          </div>
+          <article class="group">
+            <div class="item"><div class="hover_menu hover_menu_3"><span>판매하기</span><span>꺼내기</span><span>파괴하기</span></div><img src="images/swords/long_sword.png" alt=""></div>
+            <p class="item_name">롱소드</p><p class="item_count">x 1</p>
+          </article>
+          <span class="tutorial_element small up">검 보관 또는 제작된 검 목록입니다.<br/>아이콘에 마우스를 올려 다음 메뉴를 확인할 수 있습니다.<br>판매하기: 검을 판매합니다<br/>꺼내기: 현재 강화 중인 검을 보관하고, 이 검으로 강화를 시작합니다.<br>파괴하기: 검을 파괴합니다. 조각을 획득할 수 있습니다.</span>
+        </section>
+      </main>
+      <p class="tip">마우스를 올려 자세한 정보를 확인하세요.</p>
+    </div>
+  </template>
+  <template id="tutorial-making">
+    <div class="window maker_window">
+      <header>제작소</header>
+      <main>
+        <ul class="select_box">
+        <li>
+          <input type="radio" name="making_page" id="making-recipes" checked="">
+          <label for="making-recipes"> 복구권 </label>
+          <span class="underline"></span>
+          <span class="tutorial_element up">복구권 제작소를 엽니다.</span>
+        </li>
+        <li>
+          <input type="radio" name="making_page" id="making-swords">
+          <label for="making-swords"> 검 제작 </label>
+          <span class="tutorial_element up">검 제작소을 엽니다.</span>
+        </li>
+        
+
+      </ul>
+        <div class="recipe_box">
+          <section class="recipes" id="repair-recipes">
+            <article class="group">
+              <section class="material one">
+                <div class="item clickable">
+                  <img src="images/items/money.png" alt="">
+                  <span class="count">300원</span>
+                </div>
+              </section>
+              <section class="result">
+                <div class="item clickable">
+                  <img src="images/items/repair_paper.png" alt="">
+                  <span class="name">복구권</span><span class="count">+1</span>
+                </div>
+              </section>
+              <button class="blue">제작</button>
+              <span class="tutorial_element small down">제작에 필요한 재료 목록과 제작할 아이템입니다.<br>클릭하여 상세 정보를 확인할 수 있습니다.<br>제작 시 아이템은 보관함에서 확인할 수 있습니다.</span>
+            </article>
+            <article class="group">
+              <section class="material one">
+                <div class="item clickable">
+                  <img src="images/items/money.png" alt="">
+                  <span class="count">1500원</span>
+                </div>
+                <span class="tutorial_element down small"></span>
+              </section>
+              <section class="result">
+                <div class="item clickable">
+                  <img src="images/items/repair_paper.png" alt="">
+                  <span class="name">복구권</span><span class="count">+5</span>
+                </div>
+              </section>
+              <button class="blue">제작</button>
+              <span class="tutorial_element small down">제작에 필요한 재료 목록과 제작할 아이템입니다.<br>클릭하여 상세 정보를 확인할 수 있습니다.<br>제작 시 아이템은 보관함에서 확인할 수 있습니다.</span>
+            </article>
+            <article class="group">
+              <section class="material">
+                <div class="item clickable">
+                  <img src="images/pieces/watchful_wardstone.png" alt="">
+                  <span class="name">감시하는 와드석</span>
+                  <span class="count">1/1</span>
+                </div>
+                <div class="item clickable">
+                  <img src="images/pieces/spellthiefs_edge.png" alt="">
+                  <span class="name">주문 도둑의 검</span>
+                  <span class="count unable">2/5</span>
+                </div>
+              </section>
+              <section class="result">
+                <div class="item">
+                  <img src="images/swords/deaths_dance.png" alt="">
+                  <span class="name">죽음의 무도</span>
+                </div>
+              </section>
+              <button class="purple" disabled>제작 불가</button>
+              <span class="tutorial_element small up">제작에 필요한 재료가 부족하면 제작할 수 없습니다.<br></span>
+
+            </article>
+            <article class="group">
+              <section class="material">
+                <div class="item clickable">
+                  <img src="images/pieces/dorans_ring.png" alt="">
+                  <span class="name">도란의 반지</span>
+                  <span class="count">1/1</span>
+                </div>
+                <div class="item clickable">
+                  <img src="images/pieces/glacial_buckler.png" alt="">
+                  <span class="name">얼음방패</span>
+                  <span class="count">4/3</span>
+                </div>
+              </section>
+              <section class="result">
+                <div class="item">
+                  <img src="images/items/unknown.png" alt="">
+                  <span class="name">발견 안됨</span>
+                </div>
+              </section>
+              <button class="purple">제작</button>
+              <span class="tutorial_element small up">발견되지 않은 검은 제작 가능하나 제작 전까지 정체를 알 수 없습니다.</span>
+
+            </article>
+          </section>
+          <section class="recipes"></section>
+        </div>
+      </main>
+      <p class="tip">마우스를 올려 자세한 정보를 확인하세요.</p>
+    </div>
+  </template>
+  <template id="tutorial-stat">
+    <div class="window stat_window">
+      <header>강화소</header>
+      <main>
+        <div class="stat_point"> 현재 스탯 포인트: <span id="stat-point-count">0</span>개<span class="tutorial_element small down">현재 가진 스탯 포인트입니다.<br/>스탯 강화 한번 당 하나씩 소모됩니다.<br/>새로운 검을 발견할 때마다 1개씩 얻을 수 있습니다.</span></div>
+        <div class="stats" id="stat_box">
+          <section class="stat blue"><div class="icon"><img src="images/stats/lucky_bracelet.png" alt=""><div class="stat_up">스탯 강화</div></div>
+            <div class="level"><ul><li class="point active"></li><li class="point active"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul></div>
+            <div class="info">
+              <p class="name">행운 팔찌</p><p class="description">성공 확률 증가</p>
+              <ul class="detail"><li>+1p</li><li class="active">+2p</li><li>+3p</li><li>+4p</li><li>+5p</li></ul>
+            </div>
+          </section>
+          <section class="stat red"><div class="icon"><img src="images/stats/god_hand.png" alt=""><div class="stat_up">스탯 강화</div></div>
+            <div class="level"><ul><li class="point active"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul></div>
+            <div class="info">
+              <p class="name">신의 손</p><p class="description">성공 시 일정 확률로 +2강</p>
+              <ul class="detail"><li class="active">10%</li><li>15%</li><li>20%</li><li>25%</li><li>40%</li></ul>
+            </div>
+          </section>
+          <section class="stat sky"><div class="icon"><img src="images/stats/big_merchant.png" alt=""><div class="stat_up">스탯 강화</div></div><div class="level"><ul><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul></div><div class="info"><p class="name">대상인</p><p class="description">판매 가격 증가</p><ul class="detail"><li>+4%</li><li>+7%</li><li>+12%</li><li>+20%</li><li>+30%</li></ul></div></section>
+          <section class="stat green"><div class="icon"><img src="images/stats/smith.png" alt=""><div class="stat_up">스탯 강화</div></div><div class="level"><ul><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul></div><div class="info"><p class="name">대장장이</p><p class="description">강화 비용 감소</p><ul class="detail"><li>-4%</li><li>-7%</li><li>-12%</li><li>-20%</li><li>-30%</li></ul></div></section>
+          <section class="stat purple"><div class="icon"><img src="images/stats/invalidated_sphere.png" alt=""><div class="stat_up">스탯 강화</div></div><div class="level"><ul><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul></div><div class="info"><p class="name">무효화 구체</p><p class="description">검 파괴 시 복구</p><ul class="detail"><li>10%</li><li>15%</li><li>20%</li><li>25%</li><li>30%</li></ul></div></section>
+          <section class="stat navy"><div class="icon"><img src="images/stats/magic_hat.png" alt=""><div class="stat_up">스탯 강화</div></div><div class="level"><ul><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul></div><div class="info"><p class="name">마법 모자</p><p class="description">조각 최대 드롭 갯수 증가</p><ul class="detail"><li>+1개</li><li>+1개</li><li>+2개</li><li>+2개</li><li>+3개</li></ul></div></section>
+          <span class="tutorial_element">스탯 포인트를 소모하여 스탯을 강화할 수 있습니다<br/>스탯 강화 한번 당 하나씩 소모됩니다.<br/>새로운 검을 발견할 때마다 1개씩 얻을 수 있습니다.</span>
+        </div>
+        <p class="tip"> </p>
+      </main>
+    <p class="tip">마우스를 올려 자세한 정보를 확인하세요.</p>
+    </div>
+  </template>
+  <script>
+    let currentId = '';
+    const element_container = document.getElementById('tutorial-container');
+    function setBody(id) {
+      if(currentId === id) {
+        setBody('tutorial-main');
+        return;
+      }
+      currentId = id;
+      const element_template = document.getElementById(id);
+      const tutorial = element_template.content.cloneNode(true);
+      element_container.replaceChildren(tutorial);
+    }
+
+    setBody('tutorial-main');
+  </script>
+</body>
+</html>
