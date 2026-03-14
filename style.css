@@ -31,29 +31,22 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 #logo-chb:checked + label .right_sword,
 #logo-chb + label:hover .right_sword {transform: scale(1.2) rotate(39deg) translate(8px, -10px);transition: all 0.35s;}
 @keyframes pop {0%{transform: scale(1);}75%{transform: scale(1.2);}100%{transform: scale(1.15);}}
-#toturial-button {display: none;}
-#toturial-button + label {width: 50px;height: 50px;position: fixed;top: 10px;right: 10px;border: 3px solid var(--color-green);border-radius: 50px;overflow: hidden;transition: all .3s;cursor: pointer;z-index: 11;}
-#toturial-button:checked + label {border-color: var(--color-sky);}
-#toturial-button + label span {position: absolute;top: 50%;left: 50%;color: white;font-size: 0.85rem;transform: translate(-50%, -50%);text-shadow: -1px -1px 0px var(--color-green),-1px 1px 0px var(--color-green),1px 1px 0px var(--color-green),1px -1px 0px var(--color-green),-1px 0px 0px var(--color-green),1px 0px 0px var(--color-green),0px 1px 0px var(--color-green),0px -1px 0px var(--color-green);}
-#toturial-button:checked + label span {text-shadow: -1px -1px 0px var(--color-sky),-1px 1px 0px var(--color-sky),1px 1px 0px var(--color-sky),1px -1px 0px var(--color-sky),-1px 0px 0px var(--color-sky),1px 0px 0px var(--color-sky),0px 1px 0px var(--color-sky),0px -1px 0px var(--color-sky);}
-#toturial-button + label span#toturial-text {visibility: visible;}
-#toturial-button:checked + label span#toturial-text {visibility: hidden;}
-#toturial-button + label span#toturial-back-text {visibility: hidden;}
-#toturial-button:checked + label span#toturial-back-text {visibility: visible;}
-#toturial-button + label img {width: 100%;height: 100%;}
-#toturial-button:checked + label img.first {display: none;} 
-#toturial-button + label:hover {transform: scale(1.1);}
-.html_window {width: 100vw;height: 100vh;position: fixed;top: 0;left: 0;background-color: var(--color-white);z-index: 10;display: none;}
-#toturial-button:checked ~ .html_window {display: block;}
 .main_main {display: flex;flex-direction: column;justify-content: center;align-items: center;height: 100%;}
 .swordbox {display: flex;flex-direction: column;justify-content: space-between;align-items: center;}
-.swordbox .sword_img {
+.swordbox .sword_img_box {
   width: 256px;
   height: 256px;
   margin-bottom: 3%;
-  border-radius: 50%;
+}
+.swordbox .sword_img {
+  width: 100%;
+  height: 100%;
   filter: drop-shadow(2vmin 2vmin 2vmin var(--color-dark-gray));
+  border-radius: 50%;
   transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 .swordbox .sword_img:hover {transform: scale(1.2);border-radius: 0;}
 
@@ -63,13 +56,13 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
   align-items: center;
   white-space: pre;
 }
-#sword-number {font-size: 1.75rem; color: var(--color-dark-gray);}
-#sword-number.isMax {color: var(--color-red);}
-#sword-name {font-size: 2.25rem; color: var(--color-gold);}
-#sword-prob{font-size: 1.25rem; color: var(--color-dark-gray);}
-#sword-info-1, #sword-info-2 {font-size: 1rem; color: var(--color-dark-gray);}
+.sword_number {font-size: 1.75rem; color: var(--color-dark-gray); height: 1.75rem; margin: 3px 0;}
+.sword_number.isMax {color: var(--color-red);}
+.sword_name {font-size: 2.25rem; color: var(--color-purple); height: 2.25rem; margin: 3px 0;}
+.sword_prob{font-size: 1.25rem; color: var(--color-dark-gray); height: 1.25rem; margin: 3px 0;}
+.sword_info {font-size: 1rem; color: var(--color-dark-gray); height: 1rem; margin: 3px 0;}
 
-.buttons {display: flex;justify-content: center;margin-top: 0.5rem;}
+.buttons {display: flex;justify-content: center;align-items: center;margin-top: 0.5rem;height: 70px;font-size: 1.2rem;}
 .buttons.end_sort {width: 240px;justify-content: flex-end;}
 .buttons a {
   width: 70px;height: 70px;border-radius: 50%;overflow: hidden;position: relative;cursor: pointer;
@@ -133,7 +126,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .message .message_main {position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 100%;display: flex;flex-direction: column;align-items: center;}
 .message .message_main .text {display: flex;flex-direction: column;align-items: center;}
 .message .message_main .text .popup_icon {width: 60px; height: 60px;transition: all 0.5s;cursor: pointer;}
-.message .message_main .text .popup_icon:hover {transform: scale(6);}
+.message .message_main .text .popup_icon:hover {transform: scale(2);}
 .message .message_main .text .title {font-size: 2rem;}
 .message .message_main .text .title.red {color: var(--color-red);}
 .message .message_main .text .title.green {color: var(--color-green);}
@@ -307,7 +300,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .maker_window main .recipe_box .recipes .group button.blue:not(:disabled):hover {background-color: var(--color-blue);}
 .maker_window main .recipe_box .recipes .group button.purple:not(:disabled):hover {background-color: var(--color-purple);}
 .maker_window main .recipe_box .recipes .group button:active {transform: scale(0.9);}
-.tip {font-size: 1rem;color: var(--color-dark-gray);}
+.tip {font-size: 1rem;color: var(--color-dark-gray);white-space: pre;}
 .loading {display: none;width: 100vw;height: 100vh;position: fixed;top: 0;left: 0;z-index: 1;background: rgba(243, 243, 243, 0.7);}
 .loading .lodding_img {width: 100px;height: 100px;position: fixed;z-index: 3;top: 50%;left: 50%;transform: translate(calc(-50% - 38.4765625px), -50%);transform-origin: 76.953125px 100px;}
 .loading .lodding_img img {width: 100%;height: 100%;opacity: 0.8;}
@@ -370,3 +363,107 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .stat_window main .stats .stat .info .detail li.active {color: var(--color-red);}
 #developer-mod-button {position: fixed;top: 0;right: 0;width: 20px;height: 20px;}
 input[type="checkbox"] {accent-color: var(--color-blue);}
+
+@layer a {
+  .tutorial *:not(.tutorial_element) {
+    position: relative;
+  }
+}
+
+.tutorial .tutorial_element {
+  display: inline;
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  white-space: pre;
+
+  opacity: 0;
+  padding: 20px 10px;
+  z-index: 3;
+  transition: all .3s;
+  border-radius: 10px;
+
+  font-size: 1.4rem;
+  color: var(--color-dark-gray);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+.tutorial *:not(.tutorial_element):hover > .tutorial_element {
+  background-color: var(--color-white);
+  opacity: 1;
+}
+
+.tutorial_element.small {
+  font-size: 1.2rem;
+}
+
+.tutorial_element.down {
+  transform: translate(-50%, 25px);
+}
+.tutorial_element.up {
+  top: 0;
+  transform: translate(-50%, calc(-100% - 5px));
+}
+.tutorial_element.up.right {
+  top: 0;
+  transform: translate(0, calc(-100% - 5px));
+}
+.tutorial_element.up.left {
+  top: 0;
+  left: 0;
+  transform: translate(-100%, calc(-100% - 5px));
+}
+
+.game_info_text {
+  color: var(--color-dark-gray);
+  font-size: 1.4rem;
+}
+
+.screen_info {
+  color: var(--color-dark-gray);
+  font-size: 1.2rem;
+}
+
+.toturial_button {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  border-radius: 50px;
+  overflow: hidden;
+  transition: all .3s;
+  cursor: pointer;
+  z-index: 1;
+}
+.toturial_button.green {
+  border: 3px solid var(--color-green);
+}
+.toturial_button.sky {
+  border: 3px solid var(--color-sky);
+}
+.toturial_button:hover {transform: scale(1.1);}
+.toturial_button img {position:absolute; top:0;left:0;width: 100%;height: 100%;}
+.toturial_button span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: white;
+  font-size: 0.85rem;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.toturial_button.green span {
+  text-shadow: -1px -1px 0px var(--color-green),-1px 1px 0px var(--color-green),1px 1px 0px var(--color-green),1px -1px 0px var(--color-green),-1px 0px 0px var(--color-green),1px 0px 0px var(--color-green),0px 1px 0px var(--color-green),0px -1px 0px var(--color-green);
+}
+.toturial_button.sky span {
+  text-shadow: -1px -1px 0px var(--color-sky),-1px 1px 0px var(--color-sky),1px 1px 0px var(--color-sky),1px -1px 0px var(--color-sky),-1px 0px 0px var(--color-sky),1px 0px 0px var(--color-sky),0px 1px 0px var(--color-sky),0px -1px 0px var(--color-sky);
+}
