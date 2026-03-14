@@ -42,7 +42,7 @@ export class MakingManager extends Observer {
 
     public getMultipliedItems(items: readonly Item[], amount: number): readonly Item[] {
         return items.map(
-            item => new Item(item.id, item.name, item.imgSrc, item.count * amount)
+            item => new Item(item.id, item.name, item.imgSrc, item.description, item.count * amount)
         );
     }
 

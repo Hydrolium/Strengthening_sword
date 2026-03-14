@@ -1,8 +1,8 @@
-import { StatID, StatManager } from "../manager/stat_manager";
-import { Piece } from "./object/piece";
-import { SwordInfoByPiece } from "./object/sword";
-import { Sword } from "./object/sword";
-import { DeveloperMode } from "./developer_mode";
+import { StatID, StatManager } from "../../manager/stat_manager";
+import { Piece } from "../object/piece";
+import { SwordInfoByPiece } from "../object/sword";
+import { Sword } from "../object/sword";
+import { DeveloperMode } from "../developer_mode";
 
 export class CalculatedSwordDB {
     private readonly _swords: readonly Sword[];
@@ -67,6 +67,7 @@ export class CalculatedSwordDB {
             sword.index,
             sword.name,
             sword.imgSrc,
+            sword.description,
             (this._developerMode.alwaysSuccess) ? 1 : this._statManager.calculate(StatID.LUCKY_BRACELET, sword.prob),
             this._statManager.calculate(StatID.SMITH, sword.cost),
             this._statManager.calculate(StatID.BIG_MERCHANT, sword.price),

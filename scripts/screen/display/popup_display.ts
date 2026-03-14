@@ -1,4 +1,4 @@
-import { AskingSwordItemBreakContext, AskingSwordItemSellContext, GameAllStatContext, GameEndContext, GodHandContext, InvalidationContext, MaxStatContext, MaxUpgradeContext, MoneyLackContext, ScreenDrawingContext, ScreenDrawingContextType, StatPointLackContext, SwordCraftingContext, SwordInfoContext, SwordItemBreakedContext, UpgradeFailureContext, WherePieceDroppedContext } from "../../context/rendering/screen_drawing_context";
+import { AskingSwordItemBreakContext, AskingSwordItemSellContext, GameAllStatContext, GameEndContext, GodHandContext, InvalidationContext, ItemInfoSearchContext, MaxStatContext, MaxUpgradeContext, MoneyLackContext, ScreenDrawingContext, ScreenDrawingContextType, StatPointLackContext, SwordCraftingContext, SwordInfoContext, SwordItemBreakedContext, UpgradeFailureContext, WherePieceDroppedContext } from "../../context/rendering/screen_drawing_context";
 import { ColoredTextElement } from "../../element/colored_text";
 import { createElementWith, createImageWithSrc } from "../../element/element_controller";
 import { Color } from "../../element/popup_info";
@@ -22,6 +22,7 @@ export class PopupDisplay extends Display {
         [ScreenDrawingContextType.SWORD_ITEM_BREAKED_CONTEXT]: this.popupSwordItemBreakedMessage,
         [ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT]: this.popupAskingSwordItemSellMessage,
         [ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT]: this.popupWherePieceDroppedMessage,
+        [ScreenDrawingContextType.ITEM_INFO_SEARCH_CONTEXT]: this.popupItemInfoSearchMessage,
         [ScreenDrawingContextType.SWORD_CRAFTING_CONTEXT]: this.popupSwordCraftingMessage,
         [ScreenDrawingContextType.MAX_STAT_CONTEXT]: this.popupMaxStatMessage,
         [ScreenDrawingContextType.STAT_POINT_LACK_CONTEXT]: this.popupStatPointLackMessage,
@@ -39,13 +40,13 @@ export class PopupDisplay extends Display {
         popup.setSubTitle(`손실: ${context.loss}원`);
 
         if(context.pieces.length > 0) {
-            popup.addParagraphText("<떨어진 조각 목록>");
+            popup.addParagraphText("<획득한 조각 목록>");
             context.pieces.forEach(
                 pieceItem => {
                     const created_div = createElementWith("div", {classes: ["img_name_count_paragraph"]});
                     created_div.appendChild(createImageWithSrc(pieceItem.imgSrc));
                     new ColoredTextElement()
-                        .add(`${pieceItem.name}`, Color.DARK_BLUE)
+                        .add(`${pieceItem.name}`, Color.GREEN)
                         .add(` x `, Color.DARK_GRAY)
                         .add(`${pieceItem.count}`, Color.GOLD)
                         .add(`개`, Color.DARK_GRAY)
@@ -105,16 +106,16 @@ export class PopupDisplay extends Display {
 
         const popup = new Popup();
         popup.setTitle("검이 파괴되었지만 복구되었습니다.", Color.BLUE);
-        popup.setSubTitle("강화 비용 또한 반환되었습니다!");
+        popup.setSubTitle("강화 비용이 반환되며 조각 또한 획득할 수 있습니다.");
 
         if(context.pieces.length > 0) {
-            popup.addParagraphText("<떨어진 조각 목록>");
+            popup.addParagraphText("<획득한 조각 목록>");
             context.pieces.forEach(
                 pieceItem => {
                     const created_div = createElementWith("div", {classes: ["img_name_count_paragraph"]});
                     created_div.appendChild(createImageWithSrc(pieceItem.imgSrc));
                     new ColoredTextElement()
-                        .add(`${pieceItem.name}`, Color.DARK_BLUE)
+                        .add(`${pieceItem.name}`, Color.GREEN)
                         .add(` x `, Color.DARK_GRAY)
                         .add(`${pieceItem.count}`, Color.GOLD)
                         .add(`개`, Color.DARK_GRAY)
@@ -151,7 +152,6 @@ export class PopupDisplay extends Display {
         popup.show();
     }
 
-
     private popupSwordInfoMessage(context: SwordInfoContext) {
 
         const popup = new Popup();
@@ -159,25 +159,26 @@ export class PopupDisplay extends Display {
         popup.setIcon(context.sword.imgSrc);
 
         popup.setTitle(`${context.sword.index}강: ${context.sword.name}`, Color.PURPLE);
+        popup.setSubTitle(context.sword.description);
 
         if(context.sword.prob > 0)
             popup.addColoredParagraph(
-                new ColoredTextElement().add("강화 확률: ", Color.DARK_GRAY).add(Math.floor(context.sword.prob*100), Color.GOLD).add("%", Color.DARK_GRAY)
+                new ColoredTextElement().add("다음 단계 강화 확률: ", Color.DARK_GRAY).add(Math.floor(context.sword.prob*100), Color.GOLD).add("%", Color.DARK_GRAY)
             );
 
         
         if(context.sword.cost > 0)
             popup.addColoredParagraph(
-                new ColoredTextElement().add("강화 비용: ", Color.DARK_GRAY).add(context.sword.cost, Color.GOLD).add("원", Color.DARK_GRAY)
+                new ColoredTextElement().add("다음 단계 강화 비용: ", Color.DARK_GRAY).add(context.sword.cost, Color.GOLD).add("원", Color.DARK_GRAY)
             );
 
         if(context.sword.price > 0)
             popup.addColoredParagraph(
-                new ColoredTextElement().add("판매 가격: ", Color.DARK_GRAY).add(context.sword.price, Color.GOLD).add("원", Color.DARK_GRAY)
+                new ColoredTextElement().add("검 판매 가격: ", Color.DARK_GRAY).add(context.sword.price, Color.GOLD).add("원", Color.DARK_GRAY)
             );
         else
             popup.addColoredParagraph(
-                new ColoredTextElement().add("판매 가격: ", Color.DARK_GRAY).add("판매 불가.", Color.RED)
+                new ColoredTextElement().add("검 판매 가격: ", Color.DARK_GRAY).add("판매 불가.", Color.RED)
             );
         
         if(context.sword.requiredRepairs > 0)
@@ -193,9 +194,9 @@ export class PopupDisplay extends Display {
                     const created_div = createElementWith("div", {classes: ["img_name_count_paragraph"]});
                     created_div.appendChild(createImageWithSrc(piece.imgSrc));
                     new ColoredTextElement()
-                        .add(`${piece.name}`, Color.DARK_BLUE)
+                        .add(`${piece.name}`, Color.GREEN)
                         .add(`이(가) `, Color.DARK_GRAY)
-                        .add(`${Math.floor(piece.prob * 100)}`, Color.PURPLE)
+                        .add(`${Math.floor(piece.prob * 100)}`, Color.DARK_BLUE)
                         .add(`% 확률로 `, Color.DARK_GRAY)
                         .add((piece.maxDrop == 1) ? "1": `1~${piece.maxDrop}`, Color.GOLD)
                         .add(`개`, Color.DARK_GRAY)
@@ -207,8 +208,6 @@ export class PopupDisplay extends Display {
             )
         } else popup.addParagraphText("파괴 시 획득 가능한 조각이 없습니다.");
         
-
-        // popup.setFooter("*해당 정보는 강화소의 스탯이 계산되지 않은 정보입니다*", Color.RED)
         popup.addCloseButton();
 
         popup.build();
@@ -230,9 +229,9 @@ export class PopupDisplay extends Display {
                     created_div.appendChild(createImageWithSrc(piece.imgSrc));
 
                     new ColoredTextElement()
-                        .add(`${piece.name}`, Color.DARK_BLUE)
+                        .add(`${piece.name}`, Color.GREEN)
                         .add(`이(가) `, Color.DARK_GRAY)
-                        .add(`${Math.floor(piece.prob * 100)}`, Color.PURPLE)
+                        .add(`${Math.floor(piece.prob * 100)}`, Color.DARK_BLUE)
                         .add(`% 확률로 `, Color.DARK_GRAY)
                         .add((piece.maxDrop == 1) ? "1": `1~${piece.maxDrop}`, Color.GOLD)
                         .add(`개`, Color.DARK_GRAY)
@@ -262,14 +261,14 @@ export class PopupDisplay extends Display {
         popup.setTitle("검을 파괴했습니다.", Color.BLUE);
 
         if(context.pieces.length > 0) {
-            popup.addParagraphText("<떨어진 조각 목록>");
+            popup.addParagraphText("<획득한 조각 목록>");
             context.pieces.forEach(
                 pieceItem => {
                     const created_div = createElementWith("div", {classes: ["img_name_count_paragraph"]});
                     created_div.appendChild(createImageWithSrc(pieceItem.imgSrc));
 
                     new ColoredTextElement()
-                        .add(`${pieceItem.name}`, Color.DARK_BLUE)
+                        .add(`${pieceItem.name}`, Color.GREEN)
                         .add(` x `, Color.DARK_GRAY)
                         .add(`${pieceItem.count}`, Color.GOLD)
                         .add(`개`, Color.DARK_GRAY)
@@ -307,22 +306,23 @@ export class PopupDisplay extends Display {
         
         const popup = new Popup();
         popup.setIcon(context.pieceItem.imgSrc)
-        popup.setTitle(`<${context.pieceItem.name}> 획득처`, Color.GREEN);
+        popup.setTitle(`<${context.pieceItem.name}>`, Color.GREEN);
+        popup.setSubTitle(context.pieceItem.description);
 
         const unknown = UnknownItem.instance;
 
-       context. swords.forEach(
+        context. swords.forEach(
                 sword => {
                     const created_div = createElementWith("div", {classes: ["img_name_count_paragraph"]});
 
                     if(context.founds.has(sword.index)) {
                         created_div.appendChild(createImageWithSrc(sword.imgSrc));
                         new ColoredTextElement()
-                            .add(`${sword.index}`, Color.DARK_BLUE)
+                            .add(`${sword.index}`, Color.NAVY)
                             .add(`강`,Color.DARK_GRAY)
-                            .add(` ${sword.name}`, Color.NAVY)
+                            .add(` ${sword.name}`, Color.PURPLE)
                             .add(` 파괴 시 `, Color.DARK_GRAY)
-                            .add(`${Math.floor(sword.prob * 100)}`, Color.PURPLE)
+                            .add(`${Math.floor(sword.prob * 100)}`, Color.DARK_BLUE)
                             .add(`% 확률로 `, Color.DARK_GRAY)
                             .add((sword.maxDrop == 1) ? "1": `1~${sword.maxDrop}`, Color.GOLD)
                             .add(`개`, Color.DARK_GRAY)
@@ -343,6 +343,15 @@ export class PopupDisplay extends Display {
 
         popup.setFooter("발견되지 않은 검은 상세정보를 확인할 수 없습니다.", Color.DARK_GRAY);
 
+        popup.addCloseButton();
+        popup.build();
+        popup.show();
+    }
+    
+    private popupItemInfoSearchMessage(context: ItemInfoSearchContext) {
+        const popup = new Popup();
+        popup.setTitle(`<${context.item.name}>`, Color.BROWN);
+        popup.setSubTitle(context.item.description);
         popup.addCloseButton();
         popup.build();
         popup.show();

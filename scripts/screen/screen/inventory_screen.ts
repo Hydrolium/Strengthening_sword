@@ -130,9 +130,7 @@ export class InventoryScreen extends Screen {
         const inner = [];   
 
         if(context.repairPapers > 0) inner.push(this.makeRepairGroupSection(context.repairPapers));
-
         if(context.pieceStorage.size != 0) inner.push(this.makePieceGroupSection(context.pieceStorage.sorted((a, b) => a.count - b.count)));
-        
         if(context.swordStorage.size != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.getAll())));
         
         if(context.pieceStorage.size == 0 && context.swordStorage.size == 0) {

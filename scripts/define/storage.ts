@@ -28,7 +28,7 @@ export class Storage<T extends Item> implements StorageInfo<T> {
 
     public getAll(): readonly T[] {
         if (!this._developerMode.infinityMaterial) return Array.from(this._items.values());
-        return Array.from(this._items.values(), item => new this._itemClass(item.id, item.name, item.imgSrc, Infinity));
+        return Array.from(this._items.values(), item => new this._itemClass(item.id, item.name, item.imgSrc, item.description, Infinity));
     }
 
     public getCount(id: string): number {
@@ -48,21 +48,20 @@ export class Storage<T extends Item> implements StorageInfo<T> {
     public add(item: T) {
         if (item.count <= 0) return;
 
-        const exisiting = this._items.get(item.id);
+        const existing = this._items.get(item.id);
 
-        if (exisiting) this._items.set(item.id, new this._itemClass(item.id, item.name, item.imgSrc, item.count + exisiting.count));
-        else this._items.set(item.id, new this._itemClass(item.id, item.name, item.imgSrc, item.count));
-
+        if (existing) this._items.set(item.id, new this._itemClass(item.id, item.name, item.imgSrc, item.description, item.count + existing.count));
+        else this._items.set(item.id, new this._itemClass(item.id, item.name, item.imgSrc, item.description, item.count));
     }
 
     public remove(id: string, count: number) {
         if (count <= 0) return;
 
-        const exisiting = this._items.get(id);
-        if (!exisiting) return;
+        const existing = this._items.get(id);
+        if (!existing) return;
 
-        if (exisiting.count <= count) this._items.delete(id);
-        else this._items.set(exisiting.id, new this._itemClass(exisiting.id, exisiting.name, exisiting.imgSrc, exisiting.count - count));
+        if (existing.count <= count) this._items.delete(id);
+        else this._items.set(existing.id, new this._itemClass(existing.id, existing.name, existing.imgSrc, existing.description, existing.count - count));
     }
 }
 

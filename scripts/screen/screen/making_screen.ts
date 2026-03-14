@@ -68,12 +68,12 @@ export class MakingScreen extends Screen {
         for(const material of materials) {
             
             if(material instanceof MoneyItem) {
-
-                created_materials.appendChild(this.makeMaterialDiv(material, info.money, false));
-            } 
+                const created_materialDiv = this.makeMaterialDiv(material, info.money, true);
+                created_materialDiv.addEventListener("click", () => this._actions?.onItemInfoSearch(material));
+                created_materials.appendChild(created_materialDiv);
+            }
             else if(material instanceof SwordItem) {
                 const havingCount = info.havingSwords.getCount(material.id);
-
                 if(info.foundSwordIds.has(material.id)) {
                     const created_materialDiv = this.makeMaterialDiv(material, havingCount, true);
                     created_materialDiv.addEventListener("click", () => this._actions?.onSwordInfoSearch(material.id));
@@ -91,13 +91,16 @@ export class MakingScreen extends Screen {
         return created_materials;
     }
     
-    private makeResultSection(item: Item, clickable: boolean): HTMLElement  {
+    private makeResultSection(item: Item): HTMLElement  {
         const created_result = createElementWith("section", {classes: ["result"]});
         const created_imgDiv = createElementWith("div", {classes: ["item"]});
 
-        if(item instanceof SwordItem && clickable) {
+        if(item instanceof SwordItem) {
             created_imgDiv.classList.add("clickable");
             created_imgDiv.addEventListener("click", () => this._actions?.onSwordInfoSearch(item.id));
+        } else if(item instanceof RepairPaperItem) {
+            created_imgDiv.classList.add("clickable");
+            created_imgDiv.addEventListener("click", () => this._actions?.onItemInfoSearch(item));
         }
 
         created_imgDiv.appendChild(createImageWithSrc(item.imgSrc));
@@ -125,31 +128,30 @@ export class MakingScreen extends Screen {
         return created_article;
     }
 
-        public hasItem(item: Item, info: MakingScreenRenderingContext): boolean {
-    
-            if(
-                item instanceof MoneyItem
-                && info.money < item.count
-            ) return false;
-            else if (
-                item instanceof SwordItem
-                && !info.havingSwords.hasEnough(item.id, item.count)
-            ) return false;
-            else if (
-                item instanceof PieceItem
-                && !info.havingPieces.hasEnough(item.id, item.count)
-            ) return false;
-            else if (
-                item instanceof RepairPaperItem
-                && info.repairPaperCount < item.count
-            ) return false;
+    public hasItem(item: Item, info: MakingScreenRenderingContext): boolean {
+        if(
+            item instanceof MoneyItem
+            && info.money < item.count
+        ) return false;
+        else if (
+            item instanceof SwordItem
+            && !info.havingSwords.hasEnough(item.id, item.count)
+        ) return false;
+        else if (
+            item instanceof PieceItem
+            && !info.havingPieces.hasEnough(item.id, item.count)
+        ) return false;
+        else if (
+            item instanceof RepairPaperItem
+            && info.repairPaperCount < item.count
+        ) return false;
 
-            return true;
-        }
+        return true;
+    }
 
-        public hasItems(items: readonly Item[], info: MakingScreenRenderingContext): boolean {
-            return items.every(item => this.hasItem(item, info));
-        }
+    public hasItems(items: readonly Item[], info: MakingScreenRenderingContext): boolean {
+        return items.every(item => this.hasItem(item, info));
+    }
     
     private makeRepairPaperPage(recipes: readonly Recipe[], info: MakingScreenRenderingContext): readonly HTMLElement[] {
 
@@ -157,7 +159,7 @@ export class MakingScreen extends Screen {
             recipe =>
                 this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials, info), 
-                    this.makeResultSection(recipe.result, false),
+                    this.makeResultSection(recipe.result),
                     "blue",
                     this.hasItems(recipe.materials, info), 
                     () => this._actions?.onMaking(recipe))
@@ -170,8 +172,8 @@ export class MakingScreen extends Screen {
             recipe => this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials, info), 
                     (info.foundSwordIds.has(recipe.result.id))
-                    ? this.makeResultSection(recipe.result, true)
-                    : this.makeResultSection(UnknownItem.instance, false),
+                    ? this.makeResultSection(recipe.result)
+                    : this.makeResultSection(UnknownItem.instance),
                     "purple",
                     this.hasItems(recipe.materials, info),
                     () => this._actions?.onMaking(recipe)

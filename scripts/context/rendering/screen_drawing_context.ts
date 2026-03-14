@@ -1,7 +1,7 @@
 import { Recipe } from "../../define/object/recipe";
 import { StatInfo } from "../../define/object/stat";
 import { SwordInfoByPiece } from "../../define/object/sword";
-import { SwordItem } from "../../define/object/item";
+import { Item, SwordItem } from "../../define/object/item";
 import { PieceItem } from "../../define/object/item";
 import { StorageInfo } from "../../define/storage";
 import { Popup } from "../../element/popup_message";
@@ -32,13 +32,14 @@ export enum ScreenDrawingContextType {
     SWORD_ITEM_BREAKED_CONTEXT = "SWORD_ITEM_BREAKED_CONTEXT",
     ASKING_SWORD_ITEM_SELL_CONTEXT = "ASKING_SWORD_ITEM_SELL_CONTEXT",
     WHERE_PIECE_DROPPED_CONTEXT = "WHERE_PIECE_DROPPED_CONTEXT",
+    ITEM_INFO_SEARCH_CONTEXT = "ITEM_INFO_SEARCH_CONTEXT",
     SWORD_CRAFTING_CONTEXT = "SWORD_CRAFTING_CONTEXT",
     MAX_STAT_CONTEXT = "MAX_STAT_CONTEXT",
     STAT_POINT_LACK_CONTEXT = "STAT_POINT_LACK_CONTEXT",
     GAME_ALL_STAT_CONTEXT = "GAME_ALL_STAT_CONTEXT"
 }
 
-export type ScreenDrawingContext = MainScreenRenderingContext | MakingScreenRenderingContext | InventoryScreenRenderingContext | InformationScreenRenderingContext | StatScreenRenderingContext | RecordStorageRenderingContext0 | RecordStorageRenderingContext1 | RecordStorageRenderingContext2 | RecordStorageRenderingContext3 | RecordStorageRenderingContext4 | MoneyDisplayRenderingContext | MakingScreenAnimatingContext | UpgradeFailureContext | MaxUpgradeContext | MoneyLackContext | InvalidationContext | GodHandContext | GameEndContext | SwordInfoContext | AskingSwordItemBreakContext | SwordItemBreakedContext | AskingSwordItemSellContext | WherePieceDroppedContext | SwordCraftingContext | MaxStatContext | StatPointLackContext | GameAllStatContext; 
+export type ScreenDrawingContext = MainScreenRenderingContext | MakingScreenRenderingContext | InventoryScreenRenderingContext | InformationScreenRenderingContext | StatScreenRenderingContext | RecordStorageRenderingContext0 | RecordStorageRenderingContext1 | RecordStorageRenderingContext2 | RecordStorageRenderingContext3 | RecordStorageRenderingContext4 | MoneyDisplayRenderingContext | MakingScreenAnimatingContext | UpgradeFailureContext | MaxUpgradeContext | MoneyLackContext | InvalidationContext | GodHandContext | GameEndContext | SwordInfoContext | AskingSwordItemBreakContext | SwordItemBreakedContext | AskingSwordItemSellContext | WherePieceDroppedContext | ItemInfoSearchContext | SwordCraftingContext | MaxStatContext | StatPointLackContext | GameAllStatContext; 
 
 export const popupDrawingTypes = [
     ScreenDrawingContextType.UPGRADE_FAILURE_CONTEXT,
@@ -52,6 +53,7 @@ export const popupDrawingTypes = [
     ScreenDrawingContextType.SWORD_ITEM_BREAKED_CONTEXT,
     ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT,
     ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT,
+    ScreenDrawingContextType.ITEM_INFO_SEARCH_CONTEXT,
     ScreenDrawingContextType.SWORD_CRAFTING_CONTEXT,
     ScreenDrawingContextType.MAX_STAT_CONTEXT,
     ScreenDrawingContextType.STAT_POINT_LACK_CONTEXT,
@@ -226,6 +228,11 @@ export interface WherePieceDroppedContext {
     readonly pieceItem: PieceItem;
     readonly swords: readonly SwordInfoByPiece[];
     readonly founds: ReadonlySet<number>;
+}
+
+export interface ItemInfoSearchContext {
+    readonly type: ScreenDrawingContextType.ITEM_INFO_SEARCH_CONTEXT;
+    readonly item: Item
 }
 
 export interface SwordCraftingContext {

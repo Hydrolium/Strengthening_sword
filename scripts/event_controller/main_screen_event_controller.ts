@@ -6,7 +6,7 @@ import { RepairPaperItem } from "../define/object/item";
 import { SwordTestResult0, SwordTestResult1, SwordTestResultType } from "../define/object/test_result";
 import { Popup } from "../element/popup_message";
 import { DeveloperMode } from "../define/developer_mode";
-import { CalculatedSwordDB } from "../define/calculated_sword_db";
+import { CalculatedSwordDB } from "../define/db/calculated_sword_db";
 import { ScreenDrawingContextType } from "../context/rendering/screen_drawing_context";
 import { Managers } from "../manager/manager";
 import { StatID } from "../manager/stat_manager";
@@ -17,6 +17,7 @@ export interface MainScreenActions {
     onSave: () => void;
     onRepair: (sword: Sword, popup: Popup) => void;
     onInit: (popup: Popup) => void;
+    onSwordInfoSearch: (id: string) => void;
 }
 
 export class MainScreenEventController implements MainScreenActions {
@@ -190,6 +191,13 @@ export class MainScreenEventController implements MainScreenActions {
         this.updateSword(this._swordDB.getCalculatedSwordbyIndex(0));
         
         popup.close();
+    }
+
+    onSwordInfoSearch = (id: string) => {
+        this._managers.screenManager.update({
+            type: ScreenDrawingContextType.SWORD_INFO_CONTEXT,
+            sword: this._swordDB.getCalculatedSwordbyId(id)
+        });
     }
     
 }

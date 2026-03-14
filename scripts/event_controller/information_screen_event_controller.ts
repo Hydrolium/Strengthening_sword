@@ -1,4 +1,4 @@
-import { CalculatedSwordDB } from "../define/calculated_sword_db";
+import { CalculatedSwordDB } from "../define/db/calculated_sword_db";
 import { ScreenDrawingContextType } from "../context/rendering/screen_drawing_context";
 import { Managers } from "../manager/manager";
 

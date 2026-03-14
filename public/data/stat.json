@@ -1,7 +1,6 @@
 [
   {
     "id": "lucky_bracelet",
-    "description": "성공 확률 증가",
     "values": [1, 2, 3, 4, 5],
     "default_value": 0,
     "color": "BLUE",
@@ -10,7 +9,6 @@
   },
   {
     "id": "god_hand",
-    "description": "성공 시 일정 확률로 +2강",
     "values": [10, 15, 20, 25, 40],
     "default_value": 0,
     "color": "RED",
@@ -19,7 +17,6 @@
   },
   {
     "id": "big_merchant",
-    "description": "판매 가격 증가",
     "values": [4, 7, 12, 20, 30],
     "default_value": 0,
     "color": "SKY",
@@ -28,7 +25,6 @@
   },
   {
     "id": "smith",
-    "description": "강화 비용 감소",
     "values": [4, 7, 12, 20, 30],
     "default_value": 0,
     "color": "GREEN",
@@ -37,7 +33,6 @@
   },
   {
     "id": "invalidated_sphere",
-    "description": "검 파괴 시 복구",
     "values": [10, 15, 20, 25, 30],
     "default_value": 0,
     "color": "PURPLE",
@@ -46,7 +41,6 @@
   },
   {
     "id": "magic_hat",
-    "description": "조각 최대 드롭 갯수 증가",
     "values": [1, 1, 2, 2, 3],
     "default_value": 0,
     "color": "NAVY",

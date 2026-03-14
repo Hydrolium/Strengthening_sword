@@ -9,6 +9,17 @@ import { PieceItem } from "./object/item.js";
 
 export type StatIDs = "luckly_bracelet" | "god_hand" | "big_merchant" | "smith" | "invalidated_sphere" | "magic_hat"
 
+interface KoreanDataEntry {
+    readonly name: string;
+    readonly description: string;
+}
+
+interface KoreanData {   
+    readonly stat: Readonly<Record<string, KoreanDataEntry>>;
+    readonly sword: Readonly<Record<string, KoreanDataEntry>>;
+    readonly piece: Readonly<Record<string, KoreanDataEntry>>;
+}
+
 interface PieceData {
     readonly id: string;
     readonly prob: number;
@@ -25,14 +36,8 @@ interface SwordData {
     readonly pieces: readonly PieceData[];
 }
 
-interface PieceInfoData {
-    readonly id: string;
-    readonly description: string;
-}
-
 interface StatData {
     readonly id: StatIDs;
-    readonly description: string;
     readonly values: readonly number[];
     readonly default_value: number;
     readonly color: string;
@@ -51,11 +56,18 @@ interface RecipeData {
     readonly result: RecipeItem;
 }
 
+type PathDataType = Readonly<Record<string, string>>;
+type SwordDataList = readonly SwordData[];
+type RecipeDataList = readonly RecipeData[];
+type StatDataList = readonly StatData[];
+
+type StatRecord = Readonly<Record<StatID, Stat>>;
+
 interface Data {
-    readonly path?: Readonly<Record<string, string>>;
+    readonly path?: PathDataType;
     readonly sword?: readonly Sword[];
     readonly recipe?: readonly Recipe[];
-    readonly stat?: Readonly<Record<StatID, Stat>>;
+    readonly stat?: StatRecord;
 }
 
 export class DataReader {
@@ -64,29 +76,27 @@ export class DataReader {
 
         try {
 
-            const [pathRes, swordRes, pieceRes, recipeRes, statRes, koreanRes] = await Promise.all([
+            const [pathRes, swordRes, recipeRes, statRes, koreanRes] = await Promise.all([
                 fetch('data/path.json'),
                 fetch('data/sword.json'),
-                fetch('data/piece.json'),
                 fetch('data/recipes.json'),
                 fetch('data/stat.json'),
                 fetch('data/korean.json')
             ]);
 
-            if(!pathRes.ok || !swordRes.ok || !pieceRes.ok || !recipeRes.ok || !statRes.ok || !koreanRes.ok) {
+            if(!pathRes.ok || !swordRes.ok || !recipeRes.ok || !statRes.ok || !koreanRes.ok) {
                 throw new Error("데이터 파일 로딩 실패");
             }
 
-            const paths: Record<string, string> = await pathRes.json();
-            const swords: SwordData[] = await swordRes.json();
-            const pieces: PieceInfoData[] = await pieceRes.json();
-            const recipes: RecipeData[] = await recipeRes.json();
-            const stats: StatData[] = await statRes.json();
-            const koreans: Record<string, string> = await  koreanRes.json();
+            const paths: PathDataType = await pathRes.json();
+            const swords: SwordDataList = await swordRes.json();
+            const recipes: RecipeDataList = await recipeRes.json();
+            const stats: StatDataList = await statRes.json();
+            const koreans: KoreanData = await  koreanRes.json();
 
             return {
                 path: paths,
-                sword: this.convertSword(swords, pieces, paths, koreans),
+                sword: this.convertSword(swords, paths, koreans),
                 recipe: this.convertRecipe(recipes as any, paths, koreans),
                 stat: this.convertStat(stats as any, paths, koreans),
             };
@@ -97,43 +107,37 @@ export class DataReader {
         return null;
     }
 
-    private convertSword(
-        swords: readonly SwordData[],
-        pieces: readonly PieceInfoData[],
-        paths: Readonly<Record<string, string>>,
-        koreans: Readonly<Record<string, string>>): readonly Sword[] {
-
+    private convertSword(swords: SwordDataList, paths: PathDataType, koreans: KoreanData): readonly Sword[] {
         return swords.map(
                 (sword, index) => {
-                    const pieceDescription = pieces.find(pid => pid.id == sword.id)?.description ?? "";
                     return new Sword(
-                        sword.id, index, koreans[sword.id], paths[sword.id], sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave,
+                        sword.id, index, koreans.sword[sword.id].name, paths[sword.id], koreans.sword[sword.id].description, sword.prob, sword.cost, sword.price, sword.requiredRepairs, sword.canSave,
                         sword.pieces.map(
-                            drop => new Piece(drop.id, koreans[drop.id], paths[drop.id], pieceDescription, drop.prob, drop.max_drop)
+                            drop => new Piece(drop.id, koreans.piece[drop.id].name, paths[drop.id], koreans.piece[drop.id].description, drop.prob, drop.max_drop)
                         )
                     )
                 }
             );
     }
 
-    private convertRecipe(recipes: readonly RecipeData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): readonly Recipe[] {
+    private convertRecipe(recipes: RecipeDataList, paths: PathDataType, koreans: KoreanData): readonly Recipe[] {
         return recipes.map(
                 recipeData =>
                     new Recipe(
                         (recipeData.result.type == "sword")
-                        ? new SwordItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count)
-                        : new PieceItem(recipeData.result.id, koreans[recipeData.result.id], paths[recipeData.result.id], recipeData.result.count),
+                        ? new SwordItem(recipeData.result.id, koreans.sword[recipeData.result.id].name, paths[recipeData.result.id], koreans.sword[recipeData.result.id].description, recipeData.result.count)
+                        : new PieceItem(recipeData.result.id, koreans.piece[recipeData.result.id].name, paths[recipeData.result.id], koreans.piece[recipeData.result.id].description, recipeData.result.count),
                         recipeData.materials.map(
-                            recipeItem => {
-                                if(recipeItem.type == "sword") return new SwordItem(recipeItem.id, koreans[recipeItem.id], paths[recipeItem.id], recipeItem.count);
-                                else return new PieceItem(recipeItem.id, koreans[recipeItem.id], paths[recipeItem.id], recipeItem.count);
-                            }
+                            material =>
+                                (material.type == "sword")
+                                ? new SwordItem(material.id,  koreans.sword[material.id].name, paths[material.id],  koreans.sword[material.id].description, material.count)
+                                : new PieceItem(material.id, koreans.piece[material.id].name, paths[material.id], koreans.piece[material.id].description, material.count)
                         )
                     )
             );
     }
 
-    private convertStat(stats: readonly StatData[], paths: Readonly<Record<string, string>>, koreans: Readonly<Record<string, string>>): Readonly<Record<StatID, Stat>> {
+    private convertStat(stats: StatDataList, paths: PathDataType, koreans: KoreanData): StatRecord {
         const g = {} as Record<StatID, Stat>;
 
         for(const statData of stats) {
@@ -142,9 +146,9 @@ export class DataReader {
 
             g[statID] = new (getStatClass(statID))(
                 statData.id,
-                koreans[statData.id],
+                koreans.stat[statData.id].name,
                 paths[statData.id],
-                statData.description,
+                koreans.stat[statData.id].description,
                 statData.values,
                 statData.default_value,
                 Color[statData.color as keyof typeof Color],

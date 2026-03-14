@@ -26,6 +26,7 @@ export class ScreenManager extends Observer {
         ScreenDrawingContextType.SWORD_ITEM_BREAKED_CONTEXT,
         ScreenDrawingContextType.ASKING_SWORD_ITEM_SELL_CONTEXT,
         ScreenDrawingContextType.WHERE_PIECE_DROPPED_CONTEXT,
+        ScreenDrawingContextType.ITEM_INFO_SEARCH_CONTEXT,
         ScreenDrawingContextType.SWORD_CRAFTING_CONTEXT,
         ScreenDrawingContextType.MAX_STAT_CONTEXT,
         ScreenDrawingContextType.STAT_POINT_LACK_CONTEXT,

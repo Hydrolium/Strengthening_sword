@@ -50,6 +50,7 @@ export class MainScreen extends Screen {
         if(context?.type != ScreenDrawingContextType.MAIN_SCREEN_RENDERING_CONTEXT) return;
 
         this._elements.swordImage!.src = context.sword.imgSrc;
+        this._elements.swordImage!.onclick = () => this._actions?.onSwordInfoSearch(context.sword.id);
 
         write(this._elements.swordName, context.sword.name);
 

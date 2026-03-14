@@ -73,7 +73,6 @@ export class StatScreen extends Screen {
         return created_infoBox;
     };
 
-
     private makeStatSection(stat: StatInfo): HTMLElement {
 
         const created_section = createElementWith("section", {classes: ["stat", stat.color]});

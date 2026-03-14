@@ -11,7 +11,7 @@ export class Piece {
         public readonly maxDrop: number = 1) { }
 
     public drop(): PieceItem {
-        if (Math.random() < this.prob) return new PieceItem(this.id, this.name, this.imgSrc, Math.floor(Math.random() * this.maxDrop + 1));
-        return new PieceItem(this.id, this.name, this.imgSrc, 0);
+        if (Math.random() < this.prob) return new PieceItem(this.id, this.name, this.imgSrc, this.description ,Math.floor(Math.random() * this.maxDrop + 1));
+        return new PieceItem(this.id, this.name, this.imgSrc, this.description, 0);
     }
 }

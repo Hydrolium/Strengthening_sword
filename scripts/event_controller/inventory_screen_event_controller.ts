@@ -4,7 +4,7 @@ import { InventoryUpdateContextType } from "../context/updating/inventory_update
 import { SwordUpdateContextType } from "../context/updating/sword_update_context";
 import { SwordItem } from "../define/object/item";
 import { PieceItem } from "../define/object/item";
-import { CalculatedSwordDB } from "../define/calculated_sword_db";
+import { CalculatedSwordDB } from "../define/db/calculated_sword_db";
 import { Managers } from "../manager/manager";
 
 export interface InventoryScreenActions {

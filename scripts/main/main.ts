@@ -18,7 +18,7 @@ import { ScreenShowingContextType } from "../context/rendering/screen_showing_co
 import { popupDrawingTypes, ScreenDrawingContextType } from "../context/rendering/screen_drawing_context.js";
 import { SwordUpdateContextType } from "../context/updating/sword_update_context.js";
 import { StatUpdateContextType } from "../context/updating/stat_update_context.js";
-import { CalculatedSwordDB } from "../define/calculated_sword_db.js";
+import { CalculatedSwordDB } from "../define/db/calculated_sword_db.js";
 import { PopupDisplay } from "../screen/display/popup_display.js";
 import { MainScreenEventController } from "../event_controller/main_screen_event_controller.js";
 import { InformationScreenEventController } from "../event_controller/information_screen_event_controller.js";
