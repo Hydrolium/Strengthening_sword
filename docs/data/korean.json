@@ -10,7 +10,7 @@
   "sword": {
     "dagger": { "name": "단검", "description": "초보 모험가가 사용하는 작고 가벼운 연습용 칼날" },
     "long_sword": { "name": "롱소드", "description": "가장 기초적이고 정석적인 형태의 강철 검" },
-    "rageknife": { "name": "분노의 칼", "description": "주인의 분노와 함께 강해지는 기능성 칼" },
+    "rageknife": { "name": "분노의 칼", "description": "주인의 분노와 함께 강해지는 금빛 칼" },
     "dorans_blade": { "name": "도란의 검", "description": "전설적인 대장장이 도란이 제작한 균형 잡힌 명품 검" },
     "hexdrinker": { "name": "주문포식자", "description": "마법사를 상대하기 위해 마력을 집어삼키도록 설계된 항마검" },
     "bf_sword": { "name": "BF 대검", "description": "웬만한 완력으로는 휘두르기조차 힘든 압도적인 파괴력의 묵직한 대검" },
