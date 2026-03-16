@@ -75,7 +75,7 @@ export class StatScreen extends Screen {
 
     private makeStatSection(stat: StatInfo): HTMLElement {
 
-        const created_section = createElementWith("section", {classes: ["stat", stat.color]});
+        const created_section = createElementWith("section", {classes: ["stat", stat.color, "how_to_play_parent"]});
 
         created_section.appendChild(
             this.makeIconDiv(
@@ -88,6 +88,10 @@ export class StatScreen extends Screen {
             this.makeLevelDiv(stat));
         
         created_section.appendChild(this.makeInfoDiv(stat));
+
+
+        created_section.appendChild(createElementWith("span", {classes: ["how_to_play_element", "small"], text: "스탯 포인트를 소모하여 스탯을 강화할 수 있습니다\n스탯 강화 한번 당 스탯포인트가 하나씩 소모됩니다.\n아이콘을 눌러 스탯을 강화하세요."}))
+
         return created_section;
     };
 

@@ -309,8 +309,7 @@ export class PopupDisplay extends Display {
         popup.setTitle(`<${context.pieceItem.name}>`, Color.GREEN);
         popup.setSubTitle(context.pieceItem.description);
 
-        const unknown = UnknownItem.instance;
-
+        let isUnknownExisit = false;
         context. swords.forEach(
                 sword => {
                     const created_div = createElementWith("div", {classes: ["img_name_count_paragraph"]});
@@ -329,9 +328,10 @@ export class PopupDisplay extends Display {
                             .build()
                             .forEach(element => created_div.appendChild(element));
                     } else {
-                        created_div.appendChild(createImageWithSrc(unknown.imgSrc));
+                        isUnknownExisit = true;
+                        created_div.appendChild(createImageWithSrc(UnknownItem.instance.imgSrc));
                             new ColoredTextElement()
-                            .add(`${sword.index}강 ${unknown.name} `, Color.RED)
+                            .add(`${sword.index}강 ${UnknownItem.instance.name} `, Color.RED)
                             .add(`파괴 시 획득 가능`, Color.DARK_GRAY)
                             .build()
                             .forEach(element => created_div.appendChild(element));
@@ -341,7 +341,7 @@ export class PopupDisplay extends Display {
                 }
             );
 
-        popup.setFooter("발견되지 않은 검은 상세정보를 확인할 수 없습니다.", Color.DARK_GRAY);
+        if(isUnknownExisit) popup.setFooter("발견되지 않은 검은 상세정보를 확인할 수 없습니다.", Color.DARK_GRAY);
 
         popup.addCloseButton();
         popup.build();

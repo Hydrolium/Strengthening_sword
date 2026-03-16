@@ -13,8 +13,8 @@ export class MainScreen extends Screen {
         swordNumber?: HTMLParagraphElement,
         swordName?: HTMLParagraphElement,
         swordProb?: HTMLParagraphElement,
-        swordInfo1?: HTMLParagraphElement,
-        swordInfo2?: HTMLParagraphElement,
+        swordCost?: HTMLParagraphElement,
+        swordPrice?: HTMLParagraphElement,
         sellButton?: HTMLAnchorElement,
         upgradeButton?: HTMLAnchorElement,
         saveButton?: HTMLAnchorElement
@@ -33,8 +33,8 @@ export class MainScreen extends Screen {
         this._elements.swordNumber = $<HTMLParagraphElement>("#sword-number");
         this._elements.swordName = $<HTMLParagraphElement>("#sword-name");
         this._elements.swordProb = $<HTMLParagraphElement>("#sword-prob");
-        this._elements.swordInfo1 = $<HTMLParagraphElement>("#sword-info-1");
-        this._elements.swordInfo2 = $<HTMLParagraphElement>("#sword-info-2");
+        this._elements.swordCost = $<HTMLParagraphElement>("#sword-cost");
+        this._elements.swordPrice = $<HTMLParagraphElement>("#sword-price");
 
         this._elements.sellButton = $<HTMLAnchorElement>("#sell-button");
         this._elements.upgradeButton = $<HTMLAnchorElement>("#upgrade-button");
@@ -59,16 +59,16 @@ export class MainScreen extends Screen {
             this._elements.swordNumber?.classList.remove("isMax")
 
             write(this._elements.swordProb, `강화 성공 확률: ${Math.floor(context.sword.prob * 100)}%`);
-            write(this._elements.swordInfo1, `강화 비용: ${context.sword.cost}원`);
-            write(this._elements.swordInfo2, (context.sword.price > 0) ? `판매 가격: ${context.sword.price}원` : " ");
+            write(this._elements.swordCost, `강화 비용: ${context.sword.cost}원`);
+            write(this._elements.swordPrice, (context.sword.price > 0) ? `판매 가격: ${context.sword.price}원` : " ");
 
         } else {
             write(this._elements.swordNumber, `${context.sword.index}강 (MAX)`);
             this._elements.swordNumber?.classList.add("isMax");
 
             write(this._elements.swordProb, " ");
-            write(this._elements.swordInfo1, (context.sword.price > 0) ? `판매 가격: ${context.sword.price}원` : " ");
-            write(this._elements.swordInfo2, " ");
+            write(this._elements.swordCost, " ");
+            write(this._elements.swordPrice, (context.sword.price > 0) ? `판매 가격: ${context.sword.price}원` : " ");
         }
 
         setVisibility(this._elements.sellButton, context.sword.price > 0);

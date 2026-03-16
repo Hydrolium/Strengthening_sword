@@ -15,8 +15,7 @@ export class InventoryScreen extends Screen {
     protected readonly _id = ScreenShowingContextType.INVENTORY_SCREEN_SHOWING_CONTEXT;
 
     private readonly _elements: {
-        inventoryItems?: HTMLDivElement,
-        windowMain?: HTMLElement
+        inventoryItems?: HTMLDivElement
     } = {}
 
     private _actions?: InventoryScreenActions;
@@ -27,7 +26,6 @@ export class InventoryScreen extends Screen {
 
     protected init() {
         this._elements.inventoryItems = $("#inventory-items");
-        this._elements.windowMain = $(".inventory_window main");
     }
 
     private makeSwordHoverMenuDiv(sword: SwordItem): HTMLDivElement {
@@ -81,7 +79,7 @@ export class InventoryScreen extends Screen {
     }
 
     private makeRepairGroupSection(repairPaperCount: number): HTMLElement {
-        const created_repairGroup = createElementWith("section", {classes: ["item_group"]});
+        const created_repairGroup = createElementWith("section", {classes: ["item_group", "how_to_play_parent"]});
 
         const created_group_title = createElementWith("div", {classes: [ "underline", "bok"]});
         created_group_title.replaceChildren(...new ColoredTextElement().add("복구권", Color.GOLD).build());
@@ -90,26 +88,31 @@ export class InventoryScreen extends Screen {
         created_repairGroup.appendChild(
             this.makeInventoryArticle(new RepairPaperItem(repairPaperCount)),
         )
+
+        created_repairGroup.appendChild(createElementWith("span",{classes:["how_to_play_element", "small", "down"], text: "검이 파괴되었을 때 복구를 위해 사용되는 복구권입니다.\n제작소에서 구매할 수 있습니다."}));
+
         return created_repairGroup;
     }
 
     private makePieceGroupSection(pieceItemList: readonly PieceItem[]): HTMLElement {
-        const created_pieceGroup = createElementWith("section", {classes: ["item_group"]});
+        const created_pieceGroup = createElementWith("section", {classes: ["item_group", "how_to_play_parent"]});
 
         const created_group_title = createElementWith("div", {classes: [ "underline", "pie"]});
-        created_group_title.replaceChildren(...new ColoredTextElement().add("조각", Color.GREEN).add(" (마우스를 아이콘 위에 올려 메뉴 확인)", Color.DARK_GRAY).build());
+        created_group_title.replaceChildren(...new ColoredTextElement().add("조각", Color.GREEN).build());
 
         created_pieceGroup.appendChild(created_group_title);
         pieceItemList.forEach(
             pieceItem => created_pieceGroup.appendChild(this.makeInventoryArticle(pieceItem)));
+
+        created_pieceGroup.appendChild(createElementWith("span",{classes:["how_to_play_element", "small", "down"], text: "파괴된 검에서 획득한 조각 목록입니다.\n아이콘을 클릭하여 획득처를 확인할 수 있습니다."}));
         return created_pieceGroup;
     }
 
     private makeSwordGroupSection(swordItemList: readonly SwordItem[]): HTMLElement {
-        const created_swordGroup = createElementWith("section", {classes: ["item_group"]});
+        const created_swordGroup = createElementWith("section", {classes: ["item_group", "how_to_play_parent"]});
 
         const created_group_title = createElementWith("div", {classes: [ "underline", "swo"]});
-        created_group_title.replaceChildren(...new ColoredTextElement().add("검", Color.BLUE).add(" (마우스를 아이콘 위에 올려 메뉴 확인)", Color.DARK_GRAY).build());
+        created_group_title.replaceChildren(...new ColoredTextElement().add("검", Color.BLUE).build());
 
         created_swordGroup.appendChild(created_group_title);
 
@@ -120,6 +123,7 @@ export class InventoryScreen extends Screen {
                 );
             });
 
+        created_swordGroup.appendChild(createElementWith("span",{classes:["how_to_play_element", "small", "down"], text: "보관하거나 제작하여 얻은 검 목록입니다.\n아이콘에 마우스를 올려 다음 메뉴를 확인할 수 있습니다.\n판매하기: 검을 판매합니다\n꺼내기: 현재 강화 중인 검을 보관하고, 이 검으로 강화를 시작합니다.\n파괴하기: 검을 파괴합니다. 조각을 획득할 수 있습니다."}));
         return created_swordGroup;
     }   
 
@@ -134,10 +138,10 @@ export class InventoryScreen extends Screen {
         if(context.swordStorage.size != 0) inner.push(this.makeSwordGroupSection(Array.from(context.swordStorage.getAll())));
         
         if(context.pieceStorage.size == 0 && context.swordStorage.size == 0) {
-            this._elements.windowMain?.classList.add("empty_inventory");
+            this._elements.inventoryItems?.classList.add("empty_inventory");
             
             if(context.repairPapers <= 0) inner.push(createElementWith("p", {classes: ["no_item"], text: "보관된 아이템이 없습니다."}));
-        } else this._elements.windowMain?.classList.remove("empty_inventory");
+        } else this._elements.inventoryItems?.classList.remove("empty_inventory");
 
         this._elements.inventoryItems?.replaceChildren(...inner);
 

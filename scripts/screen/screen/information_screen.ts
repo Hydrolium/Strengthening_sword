@@ -27,14 +27,17 @@ export class InformationScreen extends Screen {
     }
 
     private makeIcon(item: SwordItem | UnknownItem): HTMLDivElement {
-        const created_div = createElementWith<HTMLDivElement>("div", {classes: ["sword_icon", (item instanceof SwordItem) ? "sword" : "unknown"]});
+        const created_div = createElementWith<HTMLDivElement>("div", {classes: ["sword_icon", (item instanceof SwordItem) ? "sword" : "unknown", "how_to_play_parent"]});
+
 
         created_div.appendChild(createImageWithSrc(item.imgSrc, item.name));
 
         if(item instanceof SwordItem) {
             created_div.appendChild(createElementWith("span", {classes: ["sword_name"], text: item.name}));
             created_div.addEventListener("click", () => this._actions?.onSwordInfoSearch(item.id));
-        }
+            created_div.appendChild(createElementWith("span", {classes: ["how_to_play_element", "small", "up"], text: "강화에 성공하여 발견한 검입니다.\n클릭하여 상세정보를 확인할 수 있습니다."}));
+        } else created_div.appendChild(createElementWith("span", {classes: ["how_to_play_element", "up"], text: "발견되지 않은 검입니다.\n상세 정보를 확인할 수 없습니다."}));
+
         
         return created_div;
     }

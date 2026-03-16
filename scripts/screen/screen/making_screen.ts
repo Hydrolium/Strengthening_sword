@@ -1,7 +1,7 @@
 import { MakingScreenRenderingContext, ScreenDrawingContext, ScreenDrawingContextType } from "../../context/rendering/screen_drawing_context.js";
 import { ScreenShowingContextType } from "../../context/rendering/screen_showing_context.js";
 import { MakingScreenActions } from "../../event_controller/making_screen_event_controller.js";
-import { $, createElementWith, createImageWithSrc, display, hide, setOnClick } from "../../element/element_controller.js";
+import { $, createElementWith, createImageWithSrc, display, hide, setOnClick, write } from "../../element/element_controller.js";
 import { Recipe } from "../../define/object/recipe.js";
 import { UnknownItem } from "../../define/object/item.js";
 import { RepairPaperItem } from "../../define/object/item.js";
@@ -13,6 +13,13 @@ import { Keyframes } from "../refreshable.js";
 import { Screen } from "./screen.js";
 
 type ButtonColor = "blue" | "purple";
+
+const HowToPlayElementText = {
+    UNKNOWN: "*발견되지 않은 검은 제작 가능하나 제작 전까지 정체를 알 수 없습니다.",
+    MATERIAL_LACK: "*제작에 필요한 재료가 부족하면 제작할 수 없습니다.",
+    ENOUGH: "*제작 시 아이템은 보관함으로 이동됩니다.",
+    DEFAULT: "제작에 필요한 재료 목록과 제작할 아이템입니다.\n아이콘을 클릭하여 상세 정보를 확인할 수 있습니다."
+} as const;
 
 export class MakingScreen extends Screen {
 
@@ -114,7 +121,7 @@ export class MakingScreen extends Screen {
 
     private makeGroupArticle(material_section: HTMLElement, resultSection: HTMLElement, color: ButtonColor, canMake: boolean, clickFunction: () => void) {
 
-        const created_article = createElementWith("article", {classes: [ "group"]});
+        const created_article = createElementWith("article", {classes: [ "group", "how_to_play_parent"]});
 
         created_article.appendChild(material_section);
         created_article.appendChild(resultSection);
@@ -156,28 +163,63 @@ export class MakingScreen extends Screen {
     private makeRepairPaperPage(recipes: readonly Recipe[], info: MakingScreenRenderingContext): readonly HTMLElement[] {
 
         return recipes.map(
-            recipe =>
-                this.makeGroupArticle(
+            (recipe, index) => {
+
+                const isHaving = this.hasItems(recipe.materials, info);
+                
+                const created_articleGroup = this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials, info), 
                     this.makeResultSection(recipe.result),
                     "blue",
-                    this.hasItems(recipe.materials, info), 
-                    () => this._actions?.onMaking(recipe))
+                    isHaving, 
+                    () => this._actions?.onMaking(recipe));
+
+                const created_howToPlay = createElementWith("span", {classes: ["how_to_play_element", "small"]});
+
+                if(index >= 2) created_howToPlay.classList.add("up");
+                else created_howToPlay.classList.add("down");
+                
+                if(isHaving) write(created_howToPlay, HowToPlayElementText.DEFAULT);
+                else write(created_howToPlay, HowToPlayElementText.MATERIAL_LACK);
+
+                created_articleGroup.appendChild(created_howToPlay);
+                
+                return created_articleGroup;
+            }
         );
     }
 
     private makeSwordPage(recipes: readonly Recipe[], info: MakingScreenRenderingContext): readonly HTMLElement[] {
-        info
+
         return recipes.map(
-            recipe => this.makeGroupArticle(
+            (recipe, index) => {
+
+                const isFound = info.foundSwordIds.has(recipe.result.id);
+                const isHaving = this.hasItems(recipe.materials, info);
+
+                const created_articleGroup = this.makeGroupArticle(
                     this.makeMaterialSection(recipe.materials, info), 
-                    (info.foundSwordIds.has(recipe.result.id))
+                    (isFound)
                     ? this.makeResultSection(recipe.result)
                     : this.makeResultSection(UnknownItem.instance),
                     "purple",
-                    this.hasItems(recipe.materials, info),
+                    isHaving,
                     () => this._actions?.onMaking(recipe)
-                )
+                );
+
+                const created_howToPlay = createElementWith("span", {classes: ["how_to_play_element", "small"]});
+
+                if(index >= 2) created_howToPlay.classList.add("up");
+                else created_howToPlay.classList.add("down");
+                
+                if(isHaving && isFound) write(created_howToPlay, HowToPlayElementText.DEFAULT + "\n" + HowToPlayElementText.ENOUGH);
+                else if(isHaving) write(created_howToPlay, HowToPlayElementText.DEFAULT + "\n" + HowToPlayElementText.ENOUGH + "\n" + HowToPlayElementText.UNKNOWN);
+                else if(isFound) write(created_howToPlay, HowToPlayElementText.DEFAULT + "\n" + HowToPlayElementText.MATERIAL_LACK);
+                else write(created_howToPlay, HowToPlayElementText.DEFAULT + "\n" + HowToPlayElementText.MATERIAL_LACK + "\n" + HowToPlayElementText.UNKNOWN);
+
+                created_articleGroup.appendChild(created_howToPlay);
+                return created_articleGroup;
+            }
         );
 
     }

@@ -193,18 +193,25 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .main_footer .coinbox:hover > #money-record .record_title {margin-bottom: 1rem;}
 .window {width: 100%;height: 100%;display: grid;grid-template-columns: 1fr;grid-template-rows: 1fr 9fr;place-items: center;}
 .window > header {font-size: 1.5rem;}
-.inventory_window main {display: flex;flex-wrap: wrap;justify-content: flex-start;width: 90%;height: 100%;max-width: 550px;max-height: 450px;overflow: hidden scroll;gap: 8px;}
-.inventory_window main.empty_inventory {flex-direction: column;justify-content: flex-start;align-items: center;width: 300px;row-gap: 20px;height: 70%;overflow: unset;}
-.inventory_window main .no_item {color: var(--color-dark-gray);font-size: 1.05rem;}
-.inventory_window main .item_group {width: 100%;display: flex;flex-wrap: wrap;justify-content: space-between;height: fit-content;}
-.inventory_window main .item_group .underline {width: 100%;height:1.75rem;border: solid 3px var(--color-dark-gray);font-size: 1.1rem;}
-.inventory_window main .item_group .underline span:not(:first-child) {font-size: 0.9rem;}
-.inventory_window main .item_group .group {display: grid;grid-template-columns: 1fr 2fr 1fr;width: 230px;height: 54px;align-items: center;margin: 0.5rem;}
-.inventory_window main .item_group .group .item {width: 50px;height: 50px;background-image: url("/images/ui/frames/item_frame.png");background-size: contain;position: relative;cursor: pointer;}
-.inventory_window main .item_group .group .item img {width: 80%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.5s;}
-.inventory_window main .item_group .group .item img:hover,
-.inventory_window main .item_group .group .item .hover_menu:hover + img {width: 100%;transition: all 0.1s;}
-.inventory_window main .item_group .group .item .hover_menu {
+
+.inventory_window main {
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+.inventory_window main .inventory_items {display: flex;flex-direction: column;width: 90%;max-width: 550px;max-height: 450px;overflow: hidden auto;gap: 20px;padding: 0 8px;}
+.inventory_window main .inventory_items.empty_inventory {flex-direction: column;justify-content: flex-start;align-items: center;width: 300px;row-gap: 20px;height: 70%;overflow: unset;}
+.inventory_window main .inventory_items .no_item {color: var(--color-dark-gray);font-size: 1.05rem;}
+.inventory_window main .inventory_items .item_group {width: 100%;display: flex;flex-wrap: wrap;justify-content: space-between;height: fit-content;row-gap: 5px;}
+.inventory_window main .inventory_items .item_group .underline {width: 100%;height:1.75rem;border: solid 3px var(--color-dark-gray);font-size: 1.1rem;}
+.inventory_window main .inventory_items .item_group .underline span:not(:first-child) {font-size: 0.9rem;}
+.inventory_window main .inventory_items .item_group .group {display: grid;grid-template-columns: 1fr 2fr 1fr;width: 230px;height: 54px;align-items: center;}
+.inventory_window main .inventory_items .item_group .group .item {width: 50px;height: 50px;background-image: url("/images/ui/frames/item_frame.png");background-size: contain;position: relative;cursor: pointer;}
+.inventory_window main .inventory_items .item_group .group .item img {width: 80%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);transition: all 0.5s;}
+.inventory_window main .inventory_items .item_group .group .item img:hover,
+.inventory_window main .inventory_items .item_group .group .item .hover_menu:hover + img {width: 100%;transition: all 0.1s;}
+.inventory_window main .inventory_items .item_group .group .item .hover_menu {
   position: absolute;top: 0;left: 0;z-index: 1;
   width: 100%;
   height: 100%;opacity: 0;transition: opacity 0.3s;
@@ -250,7 +257,7 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .inventory_window main .item_group .group .item_count {font-size: 1.2rem;text-align: center;}
 .sword_book_window main {display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;max-height: 440px;}
 .sword_book_window main header {font-size: 1.5rem;}
-.sword_book_window main header span {color: var(--color-gold);margin: 0.25rem;font-size: 2rem;}
+.sword_book_window main header .found_sword_count {color: var(--color-gold);margin: 0.25rem;font-size: 2rem;}
 .sword_book_window main .swords {display: flex;justify-content: center;flex-wrap: wrap;gap: 8px;margin: 0 8px;width: 100%;max-width: 400px;}
 .sword_book_window main .swords .sword_icon {width: 15%;padding-bottom: 15%;display: flex;justify-content: center;align-items: center;position: relative;cursor: pointer;transition: all 0.1s;}
 .sword_book_window main .swords .sword_icon.sword {background: center / contain url("/images/ui/frames/item_frame.png");}
@@ -304,11 +311,11 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 .loading {display: none;width: 100vw;height: 100vh;position: fixed;top: 0;left: 0;z-index: 1;background: rgba(243, 243, 243, 0.7);}
 .loading .lodding_img {width: 100px;height: 100px;position: fixed;z-index: 3;top: 50%;left: 50%;transform: translate(calc(-50% - 38.4765625px), -50%);transform-origin: 76.953125px 100px;}
 .loading .lodding_img img {width: 100%;height: 100%;opacity: 0.8;}
-.stat_window main {max-width: 750px;height: 470px;display: flex;flex-direction: column;justify-content: space-between;}
+.stat_window main {max-width: 800px;height: 470px;display: flex;flex-direction: column;justify-content: space-between;align-items: center;}
 .stat_window main .stat_point {font-size: 1.3rem;}
 .stat_window main .stat_point #stat-point-count {font-size: 2rem;color: var(--color-gold);}
-.stat_window main .stats {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;width: 100%;height: 80%;overflow: hidden scroll;}
-.stat_window main .stats .stat {display: flex;flex-direction: column;align-items: center;justify-content: space-between;width: 200px;height: 160px;margin: 10px 20px;}
+.stat_window main .stats {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;height: 80%;overflow: visible auto;row-gap: 20px;column-gap: 10px;}
+.stat_window main .stats .stat {display: flex;flex-direction: column;align-items: center;justify-content: space-between;width: 200px;height: 160px;}
 .stat_window main .stats .stat .icon {width: 70px;height: 70px;position: relative;cursor: pointer;}
 .stat_window main .stats .stat .icon img {
   width: 100%;
@@ -365,12 +372,12 @@ body {display: grid;grid-template-rows: 70px auto 70px;height: 100vh;overflow:hi
 input[type="checkbox"] {accent-color: var(--color-blue);}
 
 @layer a {
-  .tutorial *:not(.tutorial_element) {
+  *:not(.how_to_play_element) {
     position: relative;
   }
 }
 
-.tutorial .tutorial_element {
+.how_to_play_element, .how_to_play_button_info {
   display: inline;
   position: absolute;
 
@@ -382,11 +389,11 @@ input[type="checkbox"] {accent-color: var(--color-blue);}
 
   opacity: 0;
   padding: 20px 10px;
-  z-index: 3;
+
   transition: all .3s;
   border-radius: 10px;
 
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--color-dark-gray);
 
   display: flex;
@@ -394,32 +401,72 @@ input[type="checkbox"] {accent-color: var(--color-blue);}
   align-items: center;
 
   pointer-events: none;
+
+  z-index: 3;
 }
 
-.tutorial *:not(.tutorial_element):hover > .tutorial_element {
+body:has(#how-to-play-button:checked) .how_to_play_parent::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border: var(--color-gold) dotted 2px;
+  border-radius: 10px;
+  padding: 2px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+body:has(#how-to-play-button:checked) .how_to_play_parent:hover > .how_to_play_element, .how_to_play_button_box:hover > .how_to_play_button_info {
   background-color: var(--color-white);
   opacity: 1;
 }
 
-.tutorial_element.small {
-  font-size: 1.2rem;
+.how_to_play_element.small {
+  font-size: 1.1rem;
 }
 
-.tutorial_element.down {
-  transform: translate(-50%, 25px);
+.how_to_play_element.down {
+  top: unset;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
 }
-.tutorial_element.up {
+.how_to_play_element.up {
   top: 0;
   transform: translate(-50%, calc(-100% - 5px));
 }
-.tutorial_element.up.right {
-  top: 0;
-  transform: translate(0, calc(-100% - 5px));
-}
-.tutorial_element.up.left {
+.how_to_play_element.up.right {
   top: 0;
   left: 0;
-  transform: translate(-100%, calc(-100% - 5px));
+  transform: translate(0, calc(-100% - 5px));
+}
+.how_to_play_element.up.left {
+  top: unset;
+  bottom: 0;
+  left: 0;
+  transform: translate(calc(-100% - 10px), 0);
+}
+.how_to_play_element.left {
+  top: 50%;
+  left: 0;
+  transform: translate(calc(-100% - 10px), -50%);
+}
+.how_to_play_element.down.left {
+  top: 0;
+  bottom: unset;
+  left: 0;
+  transform: translate(calc(-100% - 10px), 0);
+}
+.how_to_play_element.down.right {
+  top: 0;
+  bottom: unset;
+  left: unset;
+  right: 0;
+  transform: translate(calc(100% - 10px), 0);
 }
 
 .game_info_text {
@@ -432,27 +479,31 @@ input[type="checkbox"] {accent-color: var(--color-blue);}
   font-size: 1.2rem;
 }
 
-.toturial_button {
-  width: 50px;
-  height: 50px;
+.how_to_play_button_box {
   position: fixed;
   top: 10px;
   right: 10px;
+
+}
+
+.how_to_play_button {
+  width: 50px;
+  height: 50px;
   border-radius: 50px;
   overflow: hidden;
   transition: all .3s;
   cursor: pointer;
-  z-index: 1;
 }
-.toturial_button.green {
+.how_to_play_button.green {
   border: 3px solid var(--color-green);
 }
-.toturial_button.sky {
+.how_to_play_button.sky {
   border: 3px solid var(--color-sky);
 }
-.toturial_button:hover {transform: scale(1.1);}
-.toturial_button img {position:absolute; top:0;left:0;width: 100%;height: 100%;}
-.toturial_button span {
+.how_to_play_button:hover {transform: scale(1.1);}
+.how_to_play_button:active {transform: scale(0.9);}
+.how_to_play_button img {position:absolute; top:0;left:0;width: 100%;height: 100%;}
+.how_to_play_button span {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -461,9 +512,9 @@ input[type="checkbox"] {accent-color: var(--color-blue);}
   transform: translate(-50%, -50%);
   z-index: 2;
 }
-.toturial_button.green span {
+.how_to_play_button.green span {
   text-shadow: -1px -1px 0px var(--color-green),-1px 1px 0px var(--color-green),1px 1px 0px var(--color-green),1px -1px 0px var(--color-green),-1px 0px 0px var(--color-green),1px 0px 0px var(--color-green),0px 1px 0px var(--color-green),0px -1px 0px var(--color-green);
 }
-.toturial_button.sky span {
+.how_to_play_button.sky span {
   text-shadow: -1px -1px 0px var(--color-sky),-1px 1px 0px var(--color-sky),1px 1px 0px var(--color-sky),1px -1px 0px var(--color-sky),-1px 0px 0px var(--color-sky),1px 0px 0px var(--color-sky),0px 1px 0px var(--color-sky),0px -1px 0px var(--color-sky);
 }
