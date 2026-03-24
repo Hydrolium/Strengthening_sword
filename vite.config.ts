@@ -5,8 +5,7 @@ export default defineConfig({
     outDir: 'docs',
     rollupOptions: {
       input: {
-        main: 'index.html',
-        howToPlay: 'how_to_play.html'
+        main: 'index.html'
       }
     }
   },
