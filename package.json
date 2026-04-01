@@ -10,16 +10,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaknndiius/------.git"
+    "url": "git+https://github.com/Hydrolium/Strengthening_sword.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/jaknndiius/------/issues"
+    "url": "https://github.com/Hydrolium/Strengthening_sword/issues"
   },
-  "homepage": "https://github.com/jaknndiius/------#readme",
+  "homepage": "https://github.com/Hydrolium/Strengthening_sword#readme",
   "devDependencies": {
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
