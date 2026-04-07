@@ -35,7 +35,7 @@
 
 ## 계층 구조 및 흐름
 1. `EventController` 계층(`scripts/event_controller/`)
-- **역할**: 사용자 입력과 이벤트를 처리 핸들러를 정의합니다.
+- **역할**: 사용자 입력과 이벤트 처리 핸들러를 정의합니다.
 - **동작**: 이벤트 발생 시 `Manager` 클래스의 `update` 메서드를 `UpdatingContext`와 함께 호출하여 이벤트에 따른 게임 데이터 변경을 요청합니다.
 
 2. `Manager` 계층(`scripts/manager/`)
